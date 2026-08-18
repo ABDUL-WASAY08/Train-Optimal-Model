@@ -1,14 +1,117 @@
-// this is a auth screen  only wasy works
-import React from 'react'
-
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Code2, User2, Cat } from 'lucide-react';
 
 function AuthScreen() {
+  const [role, setRole] = useState('developer');
+  const navigate = useNavigate();
+
+  const handleAuth = () => {
+    if (role === 'client') {
+      console.log('Google Sign In clicked');
+    } else {
+      console.log('GitHub Sign In clicked');
+    }
+    // Navigate to the main dashboard screen upon sign-in
+    navigate('/Main');
+  };
+
   return (
-    <div>
+    <div className="min-h-screen bg-main flex flex-col font-sans selection:bg-pulse-cyan/20 selection:text-pulse-cyan">
+      {/* Header Navigation */}
+      <nav className="flex items-center justify-between px-6 py-4 bg-main border-b border-slate w-full">
+        <div 
+          className="flex items-center gap-2.5 cursor-pointer" 
+          onClick={() => navigate('/')}
+        >
+          <div className="p-1.5 rounded-xl border border-slate text-heading">
+            <Cat className="w-5 h-5" />
+          </div>
+          <span className="font-extrabold text-lg tracking-tight text-heading">
+            TOM
+          </span>
+        </div>
+      </nav>
 
+      {/* Main Form Container */}
+      <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Background Glow Effects */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-pulse-cyan/10 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative z-10 bg-surface border border-slate rounded-2xl shadow-2xl max-w-lg w-full p-8 transition-all duration-300">
+          <h1 className="text-heading text-3xl font-bold text-center mb-2">
+            Welcome to TOM
+          </h1>
+          <p className="text-subheading text-center mb-8 text-sm">
+            Select your Profession
+          </p>
+
+          {/* Role Toggle Switch */}
+          <div className="bg-main p-1.5 rounded-xl border border-slate grid grid-cols-2 gap-2 mb-8">
+            <button
+              type="button"
+              onClick={() => setRole('client')}
+              className={`py-2.5 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
+                role === 'client'
+                  ? 'bg-main text-main font-semibold shadow-[0_0_12px_rgba(62,207,255,0.3)]'
+                  : 'text-subheading hover:text-heading'
+              }`}
+            >
+              <User2 className="w-4 h-4" />
+              <span>Client</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setRole('developer')}
+              className={`py-2.5 px-4 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
+                role === 'developer'
+                  ? 'bg-main text-main font-semibold shadow-[0_0_12px_rgba(62,207,255,0.3)]'
+                  : 'text-subheading hover:text-heading'
+              }`}
+            >
+              <Code2 className="w-4 h-4" />
+              <span>Developer</span>
+            </button>
+          </div>
+
+          {/* Dynamic Content Details */}
+          <div key={role} className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-main border border-slate flex items-center justify-center mb-4 text-pulse-cyan">
+              {role === 'client' ? (
+                <User2 className="w-8 h-8" />
+              ) : (
+                <Code2 className="w-8 h-8" />
+              )}
+            </div>
+
+            <h2 className="text-heading text-2xl font-semibold mb-2 capitalize">
+              {role} Account
+            </h2>
+
+            <p className="text-subheading text-sm mb-8 leading-relaxed max-w-sm min-h-[48px]">
+              {role === 'client'
+                ? 'For clients who want to collaborate, review projects, and post new requirements.'
+                : 'For developers who push code to GitHub, build features, and contribute to projects.'}
+            </p>
+
+            <button
+              onClick={handleAuth}
+              className="w-full py-3 px-6 rounded-lg font-bold text-xs bg-main hover:bg-blue-900/10 text-main flex items-center justify-center gap-3 transition-all cursor-pointer "
+            >
+              {role === 'client' ? (
+                <span>Sign in with Google</span>
+              ) : (
+                <span>Sign in with GitHub</span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-
-  )
+  );
 }
 
-export default AuthScreen
+export default AuthScreen;
