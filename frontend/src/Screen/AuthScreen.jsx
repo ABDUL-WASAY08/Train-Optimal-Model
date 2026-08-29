@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Code2, User2, Cat } from 'lucide-react';
+import { useAuthStore } from '../zustand/useAuthStore'; // Import Zustand Store
 
 function AuthScreen() {
   const [role, setRole] = useState('developer');
   const [brole, setBrole] = useState('users');
 
-  // 1. State for Admin Form inputs and error feedback
+  // Zustand state actions
+  const loginWithGithub = useAuthStore((state) => state.loginWithGithub);
+
   const [adminData, setAdminData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAdminData((prev) => ({
@@ -28,10 +32,10 @@ function AuthScreen() {
     if (brole === 'users') {
       if (role === 'client') {
         console.log('Google Sign In clicked');
+       
       } else {
-        console.log('GitHub Sign In clicked');
+        loginWithGithub();
       }
-      navigate('/Main');
     } else {
       const envEmail = import.meta.env.VITE_ADMIN_EMAIL;
       const envPassword = import.meta.env.VITE_ADMIN_PASSWORD;
@@ -135,7 +139,7 @@ function AuthScreen() {
 
               <button
                 onClick={handleAuth}
-                className="w-full py-3 px-6 rounded-lg font-bold text-xs bg-main hover:bg-blue-900/10 text-main flex items-center justify-center gap-3 transition-all cursor-pointer"
+                className="w-full py-3 px-6 rounded-lg font-bold text-xs bg-main hover:bg-blue-900/10 text-main flex items-center justify-center gap-3 transition-all cursor-pointer border border-slate"
               >
                 {role === 'client' ? (
                   <span>Sign in with Google</span>

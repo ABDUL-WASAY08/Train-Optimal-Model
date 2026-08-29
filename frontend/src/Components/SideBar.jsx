@@ -11,6 +11,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  UserCheck,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { label: "Marketplace", icon: ShoppingBag },
   { label: "Portfolio", icon: Briefcase },
   { label: "Settings", icon: Settings },
+  
 ];
 
 export default function Sidebar({ activeItem, onSelect }) {

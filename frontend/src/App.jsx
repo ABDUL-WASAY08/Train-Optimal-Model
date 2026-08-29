@@ -13,7 +13,7 @@ function App() {
     <Routes>
     <Route  path='/' element={<SplashScreen />}/>
     <Route  path='/Autorization' element={<AuthScreen />}/>
-    <Route  path='/Main' element={<MainScreen />}/>
+    <Route  path='/dashboard' element={<MainScreen />}/>
     <Route path="*" element={<PageNotFound />} />
     </Routes>
     </BrowserRouter>
