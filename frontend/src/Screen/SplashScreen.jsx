@@ -105,7 +105,7 @@ function SplashScreen() {
             </div>
           </div>
 
-          <div className="flex justify-center items-center sm:hidden md:flex pointer-events-none">
+          <div className="flex justify-center items-center hidden md:flex pointer-events-none">
             <div className="relative p-1 animate-pulse shadow-2xl">
               <div className="flex flex-col items-center justify-center space-y-6">
                 <div className="p-10 bg-surface rounded-full border border-pulse-cyan/30">
