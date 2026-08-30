@@ -45,19 +45,19 @@ export default function Sidebar({ activeItem, onSelect }) {
           transition-all duration-300 ease-in-out shrink-0
           ${isOpen ? "w-64 translate-x-0" : "-translate-x-full md:translate-x-0 md:w-20"}`}
       >
-        {/* Top Section */}
+       
         <div>
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 h-16 border-b border-white/10">
+        
+          <div className="flex items-center justify-between px-4 h-16  border-white/10">
             {isOpen ? (
               <h1 className="text-lg font-bold text-white tracking-wide truncate">
-                TOM
+                
               </h1>
             ) : (
               <span className="hidden md:block w-4" />
             )}
 
-            {/* Desktop & Mobile Collapse Button */}
+            
             <button
               onClick={toggleSidebar}
               className="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
@@ -66,8 +66,6 @@ export default function Sidebar({ activeItem, onSelect }) {
               {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
             </button>
           </div>
-
-          {/* Navigation Links */}
           <nav className="p-3 space-y-1.5">
             {NAV_ITEMS.map(({ label, icon: Icon }) => {
               const isActive = activeItem === label;

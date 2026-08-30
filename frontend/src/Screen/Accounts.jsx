@@ -19,26 +19,21 @@ import {
   Briefcase
 } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
+import { toast } from 'sonner';
 
 function Accounts() {
   const { user, fetchProfile, updateDob } = useAuthStore();
 
-  // Local state for interactive sections
   const [copied, setCopied] = useState(false);
   const [dob, setDob] = useState('');
   const [savingDob, setSavingDob] = useState(false);
-  
-  // Skills state
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
 
-  // Education state & form inputs
   const [educationList, setEducationList] = useState([
     { id: 1, degree: 'B.S. Computer Science', institution: 'COMSATS University', year: '2021 - 2025' }
   ]);
   const [eduForm, setEduForm] = useState({ degree: '', institution: '', year: '' });
-
-  // Experience state & form inputs
   const [experienceList, setExperienceList] = useState([
     { 
       id: 1, 
@@ -49,8 +44,6 @@ function Accounts() {
     }
   ]);
   const [expForm, setExpForm] = useState({ company: '', role: '', period: '', description: '' });
-
-  // Sync component state with store user data
   useEffect(() => {
     if (!user) {
       fetchProfile();
@@ -78,9 +71,9 @@ function Accounts() {
     const res = await updateDob(dob);
     setSavingDob(false);
     if (res?.success) {
-      alert('Date of birth updated!');
+      toast.success('Date of birth successfully updated!');
     } else {
-      alert(res?.error || 'Failed to update Date of Birth');
+      toast.error(res?.error || 'Failed to update Date of Birth');
     }
   };
 

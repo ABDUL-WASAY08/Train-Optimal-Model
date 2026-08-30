@@ -18,7 +18,7 @@ router.get(
 // GitHub Callback Route
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "http://localhost:5173/login?error=true" }),
+  passport.authenticate("github", { failureRedirect: "http://localhost:5173/Autorization?error=true" }),
   githubCallback
 );
 

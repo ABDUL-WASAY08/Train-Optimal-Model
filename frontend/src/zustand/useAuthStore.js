@@ -11,7 +11,6 @@ export const useAuthStore = create((set) => ({
     window.location.href = 'http://localhost:5000/api/auth/github';
   },
 
-  // 1. Fetch Logged-in User Profile (/api/auth/me)
   fetchProfile: async () => {
     set({ loading: true, error: null });
     try {
