@@ -8,7 +8,7 @@ export const useAuthStore = create((set) => ({
   error: null,
 
   loginWithGithub: () => {
-    window.location.href = 'http://localhost:5000/api/auth/github';
+    window.location.href = import.meta.env.VITE_GITHUB_URL;
   },
 
   fetchProfile: async () => {

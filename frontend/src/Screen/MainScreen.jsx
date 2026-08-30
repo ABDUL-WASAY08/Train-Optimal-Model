@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../Components/SideBar';
 import Accounts from './Accounts'; // Apni Accounts file ka sahi path check kar lein
+import Setting from './Setting';
 
 function MainScreen() {
   // 1. Sidebar selection ki state manage karein (Default: 'Dashboard' ya 'Accounts')
@@ -50,10 +51,7 @@ function MainScreen() {
         return <Accounts />;
       case 'Settings':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Settings</h1>
-            <p className="text-[#8b949e]">App preferences and configurations.</p>
-          </div>
+          <Setting/>
         );
       default:
         return <Accounts />;
