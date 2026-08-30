@@ -3,8 +3,6 @@ const passport = require("passport");
 const {
   githubCallback,
   getProfile,
-  updateDob,
-  updateSkills,
   logout,
 } = require("../controller/AuthController");
 
@@ -21,8 +19,6 @@ router.get(
 );
 router.get("/me", getProfile);
 
-router.put("/update-dob", updateDob);
-router.put("/update-skills", updateSkills);
 router.post("/logout", logout);
 
 module.exports = router;

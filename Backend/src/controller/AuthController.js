@@ -59,7 +59,7 @@ const fetchGithubRepoData = async (accessToken) => {
         count: langMap[lang],
         percentage:
           totalCount > 0
-            ? parseFloat(((langMap[lang] / totalCount) * 100).toFixed(2))
+            ? parseFloat(((langMap[lang] / totalCount) * 120).toFixed(2))
             : 0,
       }))
       .sort((a, b) => b.count - a.count);
@@ -134,45 +134,7 @@ const getProfile = async (req, res) => {
   }
 };
 
-// 4. Update DOB
-const updateDob = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
-  }
 
-  try {
-    const { dob } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { dob },
-      { new: true }
-    );
-
-    res.status(200).json({ success: true, user: updatedUser });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Failed to update DOB" });
-  }
-};
-
-// 5. Update Skills List
-const updateSkills = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
-  }
-
-  try {
-    const { skills } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { skills },
-      { new: true }
-    );
-
-    res.status(200).json({ success: true, user: updatedUser });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Failed to update skills" });
-  }
-};
 const logout = (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -208,7 +170,5 @@ module.exports = {
   processGithubProfile,
   githubCallback,
   getProfile,
-  updateDob,
-  updateSkills,
   logout
 };

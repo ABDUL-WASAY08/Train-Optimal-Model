@@ -8,7 +8,7 @@ const passport = require("passport");
 const session = require("express-session");
 const connectDatabase = require("./src/model/database");
 const authRoutes = require("./src/route/AuthRoute");
-
+const accountRoute=require("./src/route/AccountRoute")
 require("./src/middleware/passportMiddleware");
 
 const app = express();
@@ -33,6 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 connectDatabase();
 app.use("/api/auth", authRoutes);
+app.use("/api/account",accountRoute );
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
