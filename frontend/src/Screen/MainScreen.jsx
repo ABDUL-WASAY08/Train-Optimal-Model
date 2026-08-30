@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import Sidebar from '../Components/SideBar';
-import Accounts from './Accounts'; // Apni Accounts file ka sahi path check kar lein
+import Accounts from './Accounts';
 import Setting from './Setting';
+import { useAuthStore } from '../zustand/useAuthStore';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 function MainScreen() {
-  // 1. Sidebar selection ki state manage karein (Default: 'Dashboard' ya 'Accounts')
   const [activeItem, setActiveItem] = useState('Portfolio');
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
 
-  // 2. Clicked item ke according screen render karne ka logic
   const renderContent = () => {
     switch (activeItem) {
       case 'Accounts':
@@ -50,24 +53,40 @@ function MainScreen() {
       case 'Portfolio':
         return <Accounts />;
       case 'Settings':
-        return (
-          <Setting/>
-        );
+        return <Setting />;
       default:
         return <Accounts />;
     }
   };
 
+  
+  const handleLogout = async () => {
+    try {
+      const res = await logout(); 
+      if (res?.success) {
+        toast.success("Logout successful");
+        navigate('/Autorization'); 
+      } else {
+        toast.error("Logout failed");
+      }
+    } catch (error) {
+      toast.error("An error occurred during sign out");
+    }
+  };
+
   return (
     <div className="flex h-screen w-full bg-[#0d1117] overflow-hidden">
-      {/* 3. Props pass karein taake state update ho sakay */}
-      <Sidebar 
-        activeItem={activeItem} 
-        onSelect={(selectedLabel) => setActiveItem(selectedLabel)} 
+      <Sidebar
+        activeItem={activeItem}
+        onSelect={(selectedLabel) => setActiveItem(selectedLabel)}
       />
-
-      {/* 4. Scrollable Main Content Area */}
       <main className="flex-1 overflow-y-auto min-w-0">
+        <p 
+          className='font-bold hover:text-[var(--pulse-cyan)] transition-colors duration-200 flex justify-end px-4 pt-5 cursor-pointer'
+          onClick={handleLogout} 
+        >
+          SIGN OUT
+        </p>
         {renderContent()}
       </main>
     </div>

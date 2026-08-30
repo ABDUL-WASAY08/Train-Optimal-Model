@@ -46,6 +46,25 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  // 3. Clear Error State
+  logout: async () => {
+    set({ loading: true, error: null });
+    try {
+      await api.post('/auth/logout');
+      set({
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null,
+      });
+      
+      return { success: true };
+    } catch (err) {
+      set({ loading: false });
+      return {
+        success: false,
+        error: err.response?.data?.message || 'Logout failed',
+      };
+    }
+  },
   clearError: () => set({ error: null }),
 }));

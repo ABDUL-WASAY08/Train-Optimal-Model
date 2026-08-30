@@ -51,7 +51,7 @@ export default function Sidebar({ activeItem, onSelect }) {
           <div className="flex items-center justify-between px-4 h-16  border-white/10">
             {isOpen ? (
               <h1 className="text-lg font-bold text-white tracking-wide truncate">
-                
+                TOM
               </h1>
             ) : (
               <span className="hidden md:block w-4" />

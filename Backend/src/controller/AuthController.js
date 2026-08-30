@@ -173,11 +173,42 @@ const updateSkills = async (req, res) => {
     res.status(500).json({ success: false, error: "Failed to update skills" });
   }
 };
+const logout = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ 
+        success: false, 
+        message: "Logout action failed", 
+        error: err.message 
+      });
+    }
+    req.session.destroy((sessionErr) => {
+      if (sessionErr) {
+        return res.status(500).json({
+          success: false,
+          message: "Could not destroy session",
+          error: sessionErr.message,
+        });
+      }
+      res.clearCookie("connect.sid", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
 
+      return res.status(200).json({
+        success: true,
+        message: "Successfully logged out",
+      });
+    });
+  });
+};
 module.exports = {
   processGithubProfile,
   githubCallback,
   getProfile,
   updateDob,
   updateSkills,
+  logout
 };

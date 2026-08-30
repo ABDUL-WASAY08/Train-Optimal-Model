@@ -4,6 +4,7 @@ import MainScreen from './Screen/MainScreen'
 import PageNotFound from './Screen/pageNotFound'
 import SplashScreen from './Screen/SplashScreen'
 import {BrowserRouter,Route,Routes} from "react-router-dom"
+import './index.css'
 import {Toaster} from "sonner"
 function App() {
 
