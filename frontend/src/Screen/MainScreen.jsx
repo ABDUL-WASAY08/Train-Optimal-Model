@@ -65,7 +65,7 @@ function MainScreen() {
       const res = await logout(); 
       if (res?.success) {
         toast.success("Logout successful");
-        navigate('/Autorization'); 
+        navigate('/Authorization'); 
       } else {
         toast.error("Logout failed");
       }
@@ -82,7 +82,7 @@ function MainScreen() {
       />
       <main className="flex-1 overflow-y-auto min-w-0">
         <p 
-          className='font-bold hover:text-[var(--pulse-cyan)] transition-colors duration-200 flex justify-end px-4 pt-5 cursor-pointer'
+          className='hover:text-[var(--pulse-cyan)] transition-colors duration-200 flex justify-end px-6 pt-5 cursor-pointer'
           onClick={handleLogout} 
         >
           SIGN OUT

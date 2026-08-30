@@ -4,7 +4,7 @@ import api from '../api/axios';
 export const useAuthStore = create((set) => ({
   user: null,
   isAuthenticated: false,
-  loading: false,
+  loading: true,
   error: null,
 
   loginWithGithub: () => {
