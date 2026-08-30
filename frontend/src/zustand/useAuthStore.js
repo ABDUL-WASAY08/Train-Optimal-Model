@@ -11,7 +11,7 @@ export const useAuthStore = create((set) => ({
     window.location.href = 'http://localhost:5000/api/auth/github';
   },
 
-  // 2. Fetch Logged-in User Profile (/api/auth/me)
+  // 1. Fetch Logged-in User Profile (/api/auth/me)
   fetchProfile: async () => {
     set({ loading: true, error: null });
     try {
@@ -28,6 +28,22 @@ export const useAuthStore = create((set) => ({
         loading: false,
         error: err.response?.data?.message || 'Unauthorized',
       });
+    }
+  },
+
+  // 2. Update Date of Birth Endpoint
+  updateDob: async (dob) => {
+    try {
+      const response = await api.put('/auth/update-dob', { dob });
+      set((state) => ({
+        user: { ...state.user, dob: response.data.user.dob },
+      }));
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        error: err.response?.data?.message || 'Failed to update DOB',
+      };
     }
   },
 
