@@ -37,9 +37,8 @@ function App() {
 
           <Route path='/' element={<SplashScreen />} />
           <Route path='/Authorization' element={<AuthScreen />} />
-          <Route path="/dashboard" element={<MainScreen />} />
           <Route element={<ProtectedMiddleware />}>
-
+            <Route path="/dashboard" element={<MainScreen />} />
             <Route path="/account" element={<Accounts />} />
           </Route>
 

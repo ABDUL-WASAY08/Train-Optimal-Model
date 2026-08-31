@@ -59,7 +59,7 @@ const fetchGithubRepoData = async (accessToken) => {
         count: langMap[lang],
         percentage:
           totalCount > 0
-            ? parseFloat(((langMap[lang] / totalCount) * 120).toFixed(2))
+            ? parseFloat(((langMap[lang] / totalCount) * 100).toFixed(2))
             : 0,
       }))
       .sort((a, b) => b.count - a.count);

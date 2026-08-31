@@ -20,7 +20,22 @@ const userSchema = new mongoose.Schema(
         has_readme: Boolean,
       },
     ],
-    // Direct Inline Arrays (No separate sub-schemas)
+    selectedRepositories: [
+      {
+        name: String,
+        description: String,
+        html_url: String,
+        stargazers_count: Number,
+        language: String,
+        has_readme: Boolean,
+      },
+    ],
+    
+    isSetupCompleted: {
+      type: Boolean,
+      default: false,
+    },
+   
     skills: {
       type: [String],
       default: [],

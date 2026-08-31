@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../Components/SideBar';
 import Accounts from './Accounts';
+import AccountSetup from './AccountSetup';
 import Setting from './Setting';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function MainScreen() {
-  const [activeItem, setActiveItem] = useState('Portfolio');
-  const { logout } = useAuthStore();
+  const [activeItem, setActiveItem] = useState('Dashboard');
+  const { user, loading, logout } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const renderContent = () => {
     switch (activeItem) {
@@ -51,11 +58,11 @@ function MainScreen() {
           </div>
         );
       case 'Portfolio':
-        return <Accounts />;
+        return user?.isSetupCompleted ? <Accounts /> : <AccountSetup />;
       case 'Settings':
         return <Setting />;
       default:
-        return <Accounts />;
+        return user?.isSetupCompleted ? <Accounts /> : <AccountSetup />;
     }
   };
 

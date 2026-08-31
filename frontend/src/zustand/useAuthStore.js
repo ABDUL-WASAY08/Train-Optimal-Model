@@ -33,7 +33,7 @@ export const useAuthStore = create((set) => ({
   // 2. Update Date of Birth Endpoint
   updateDob: async (dob) => {
     try {
-      const response = await api.put('/auth/update-dob', { dob });
+      const response = await api.put('/account/update-dob', { dob });
       set((state) => ({
         user: { ...state.user, dob: response.data.user.dob },
       }));

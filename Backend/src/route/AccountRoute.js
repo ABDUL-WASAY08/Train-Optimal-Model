@@ -1,9 +1,9 @@
 const express = require("express");
 const { updateAccountDetails, updateDob } = require("../controller/AccountController");
+const isAuthenticate = require("../middleware/isAuthenticate");
 
 const router = express.Router();
 
-// Single PUT endpoint for all profile updates
-router.put("/update", updateAccountDetails);
-router.put("/update-dob", updateDob);
+router.put("/update", isAuthenticate, updateAccountDetails);
+router.put("/update-dob", isAuthenticate, updateDob);
 module.exports = router;

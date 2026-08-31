@@ -2,18 +2,19 @@ const User = require("../model/user");
 
 const updateAccountDetails = async (req, res) => {
   try {
-    // Check Passport authentication user
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
 
-    const { skills, education, workExperience, dob } = req.body;
+    const { skills, education, workExperience, dob, selectedRepositories, isSetupCompleted } = req.body;
 
     const updateData = {};
     if (skills !== undefined) updateData.skills = skills;
     if (education !== undefined) updateData.education = education;
     if (workExperience !== undefined) updateData.workExperience = workExperience;
     if (dob !== undefined) updateData.dob = dob ? new Date(dob) : null;
+    if (selectedRepositories !== undefined) updateData.selectedRepositories = selectedRepositories;
+    if (isSetupCompleted !== undefined) updateData.isSetupCompleted = isSetupCompleted;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
@@ -44,7 +45,7 @@ const updateDob = async (req, res) => {
     const { dob } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { dob },
+      { dob: dob ? new Date(dob) : null },
       { new: true }
     );
 
@@ -54,9 +55,7 @@ const updateDob = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   updateAccountDetails,
-  updateDob
+  updateDob,
 };

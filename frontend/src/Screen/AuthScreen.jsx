@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Code2, User2, Cat } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore'; // Import Zustand Store
+import { Code2, User2, Cat, Loader2 } from 'lucide-react';
+import { useAuthStore } from '../zustand/useAuthStore';
 
 function AuthScreen() {
   const [role, setRole] = useState('developer');
   const [brole, setBrole] = useState('users');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Zustand state actions
   const loginWithGithub = useAuthStore((state) => state.loginWithGithub);
 
   const [adminData, setAdminData] = useState({
@@ -32,8 +32,8 @@ function AuthScreen() {
     if (brole === 'users') {
       if (role === 'client') {
         console.log('Google Sign In clicked');
-       
       } else {
+        setIsLoggingIn(true);
         loginWithGithub();
       }
     } else {
@@ -139,9 +139,15 @@ function AuthScreen() {
 
               <button
                 onClick={handleAuth}
-                className="w-full py-3 px-6 rounded-lg font-bold text-xs bg-main hover:bg-blue-900/10 text-main flex items-center justify-center gap-3 transition-all cursor-pointer border border-slate"
+                disabled={isLoggingIn}
+                className="w-full py-3 px-6 rounded-lg font-bold text-xs bg-main hover:bg-blue-900/10 text-main flex items-center justify-center gap-3 transition-all cursor-pointer border border-slate disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {role === 'client' ? (
+                {isLoggingIn ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Connecting to GitHub...</span>
+                  </>
+                ) : role === 'client' ? (
                   <span>Sign in with Google</span>
                 ) : (
                   <span>Sign in with GitHub</span>

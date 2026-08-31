@@ -56,15 +56,24 @@ function Accounts() {
     }
   }, [user, fetchProfile]);
 
+  // Auth Store me Updated User sync karne ka helper function
+  const updateLocalUser = (updatedUser) => {
+    if (updatedUser) {
+      useAuthStore.setState({ user: updatedUser });
+    }
+  };
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
   const handleSaveDob = async (e) => {
     e.preventDefault();
     const res = await updateAccountDetails({ dob });
     if (res?.success) {
+      updateLocalUser(res.user);
       toast.success('Date of birth updated!');
     } else {
       toast.error(res?.error || 'Failed to update Date of Birth');
@@ -78,6 +87,7 @@ function Accounts() {
       const updatedSkills = [...skills, trimmedSkill];
       const res = await updateAccountDetails({ skills: updatedSkills });
       if (res.success) {
+        updateLocalUser(res.user);
         setSkills(res.user?.skills || updatedSkills);
         setNewSkill('');
         toast.success('Skill added!');
@@ -86,22 +96,26 @@ function Accounts() {
       }
     }
   };
+
   const handleRemoveSkill = async (skillToRemove) => {
     const updatedSkills = skills.filter((skill) => skill !== skillToRemove);
     const res = await updateAccountDetails({ skills: updatedSkills });
     if (res.success) {
+      updateLocalUser(res.user);
       setSkills(res.user?.skills || updatedSkills);
       toast.success('Skill removed!');
     } else {
       toast.error(res.error);
     }
   };
+
   const handleAddEducation = async (e) => {
     e.preventDefault();
     if (eduForm.degree && eduForm.institution && eduForm.year) {
       const updatedList = [...educationList, { ...eduForm, _id: Date.now().toString() }];
       const res = await updateAccountDetails({ education: updatedList });
       if (res.success) {
+        updateLocalUser(res.user);
         setEducationList(res.user?.education || updatedList);
         setEduForm({ degree: '', institution: '', year: '' });
         toast.success('Education record saved!');
@@ -115,6 +129,7 @@ function Accounts() {
     const updatedList = educationList.filter((item) => (item._id || item.id) !== id);
     const res = await updateAccountDetails({ education: updatedList });
     if (res.success) {
+      updateLocalUser(res.user);
       setEducationList(res.user?.education || updatedList);
       toast.success('Education record deleted!');
     } else {
@@ -128,6 +143,7 @@ function Accounts() {
       const updatedList = [...experienceList, { ...expForm, _id: Date.now().toString() }];
       const res = await updateAccountDetails({ workExperience: updatedList });
       if (res.success) {
+        updateLocalUser(res.user);
         setExperienceList(res.user?.workExperience || updatedList);
         setExpForm({ company: '', role: '', period: '', description: '' });
         toast.success('Work experience saved!');
@@ -141,6 +157,7 @@ function Accounts() {
     const updatedList = experienceList.filter((item) => (item._id || item.id) !== id);
     const res = await updateAccountDetails({ workExperience: updatedList });
     if (res.success) {
+      updateLocalUser(res.user);
       setExperienceList(res.user?.workExperience || updatedList);
       toast.success('Work experience record deleted!');
     } else {
@@ -335,16 +352,16 @@ function Accounts() {
           </div>
         </div>
 
-        {/* Repositories */}
+        {/* Selected Repositories */}
         <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
           <div className="flex items-center gap-2">
             <FolderGit2 className="w-5 h-5 text-[#8b949e]" />
-            <h2 className="text-lg font-bold text-[#c9d1d9]">Repositories & Projects</h2>
+            <h2 className="text-lg font-bold text-[#c9d1d9]">Featured Repositories & Projects</h2>
           </div>
 
-          {user?.repositories && user.repositories.length > 0 ? (
+          {user?.selectedRepositories && user.selectedRepositories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {user.repositories.map((repo, idx) => (
+              {user.selectedRepositories.map((repo, idx) => (
                 <div key={idx} className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex flex-col justify-between space-y-3">
                   <div>
                     <div className="flex items-center justify-between">
@@ -372,7 +389,7 @@ function Accounts() {
             </div>
           ) : (
             <p className="text-xs text-[#8b949e] italic">
-              No synced repositories available.
+              No selected repositories featured yet.
             </p>
           )}
         </div>
