@@ -25,14 +25,8 @@ function AccountSetup() {
   const { updateAccountDetails, loading } = useUtilityStore();
 
   const [step, setStep] = useState(1);
-
-  // Step 1 state
   const [dob, setDob] = useState('');
-
-  // Step 2 state
   const [selectedRepos, setSelectedRepos] = useState([]);
-
-  // Step 3 state
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
   const [educationList, setEducationList] = useState([]);
@@ -51,8 +45,6 @@ function AccountSetup() {
       useAuthStore.setState({ user: updatedUser });
     }
   };
-
-  // ── Step 1: Save DOB ──
   const handleNextStep1 = async () => {
     if (!dob) {
       toast.error('Please select your date of birth');
@@ -67,8 +59,6 @@ function AccountSetup() {
       toast.error(res?.error || 'Failed to save date of birth');
     }
   };
-
-  // ── Step 2: Toggle repo selection ──
   const toggleRepo = (repo) => {
     setSelectedRepos((prev) => {
       const exists = prev.find((r) => r.name === repo.name);
@@ -94,7 +84,6 @@ function AccountSetup() {
     }
   };
 
-  // ── Step 3: Skills ──
   const handleAddSkill = (e) => {
     e.preventDefault();
     const trimmed = newSkill.trim();
@@ -108,7 +97,6 @@ function AccountSetup() {
     setSkills((prev) => prev.filter((s) => s !== skillToRemove));
   };
 
-  // ── Step 3: Education ──
   const handleAddEducation = (e) => {
     e.preventDefault();
     if (eduForm.degree && eduForm.institution && eduForm.year) {
@@ -121,7 +109,6 @@ function AccountSetup() {
     setEducationList((prev) => prev.filter((item) => item._id !== id));
   };
 
-  // ── Step 3: Experience ──
   const handleAddExperience = (e) => {
     e.preventDefault();
     if (expForm.company && expForm.role && expForm.period && expForm.description) {
@@ -134,7 +121,6 @@ function AccountSetup() {
     setExperienceList((prev) => prev.filter((item) => item._id !== id));
   };
 
-  // ── Final: Save everything + mark setup complete ──
   const handleFinish = async () => {
     const res = await updateAccountDetails({
       skills,
@@ -150,7 +136,6 @@ function AccountSetup() {
     }
   };
 
-  // ── Step Indicator ──
   const StepIndicator = () => (
     <div className="flex items-center justify-center gap-3 mb-8">
       {[1, 2, 3].map((s) => (
@@ -187,9 +172,7 @@ function AccountSetup() {
     </div>
   );
 
-  // ═══════════════════════════════════════════
-  // STEP 1: Personal Info
-  // ═══════════════════════════════════════════
+
   const renderStep1 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -244,9 +227,7 @@ function AccountSetup() {
     </div>
   );
 
-  // ═══════════════════════════════════════════
-  // STEP 2: Select Repositories
-  // ═══════════════════════════════════════════
+ 
   const renderStep2 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -317,9 +298,7 @@ function AccountSetup() {
     </div>
   );
 
-  // ═══════════════════════════════════════════
-  // STEP 3: Skills, Education, Experience
-  // ═══════════════════════════════════════════
+
   const renderStep3 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -443,7 +422,6 @@ function AccountSetup() {
         </form>
       </div>
 
-      {/* Work Experience */}
       <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Briefcase className="w-4 h-4 text-[#8b949e]" />
@@ -518,7 +496,7 @@ function AccountSetup() {
         </form>
       </div>
 
-      {/* Navigation */}
+
       <div className="flex gap-3">
         <button
           onClick={() => setStep(2)}

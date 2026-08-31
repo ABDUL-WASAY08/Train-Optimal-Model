@@ -56,8 +56,9 @@ function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: theme.bg, color: theme.text }}>
-      <nav className="flex items-center justify-between px-6 py-4 w-full" style={{ backgroundColor: theme.bg, borderBottom: `1px solid ${theme.border}` }}>
+    // Change 1: Added 'flex flex-col' to outer main div
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: theme.bg, color: theme.text }}>
+      <nav className="flex items-center justify-between px-6 py-4 w-full shrink-0" style={{ backgroundColor: theme.bg, borderBottom: `1px solid ${theme.border}` }}>
         <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigate('/')}>
           <div className="p-1.5 rounded-xl" style={{ border: `1px solid ${theme.border}`, color: theme.text }}>
             <Cat className="w-5 h-5" />
@@ -82,12 +83,13 @@ function AuthScreen() {
         </div>
       </nav>
 
-      {brole === "users" ? (
-        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
-          <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full blur-3xl" style={{ backgroundColor: theme.glowCyan }} />
-          </div>
+      {/* Main Container: Flex-1 and centered grid/flex */}
+      <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full blur-3xl" style={{ backgroundColor: theme.glowCyan }} />
+        </div>
 
+        {brole === "users" ? (
           <div className="relative z-10 rounded-2xl shadow-2xl max-w-lg w-full p-8 transition-all duration-300" style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}` }}>
             <h1 className="text-3xl font-bold text-center mb-2" style={{ color: theme.text }}>Welcome to TOM</h1>
             <p className="text-center mb-8 text-sm" style={{ color: theme.subtext }}>Select your Profession</p>
@@ -148,18 +150,12 @@ function AuthScreen() {
               </button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden">
-          <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full blur-3xl" style={{ backgroundColor: theme.glowCyan }} />
-          </div>
-
+        ) : (
           <div className="relative z-10 rounded-2xl shadow-2xl max-w-lg w-full p-8 transition-all duration-300" style={{ backgroundColor: theme.card, border: `1px solid ${theme.border}` }}>
             <h1 className="text-3xl font-bold text-center mb-2" style={{ color: theme.text }}>Welcome Sir</h1>
             <p className="text-center mb-8 text-sm" style={{ color: theme.subtext }}>Good to see you again</p>
 
-            <div className="p-1.5 rounded-xl mb-8" style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}>
+            <div className="p-1.5 rounded-xl" style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}>
               <form onSubmit={handleAuth} className="p-3 w-full flex flex-col gap-4">
                 {error && (
                   <div className="p-2 text-xs rounded text-center" style={{ color: theme.error, backgroundColor: `${theme.error}15` }}>
@@ -172,7 +168,7 @@ function AuthScreen() {
                 </div>
                 <div className="flex items-center gap-4">
                   <label htmlFor="admin-password" className="text-sm font-medium w-24 shrink-0" style={{ color: theme.text }}>Password:</label>
-                  <input type="password" id="admin-password" name="password" value={adminData.password} onChange={handleInputChange} placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" required style={inputStyle} />
+                  <input type="password" id="admin-password" name="password" value={adminData.password} onChange={handleInputChange} placeholder="••••••••" required style={inputStyle} />
                 </div>
                 <button type="submit" className="w-full py-3 px-6 rounded-lg font-bold text-xs flex items-center justify-center gap-3 transition-all cursor-pointer mt-2" style={{ backgroundColor: theme.bg, color: theme.text, border: `1px solid ${theme.border}` }}>
                   Sign in as Admin
@@ -180,8 +176,8 @@ function AuthScreen() {
               </form>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
