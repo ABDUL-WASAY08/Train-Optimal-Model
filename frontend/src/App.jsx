@@ -2,6 +2,7 @@ import './App.css'
 import AuthScreen from './Screen/AuthScreen'
 import MainScreen from './Screen/MainScreen'
 import PageNotFound from './Screen/pageNotFound'
+
 import SplashScreen from './Screen/SplashScreen'
 import Accounts from './Screen/Accounts'
 import AccountSkelton from './Screen/AccountSkelton'
