@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Share2, 
-  Mail, 
-  User, 
-  Code, 
-  GraduationCap, 
-  Plus, 
-  Trash2, 
-  Check, 
-  Award, 
-  BookOpen, 
-  Calendar, 
-  Globe, 
-  ExternalLink, 
-  FolderGit2, 
-  Star, 
-  GitBranch, 
-  Briefcase 
+import { useState, useEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
+import {
+  Share2, Mail, User, Code, GraduationCap, Plus, Trash2,
+  Check, Award, BookOpen, Calendar, Globe, ExternalLink,
+  FolderGit2, Star, GitBranch, Briefcase
 } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
@@ -25,6 +12,7 @@ import { toast } from 'sonner';
 function Accounts() {
   const { user, fetchProfile } = useAuthStore();
   const { updateAccountDetails, loading } = useUtilityStore();
+  const { theme } = useTheme();
 
   const [copied, setCopied] = useState(false);
   const [dob, setDob] = useState('');
@@ -36,7 +24,7 @@ function Accounts() {
 
   const [experienceList, setExperienceList] = useState([]);
   const [expForm, setExpForm] = useState({ company: '', role: '', period: '', description: '' });
-  
+
   useEffect(() => {
     if (!user) {
       fetchProfile();
@@ -165,34 +153,61 @@ function Accounts() {
     }
   };
 
+  const card = { backgroundColor: theme.card, borderColor: theme.border, borderWidth: 1, borderStyle: "solid", borderRadius: "16px", padding: "24px", boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" };
+  const innerCard = { ...card, backgroundColor: theme.hover, padding: "16px", borderRadius: "12px", boxShadow: "none" };
+
+  const inputStyle = {
+    width: "100%",
+    backgroundColor: theme.input,
+    color: theme.inputText,
+    border: `1px solid ${theme.border}`,
+    borderRadius: "12px",
+    padding: "8px 12px",
+    fontSize: "12px",
+    outline: "none",
+    transition: "border-color 0.2s",
+  };
+
+  const secondaryBtn = {
+    backgroundColor: theme.input,
+    color: theme.inputText,
+    border: `1px solid ${theme.border}`,
+    fontWeight: 600,
+    borderRadius: "12px",
+    padding: "8px 16px",
+    fontSize: "12px",
+    cursor: "pointer",
+    transition: "background-color 0.2s",
+  };
+
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] p-4 sm:p-8 font-sans">
+    <div className="min-h-screen p-4 sm:p-8 font-sans" style={{ backgroundColor: theme.bg, color: theme.text }}>
       <div className="max-w-5xl mx-auto space-y-8">
-        
+
         {/* Profile Card */}
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        <div style={card} className="relative overflow-hidden">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full bg-[#0d1117] border border-[#2a3441] flex items-center justify-center text-[#c9d1d9] font-bold text-2xl shadow-inner overflow-hidden">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center font-bold text-2xl shadow-inner overflow-hidden" style={{ backgroundColor: theme.input, border: `1px solid ${theme.border}`, color: theme.text }}>
                 {user?.avatarUrl ? (
                   <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                 ) : user?.name ? (
                   user.name.charAt(0).toUpperCase()
                 ) : (
-                  <User className="w-9 h-9" />
+                  <User className="w-9 h-9" style={{ color: theme.subtext }} />
                 )}
               </div>
 
               <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#c9d1d9] flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-extrabold flex items-center gap-2" style={{ color: theme.text }}>
                   {user?.name || user?.username || 'Developer Name'}
                 </h1>
-                <div className="flex items-center gap-2 text-xs text-[#8b949e] mt-1">
-                  <Mail className="w-3.5 h-3.5 text-[#8b949e]" />
+                <div className="flex items-center gap-2 text-xs mt-1" style={{ color: theme.subtext }}>
+                  <Mail className="w-3.5 h-3.5" />
                   <span>{user?.email || 'No email associated'}</span>
                 </div>
                 {user?.username && (
-                  <span className="inline-block mt-2 px-2.5 py-0.5 bg-[#0d1117] border border-[#2a3441] text-[#8b949e] text-[10px] font-mono rounded-md">
+                  <span className="inline-block mt-2 px-2.5 py-0.5 text-[10px] font-mono rounded-md" style={{ backgroundColor: theme.input, border: `1px solid ${theme.border}`, color: theme.subtext }}>
                     @{user.username}
                   </span>
                 )}
@@ -201,29 +216,30 @@ function Accounts() {
 
             <button
               onClick={handleShare}
-              className="px-4 py-2 bg-[#0d1117] hover:bg-[#21262d] text-[#c9d1d9] border border-[#2a3441] rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer"
+              className="font-semibold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer"
+              style={secondaryBtn}
             >
-              {copied ? <Check className="w-4 h-4 text-[#c9d1d9]" /> : <Share2 className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" style={{ color: theme.subtext }} />}
               <span>{copied ? 'Link Copied!' : 'Share Profile'}</span>
             </button>
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-4 text-xs">
             {user?.githubUrl && (
-              <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors" style={{ color: theme.subtext }}>
                 <GitBranch className="w-4 h-4" />
                 <span>GitHub</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
             {user?.twitterUrl && (
-              <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors" style={{ color: theme.subtext }}>
                 <span>Twitter</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
             {user?.websiteUrl && (
-              <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors" style={{ color: theme.subtext }}>
                 <Globe className="w-4 h-4" />
                 <span>Website</span>
                 <ExternalLink className="w-3 h-3" />
@@ -231,39 +247,29 @@ function Accounts() {
             )}
           </div>
 
-          <div className="mt-6 pt-6 border-t border-[#2a3441]">
-            <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">Bio</h3>
-            <p className="text-sm text-[#c9d1d9] leading-relaxed">
+          <div className="mt-6 pt-6" style={{ borderTop: `1px solid ${theme.border}` }}>
+            <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: theme.subtext }}>Bio</h3>
+            <p className="text-sm leading-relaxed" style={{ color: theme.text }}>
               {user?.bio || 'No bio available for this account yet.'}
             </p>
           </div>
         </div>
 
         {/* Date of Birth Section */}
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl">
+        <div style={card}>
           <div className="flex items-center gap-2 mb-4">
-            <Calendar className="w-5 h-5 text-[#8b949e]" />
-            <h2 className="text-lg font-bold text-[#c9d1d9]">Personal Details</h2>
+            <Calendar className="w-5 h-5" style={{ color: theme.subtext }} />
+            <h2 className="text-lg font-bold" style={{ color: theme.text }}>Personal Details</h2>
           </div>
 
           <form onSubmit={handleSaveDob} className="flex flex-col sm:flex-row items-end gap-4">
             <div className="flex-1 w-full space-y-2">
-              <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+              <label className="text-xs font-semibold uppercase tracking-wider" style={{ color: theme.subtext }}>
                 Date of Birth
               </label>
-              <input
-                type="date"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
+              <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} style={inputStyle} required />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
-            >
+            <button type="submit" disabled={loading} style={secondaryBtn}>
               {loading ? 'Saving...' : 'Save DOB'}
             </button>
           </form>
@@ -271,12 +277,11 @@ function Accounts() {
 
         {/* GitHub & Skills Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div style={card} className="flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-6">
-                <Code className="w-5 h-5 text-[#8b949e]" />
-                <h2 className="text-lg font-bold text-[#c9d1d9]">GitHub Language Share</h2>
+                <Code className="w-5 h-5" style={{ color: theme.subtext }} />
+                <h2 className="text-lg font-bold" style={{ color: theme.text }}>GitHub Language Share</h2>
               </div>
 
               {user?.topLanguages && user.topLanguages.length > 0 ? (
@@ -284,31 +289,26 @@ function Accounts() {
                   {user.topLanguages.map((item, idx) => (
                     <div key={idx} className="space-y-1.5">
                       <div className="flex justify-between text-xs">
-                        <span className="font-semibold text-[#c9d1d9]">{item.language}</span>
-                        <span className="text-[#8b949e] font-mono">{item.percentage}%</span>
+                        <span className="font-semibold" style={{ color: theme.text }}>{item.language}</span>
+                        <span className="font-mono" style={{ color: theme.subtext }}>{item.percentage}%</span>
                       </div>
-                      <div className="w-full bg-[#0d1117] h-2 rounded-full overflow-hidden border border-[#2a3441]">
-                        <div
-                          className="bg-[#8b949e] h-full rounded-full transition-all duration-500"
-                          style={{ width: `${item.percentage}%` }}
-                        />
+                      <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: theme.input, border: `1px solid ${theme.border}` }}>
+                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${item.percentage}%`, backgroundColor: theme.subtext }} />
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-[#8b949e] italic">
-                  No GitHub repository language data available.
-                </p>
+                <p className="text-xs italic" style={{ color: theme.subtext }}>No GitHub repository language data available.</p>
               )}
             </div>
           </div>
 
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
+          <div style={card} className="flex flex-col justify-between space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Award className="w-5 h-5 text-[#8b949e]" />
-                <h2 className="text-lg font-bold text-[#c9d1d9]">Skills & Competencies</h2>
+                <Award className="w-5 h-5" style={{ color: theme.subtext }} />
+                <h2 className="text-lg font-bold" style={{ color: theme.text }}>Skills & Competencies</h2>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-6">
@@ -316,71 +316,57 @@ function Accounts() {
                   skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="flex items-center gap-1.5 px-3 py-1 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] text-xs font-medium rounded-lg"
+                      className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg"
+                      style={{ backgroundColor: theme.input, border: `1px solid ${theme.border}`, color: theme.text }}
                     >
                       {skill}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSkill(skill)}
-                        className="hover:text-red-400 transition-colors cursor-pointer"
-                      >
-                        &times;
-                      </button>
+                      <button type="button" onClick={() => handleRemoveSkill(skill)} className="hover:text-red-400 transition-colors cursor-pointer">&times;</button>
                     </span>
                   ))
                 ) : (
-                  <p className="text-xs text-[#8b949e] italic">No skills added yet.</p>
+                  <p className="text-xs italic" style={{ color: theme.subtext }}>No skills added yet.</p>
                 )}
               </div>
             </div>
 
             <form onSubmit={handleAddSkill} className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Add skill (e.g. Python, Docker)"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                className="flex-1 bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Add
+              <input type="text" placeholder="Add skill (e.g. Python, Docker)" value={newSkill} onChange={(e) => setNewSkill(e.target.value)} style={inputStyle} className="flex-1" />
+              <button type="submit" style={secondaryBtn} className="flex items-center gap-1">
+                <Plus className="w-4 h-4" style={{ color: theme.subtext }} /> Add
               </button>
             </form>
           </div>
         </div>
 
         {/* Selected Repositories */}
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div style={card} className="space-y-6">
           <div className="flex items-center gap-2">
-            <FolderGit2 className="w-5 h-5 text-[#8b949e]" />
-            <h2 className="text-lg font-bold text-[#c9d1d9]">Featured Repositories & Projects</h2>
+            <FolderGit2 className="w-5 h-5" style={{ color: theme.subtext }} />
+            <h2 className="text-lg font-bold" style={{ color: theme.text }}>Featured Repositories & Projects</h2>
           </div>
 
           {user?.selectedRepositories && user.selectedRepositories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {user.selectedRepositories.map((repo, idx) => (
-                <div key={idx} className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex flex-col justify-between space-y-3">
+                <div key={idx} style={innerCard}>
                   <div>
                     <div className="flex items-center justify-between">
-                      <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-bold text-[#c9d1d9] hover:underline flex items-center gap-1.5">
+                      <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-bold hover:underline flex items-center gap-1.5" style={{ color: theme.text }}>
                         {repo.name}
-                        <ExternalLink className="w-3 h-3 text-[#8b949e]" />
+                        <ExternalLink className="w-3 h-3" style={{ color: theme.subtext }} />
                       </a>
                       {repo.stargazers_count !== undefined && (
-                        <div className="flex items-center gap-1 text-xs text-[#8b949e]">
-                          <Star className="w-3.5 h-3.5 text-[#8b949e]" />
+                        <div className="flex items-center gap-1 text-xs" style={{ color: theme.subtext }}>
+                          <Star className="w-3.5 h-3.5" />
                           <span>{repo.stargazers_count}</span>
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-[#8b949e] mt-2 line-clamp-2">
+                    <p className="text-xs mt-2 line-clamp-2" style={{ color: theme.subtext }}>
                       {repo.description || 'No description provided.'}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#8b949e] pt-2 border-t border-[#2a3441]/40">
+                  <div className="flex items-center justify-between text-[11px] pt-2 mt-3" style={{ color: theme.subtext, borderTop: `1px solid ${theme.border}` }}>
                     {repo.language && <span className="font-mono">{repo.language}</span>}
                     {repo.has_readme && <span>README</span>}
                   </div>
@@ -388,160 +374,87 @@ function Accounts() {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-[#8b949e] italic">
-              No selected repositories featured yet.
-            </p>
+            <p className="text-xs italic" style={{ color: theme.subtext }}>No selected repositories featured yet.</p>
           )}
         </div>
 
         {/* Education Section */}
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div style={card} className="space-y-6">
           <div className="flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-[#8b949e]" />
-            <h2 className="text-lg font-bold text-[#c9d1d9]">Education Background</h2>
+            <GraduationCap className="w-5 h-5" style={{ color: theme.subtext }} />
+            <h2 className="text-lg font-bold" style={{ color: theme.text }}>Education Background</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {educationList.map((edu) => (
-              <div
-                key={edu._id || edu.id}
-                className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex justify-between items-start"
-              >
+              <div key={edu._id || edu.id} style={innerCard} className="flex justify-between items-start">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-[#8b949e] shrink-0" />
-                    <h4 className="text-sm font-bold text-[#c9d1d9]">{edu.degree}</h4>
+                    <BookOpen className="w-4 h-4 shrink-0" style={{ color: theme.subtext }} />
+                    <h4 className="text-sm font-bold" style={{ color: theme.text }}>{edu.degree}</h4>
                   </div>
-                  <p className="text-xs text-[#8b949e]">{edu.institution}</p>
-                  <p className="text-[10px] text-[#8b949e] font-mono">{edu.year}</p>
+                  <p className="text-xs" style={{ color: theme.subtext }}>{edu.institution}</p>
+                  <p className="text-[10px] font-mono" style={{ color: theme.subtext }}>{edu.year}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteEducation(edu._id || edu.id)}
-                  className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1"
-                >
+                <button type="button" onClick={() => handleDeleteEducation(edu._id || edu.id)} className="hover:text-red-400 transition-colors cursor-pointer p-1" style={{ color: theme.subtext }}>
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
           </div>
 
-          <form onSubmit={handleAddEducation} className="pt-4 border-t border-[#2a3441] space-y-4">
-            <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
-              Add New Education Record
-            </h3>
-            
+          <form onSubmit={handleAddEducation} className="pt-4 space-y-4" style={{ borderTop: `1px solid ${theme.border}` }}>
+            <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: theme.subtext }}>Add New Education Record</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input
-                type="text"
-                placeholder="Degree (e.g. BSCS)"
-                value={eduForm.degree}
-                onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Institution / University"
-                value={eduForm.institution}
-                onChange={(e) => setEduForm({ ...eduForm, institution: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Year (e.g. 2020 - 2024)"
-                value={eduForm.year}
-                onChange={(e) => setEduForm({ ...eduForm, year: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
+              <input type="text" placeholder="Degree (e.g. BSCS)" value={eduForm.degree} onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })} style={inputStyle} required />
+              <input type="text" placeholder="Institution / University" value={eduForm.institution} onChange={(e) => setEduForm({ ...eduForm, institution: e.target.value })} style={inputStyle} required />
+              <input type="text" placeholder="Year (e.g. 2020 - 2024)" value={eduForm.year} onChange={(e) => setEduForm({ ...eduForm, year: e.target.value })} style={inputStyle} required />
             </div>
-
-            <button
-              type="submit"
-              className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
-            >
-              <Plus className="w-4 h-4" /> Save Education Record
+            <button type="submit" style={secondaryBtn} className="flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" style={{ color: theme.subtext }} /> Save Education Record
             </button>
           </form>
         </div>
 
         {/* Experience Section */}
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div style={card} className="space-y-6">
           <div className="flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-[#8b949e]" />
-            <h2 className="text-lg font-bold text-[#c9d1d9]">Work Experience</h2>
+            <Briefcase className="w-5 h-5" style={{ color: theme.subtext }} />
+            <h2 className="text-lg font-bold" style={{ color: theme.text }}>Work Experience</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {experienceList.map((exp) => (
-              <div
-                key={exp._id || exp.id}
-                className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex justify-between items-start"
-              >
+              <div key={exp._id || exp.id} style={innerCard} className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-[#c9d1d9]">{exp.role}</h4>
-                  <p className="text-xs text-[#8b949e] font-medium">{exp.company}</p>
-                  <p className="text-[10px] text-[#8b949e] font-mono">{exp.period}</p>
-                  <p className="text-xs text-[#8b949e] mt-2 leading-relaxed">{exp.description}</p>
+                  <h4 className="text-sm font-bold" style={{ color: theme.text }}>{exp.role}</h4>
+                  <p className="text-xs font-medium" style={{ color: theme.subtext }}>{exp.company}</p>
+                  <p className="text-[10px] font-mono" style={{ color: theme.subtext }}>{exp.period}</p>
+                  <p className="text-xs mt-2 leading-relaxed" style={{ color: theme.subtext }}>{exp.description}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteExperience(exp._id || exp.id)}
-                  className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1 shrink-0"
-                >
+                <button type="button" onClick={() => handleDeleteExperience(exp._id || exp.id)} className="hover:text-red-400 transition-colors cursor-pointer p-1 shrink-0" style={{ color: theme.subtext }}>
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
           </div>
 
-          <form onSubmit={handleAddExperience} className="pt-4 border-t border-[#2a3441] space-y-4">
-            <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
-              Add Work Experience
-            </h3>
-            
+          <form onSubmit={handleAddExperience} className="pt-4 space-y-4" style={{ borderTop: `1px solid ${theme.border}` }}>
+            <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: theme.subtext }}>Add Work Experience</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input
-                type="text"
-                placeholder="Company Name"
-                value={expForm.company}
-                onChange={(e) => setExpForm({ ...expForm, company: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Role / Position"
-                value={expForm.role}
-                onChange={(e) => setExpForm({ ...expForm, role: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Period (e.g. 2022 - Present)"
-                value={expForm.period}
-                onChange={(e) => setExpForm({ ...expForm, period: e.target.value })}
-                className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                required
-              />
+              <input type="text" placeholder="Company Name" value={expForm.company} onChange={(e) => setExpForm({ ...expForm, company: e.target.value })} style={inputStyle} required />
+              <input type="text" placeholder="Role / Position" value={expForm.role} onChange={(e) => setExpForm({ ...expForm, role: e.target.value })} style={inputStyle} required />
+              <input type="text" placeholder="Period (e.g. 2022 - Present)" value={expForm.period} onChange={(e) => setExpForm({ ...expForm, period: e.target.value })} style={inputStyle} required />
             </div>
-
             <textarea
               placeholder="Description of responsibilities and achievements..."
               value={expForm.description}
               onChange={(e) => setExpForm({ ...expForm, description: e.target.value })}
-              className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[80px]"
+              style={{ ...inputStyle, minHeight: "80px", resize: "none" }}
               required
             />
-
-            <button
-              type="submit"
-              className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
-            >
-              <Plus className="w-4 h-4" /> Save Experience Record
+            <button type="submit" style={secondaryBtn} className="flex items-center justify-center gap-2">
+              <Plus className="w-4 h-4" style={{ color: theme.subtext }} /> Save Experience Record
             </button>
           </form>
         </div>

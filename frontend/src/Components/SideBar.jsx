@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 import {
   LayoutDashboard,
   GitBranch,
@@ -7,11 +8,8 @@ import {
   ShoppingBag,
   Briefcase,
   Settings,
-  Menu,
-  X,
   ChevronLeft,
   ChevronRight,
-  UserCheck,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -22,50 +20,55 @@ const NAV_ITEMS = [
   { label: "Marketplace", icon: ShoppingBag },
   { label: "Portfolio", icon: Briefcase },
   { label: "Settings", icon: Settings },
-  
 ];
 
 export default function Sidebar({ activeItem, onSelect }) {
   const [isOpen, setIsOpen] = useState(true);
-
-  const toggleSidebar = () => setIsOpen((prev) => !prev);
+  const { theme } = useTheme();
 
   return (
     <>
       {isOpen && (
         <div
-          onClick={toggleSidebar}
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-40 md:hidden"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         />
       )}
 
       <aside
-        style={{ backgroundColor: "var(--side-bar, #1e1e2e)" }}
-        className={`fixed md:static inset-y-0 left-0 z-50 flex flex-col justify-between
-          transition-all duration-300 ease-in-out shrink-0
-          ${isOpen ? "w-64 translate-x-0" : "-translate-x-full md:translate-x-0 md:w-20"}`}
+        style={{
+          backgroundColor: theme.sidebar,
+          borderColor: theme.border,
+          width: isOpen ? "256px" : "80px",
+          transform: isOpen ? "translateX(0)" : "translateX(-100%)",
+        }}
+        className={`fixed md:static inset-y-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 md:translate-x-0`}
       >
-       
         <div>
-        
-          <div className="flex items-center justify-between px-4 h-16  border-white/10">
+          <div
+            className="flex items-center justify-between px-4 h-16"
+            style={{ borderBottom: `1px solid ${theme.border}` }}
+          >
             {isOpen ? (
-              <h1 className="text-lg font-bold text-white tracking-wide truncate">
+              <h1 className="text-lg font-bold tracking-wide truncate" style={{ color: theme.text }}>
                 TOM
               </h1>
             ) : (
               <span className="hidden md:block w-4" />
             )}
-
-            
             <button
-              onClick={toggleSidebar}
-              className="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              onClick={() => setIsOpen((p) => !p)}
+              className="p-1.5 rounded-lg transition-colors cursor-pointer"
+              style={{ color: theme.subtext }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.hover; e.currentTarget.style.color = theme.text; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = theme.subtext; }}
               aria-label="Toggle navigation"
             >
               {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
             </button>
           </div>
+
           <nav className="p-3 space-y-1.5">
             {NAV_ITEMS.map(({ label, icon: Icon }) => {
               const isActive = activeItem === label;
@@ -74,14 +77,15 @@ export default function Sidebar({ activeItem, onSelect }) {
                   key={label}
                   onClick={() => onSelect(label)}
                   title={!isOpen ? label : undefined}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                    transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-white/20 text-white shadow-sm"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
-                    }
-                    ${isOpen ? "justify-start" : "md:justify-center"}`}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    isOpen ? "justify-start" : "md:justify-center"
+                  }`}
+                  style={{
+                    backgroundColor: isActive ? theme.active : "transparent",
+                    color: isActive ? theme.activeText : theme.sidebarText,
+                  }}
+                  onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = theme.hover; }}
+                  onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = "transparent"; }}
                 >
                   <Icon size={20} className="shrink-0" />
                   {isOpen && <span className="truncate">{label}</span>}

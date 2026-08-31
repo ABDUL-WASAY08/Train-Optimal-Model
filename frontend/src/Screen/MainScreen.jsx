@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import Sidebar from '../Components/SideBar';
 import Accounts from './Accounts';
 import AccountSetup from './AccountSetup';
@@ -11,6 +12,7 @@ function MainScreen() {
   const [activeItem, setActiveItem] = useState('Dashboard');
   const { user, loading, logout } = useAuthStore();
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -24,37 +26,37 @@ function MainScreen() {
         return <Accounts />;
       case 'Dashboard':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Dashboard</h1>
-            <p className="text-[#8b949e]">Welcome to your main dashboard view.</p>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Dashboard</h1>
+            <p style={{ color: theme.subtext }}>Welcome to your main dashboard view.</p>
           </div>
         );
       case 'Repository':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Repositories</h1>
-            <p className="text-[#8b949e]">Your synced code repositories.</p>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Repositories</h1>
+            <p style={{ color: theme.subtext }}>Your synced code repositories.</p>
           </div>
         );
       case 'Analyze':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Analysis</h1>
-            <p className="text-[#8b949e]">ML and code performance insights.</p>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Analysis</h1>
+            <p style={{ color: theme.subtext }}>ML and code performance insights.</p>
           </div>
         );
       case 'Train':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Train Model</h1>
-            <p className="text-[#8b949e]">Configure and start model training.</p>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Train Model</h1>
+            <p style={{ color: theme.subtext }}>Configure and start model training.</p>
           </div>
         );
       case 'Marketplace':
         return (
-          <div className="p-8 text-[#c9d1d9]">
-            <h1 className="text-2xl font-bold mb-2">Marketplace</h1>
-            <p className="text-[#8b949e]">Browse developer tools and models.</p>
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-2" style={{ color: theme.text }}>Marketplace</h1>
+            <p style={{ color: theme.subtext }}>Browse developer tools and models.</p>
           </div>
         );
       case 'Portfolio':
@@ -66,31 +68,30 @@ function MainScreen() {
     }
   };
 
-  
   const handleLogout = async () => {
     try {
-      const res = await logout(); 
+      const res = await logout();
       if (res?.success) {
         toast.success("Logout successful");
-        navigate('/Authorization'); 
+        navigate('/Authorization');
       } else {
         toast.error("Logout failed");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during sign out");
     }
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#0d1117] overflow-hidden">
-      <Sidebar
-        activeItem={activeItem}
-        onSelect={(selectedLabel) => setActiveItem(selectedLabel)}
-      />
+    <div className="flex h-screen w-full overflow-hidden" style={{ backgroundColor: theme.bg }}>
+      <Sidebar activeItem={activeItem} onSelect={(label) => setActiveItem(label)} />
       <main className="flex-1 overflow-y-auto min-w-0">
-        <p 
-          className='hover:text-[var(--pulse-cyan)] transition-colors duration-200 flex justify-end px-6 pt-5 cursor-pointer'
-          onClick={handleLogout} 
+        <p
+          className="transition-colors duration-200 flex justify-end px-6 pt-5 cursor-pointer"
+          style={{ color: theme.subtext }}
+          onMouseEnter={(e) => e.currentTarget.style.color = theme.accent}
+          onMouseLeave={(e) => e.currentTarget.style.color = theme.subtext}
+          onClick={handleLogout}
         >
           SIGN OUT
         </p>
