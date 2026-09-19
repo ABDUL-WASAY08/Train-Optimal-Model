@@ -22,23 +22,19 @@ function Navbar({ onSelectTab }) {
       toast.error("An error occurred during sign out");
     }
   };
-
-  // Dummy actions for now
   const handleDummyShare = () => {
-    toast.info("Dummy: Share portfolio feature clicked!");
+    toast.info("you can just copy the url and share it ");
     if (onSelectTab) onSelectTab("SharePortfolio");
   };
 
   const handleDummyEdit = () => {
-    toast.info("Dummy: Edit portfolio feature clicked!");
+    toast.info("here you can edit your portfolio related info");
     if (onSelectTab) onSelectTab("Settings");
   };
 
   return (
     <header className="absolute top-0 left-0 z-50 w-full backdrop-blur-md border-b border-[#30363d] bg-[#0d1117]/80">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        
-        {/* Logo */}
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => onSelectTab?.('Portfolio')}>
           <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400">
            <Cat />
