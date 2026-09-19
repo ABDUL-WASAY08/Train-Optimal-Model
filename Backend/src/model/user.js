@@ -20,6 +20,16 @@ const userSchema = new mongoose.Schema(
         has_readme: Boolean,
       },
     ],
+    Filteredrepositories: [
+      {
+        name: String,
+        description: String,
+        html_url: String,
+        stargazers_count: Number,
+        language: String,
+        has_readme: Boolean,
+      },
+    ],
     skills: {
       type: [String],
       default: [],
@@ -40,8 +50,12 @@ const userSchema = new mongoose.Schema(
     twitterUrl: String,
     websiteUrl: String,
     portfolioUrl: String,
+    SetRepo: {
+      type: Boolean,
+      default: false,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("User", userSchema);

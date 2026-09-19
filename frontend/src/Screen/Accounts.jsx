@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Share2,
   Mail,
@@ -288,7 +288,7 @@ function Accounts() {
 
           </section>
         )}
-        {user?.repositories?.length > 0 && (
+        {user?.Filteredrepositories?.length > 0 && (
           <section className="portfolio-reveal pt-14">
 
             <SectionTitle
@@ -298,7 +298,7 @@ function Accounts() {
 
             <div className="mt-6 divide-y divide-[#21262d] border-y border-[#21262d]">
 
-              {user.repositories.map((repo, index) => (
+              {user.Filteredrepositories.map((repo, index) => (
 
                 <a
                   key={index}
@@ -379,7 +379,7 @@ function Accounts() {
 
 
 
-        {user?.education?.length > 0 && (
+        {user?.education?.length > 0 ? (
           <section className="portfolio-reveal pt-14">
 
             <SectionTitle
@@ -389,7 +389,7 @@ function Accounts() {
 
             <div className="relative mt-7 ml-1">
 
-            
+
               <div className="absolute left-[3px] top-2 bottom-2 w-px bg-gradient-to-b from-[#6e7681] via-[#30363d] to-transparent" />
 
               <div className="space-y-8">
@@ -428,10 +428,16 @@ function Accounts() {
             </div>
 
           </section>
-        )}
+        ) : (<div className='mb-5 mt-5'>
+          <SectionTitle
+            icon={<GraduationCap className="w-4 h-4" />}
+            title="Education"
+          />
+          <p className='mt-7 text-gray-700'>You can add your education by click edit Portfolio in navbar or just go to setting</p>
+        </div>)}
 
 
-        {user?.workExperience?.length > 0 && (
+        {user?.workExperience?.length > 0 ? (
           <section className="portfolio-reveal pt-14">
 
             <SectionTitle
@@ -483,7 +489,13 @@ function Accounts() {
             </div>
 
           </section>
-        )}
+        ) : (<div className='mb-5'>
+          <SectionTitle
+            icon={<Briefcase className="w-4 h-4" />}
+            title="Work Experience"
+          />
+          <p className='mt-7 text-gray-700'>You can add your workExperience by click edit Portfolio in navbar or just go to setting</p>
+        </div>)}
 
         <footer className="portfolio-reveal mt-20 pt-7 border-t border-[#21262d]">
 

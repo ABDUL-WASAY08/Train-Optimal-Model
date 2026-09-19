@@ -17,7 +17,6 @@ const fetchPrivateEmail = async (accessToken) => {
   }
 };
 
-// Private Helper: Fetch User Repositories & Top Languages
 const fetchGithubRepoData = async (accessToken) => {
   try {
     const repoRes = await axios.get(
@@ -70,7 +69,6 @@ const fetchGithubRepoData = async (accessToken) => {
   }
 };
 
-// 1. Process GitHub Profile
 const processGithubProfile = async (accessToken, profile) => {
   let email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
   if (!email) {
@@ -88,6 +86,7 @@ const processGithubProfile = async (accessToken, profile) => {
     avatarUrl: profile._json.avatar_url || "",
     topLanguages: topLanguages,
     repositories: repositories,
+    Filteredrepositories:null,
     accessToken: accessToken,
     githubUrl: profile.profileUrl || `https://github.com/${profile.username}`,
     twitterUrl: profile._json.twitter_username

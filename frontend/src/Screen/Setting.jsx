@@ -15,7 +15,8 @@ import {
   Star,
   GitBranch,
   Briefcase,
-  AlertTriangle
+  AlertTriangle,
+  Cross
 } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
@@ -32,6 +33,10 @@ function Setting() {
   const [experienceList, setExperienceList] = useState([]);
   const [expForm, setExpForm] = useState({ company: '', role: '', period: '', description: '' });
   const [accountInfo, openaccountInfo] = useState(false)
+  // for adding repo 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   // fetching the profile 
   useEffect(() => {
     if (!user) {
@@ -51,7 +56,10 @@ function Setting() {
       }
     }
   }, [user, fetchProfile]);
-
+  // for search querry
+  const filteredRepos = user?.repositories?.filter(repo =>
+    repo.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
   const handleSaveDob = async (e) => {
     e.preventDefault();
     const res = await updateAccountDetails({ dob });
@@ -228,7 +236,7 @@ function Setting() {
           </button>
         </div>
         {accountInfo && <div>
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl">
+          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl mb-5">
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="w-5 h-5 text-[#8b949e]" />
               <h2 className="text-lg font-bold text-[#c9d1d9]">Personal Details</h2>
@@ -258,7 +266,7 @@ function Setting() {
           </div>
 
           {/* GitHub & Skills Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-5">
 
             <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl flex flex-col justify-between">
               <div>
@@ -340,37 +348,91 @@ function Setting() {
             </div>
           </div>
 
-          {/* Repositories */}
           <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
             <div className="flex items-center gap-2">
               <FolderGit2 className="w-5 h-5 text-[#8b949e]" />
               <h2 className="text-lg font-bold text-[#c9d1d9]">Repositories & Projects</h2>
             </div>
+            <div className="relative">
+              <div className='flex justify-between items-center gap-4'>
+                <span className="text-sm font-bold text-[#c9d1d9]">Add repositories</span>
+                <div className="relative flex-1 max-w-md">
+                  <input
+                    type='text'
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setIsDropdownOpen(true); 
+                    }}
+                    onFocus={() => setIsDropdownOpen(true)}
+                    className='w-full border rounded border-white/50 bg-[#0d1117] text-white px-4 py-1.5 text-xs focus:outline-none focus:border-blue-500'
+                    placeholder='Search Your Repositories To Add...'
+                  />
 
-            {user?.repositories && user.repositories.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {user.repositories.map((repo, idx) => (
-                  <div key={idx} className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex flex-col justify-between space-y-3">
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-bold text-[#c9d1d9] hover:underline flex items-center gap-1.5">
-                          {repo.name}
-                          <ExternalLink className="w-3 h-3 text-[#8b949e]" />
-                        </a>
-                        {repo.stargazers_count !== undefined && (
-                          <div className="flex items-center gap-1 text-xs text-[#8b949e]">
-                            <Star className="w-3.5 h-3.5 text-[#8b949e]" />
-                            <span>{repo.stargazers_count}</span>
+                  {/* Dropdown Suggestions List */}
+                  {isDropdownOpen && searchQuery.trim() !== "" && (
+                    <div className="absolute left-0 right-0 top-full mt-1 bg-[#0d1117] border border-[#2a3441] rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
+                      {filteredRepos.length > 0 ? (
+                        filteredRepos.map((repo,index) => (
+                          <div
+                           key={index}
+                            onClick={() => {
+                              setSearchQuery(repo.name); 
+                              setIsDropdownOpen(false); 
+                            }}
+                            className="px-4 py-2.5 text-xs text-[#c9d1d9] hover:bg-[#21262d] hover:text-white cursor-pointer border-b border-[#2a3441]/50 last:border-none flex items-center justify-between"
+                          >
+                            <span className="font-medium">{repo.name}</span>
+                            <span className="text-[10px] text-[#8b949e] font-mono">{repo.language || 'Code'}</span>
                           </div>
-                        )}
-                      </div>
-                      <p className="text-xs text-[#8b949e] mt-2 line-clamp-2">
-                        {repo.description || 'No description provided.'}
-                      </p>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-xs text-[#8b949e] italic">
+                          No matching repositories found.
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-[#8b949e] pt-2 border-t border-[#2a3441]/40">
-                      {repo.language && <span className="font-mono">{repo.language}</span>}
-                      {repo.has_readme && <span>README</span>}
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {user?.Filteredrepositories && user.Filteredrepositories.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {user.Filteredrepositories.map((repo, idx) => (
+                  <div key={idx}>
+                    <div className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex flex-col justify-between space-y-3">
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-bold text-[#c9d1d9] hover:underline flex items-center gap-1.5">
+                            {repo.name}
+                            <ExternalLink className="w-3 h-3 text-[#8b949e]" />
+                          </a>
+
+                          <div className="flex items-center gap-3">
+                            {/* delete repo  */}
+                            <button type="button" className='text-gray-400 hover:text-red-400 transition-colors cursor-pointer'>
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+
+                            {repo.stargazers_count !== undefined && (
+                              <div className="flex items-center gap-1 text-xs text-[#8b949e]">
+                                <Star className="w-3.5 h-3.5 text-[#8b949e]" />
+                                <span>{repo.stargazers_count}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-[#8b949e] mt-2 line-clamp-2">
+                          {repo.description || 'No description provided.'}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-[#8b949e] pt-2 border-t border-[#2a3441]/40">
+                        {repo.language && <span className="font-mono">{repo.language}</span>}
+                        {repo.has_readme && <span>README</span>}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -383,7 +445,7 @@ function Setting() {
           </div>
 
           {/* Education Section */}
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="bg-[#161b22] border border-[#2a3441] mt-5 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
             <div className="flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-[#8b949e]" />
               <h2 className="text-lg font-bold text-[#c9d1d9]">Education Background</h2>
@@ -454,9 +516,7 @@ function Setting() {
               </button>
             </form>
           </div>
-
-          {/* Experience Section */}
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="bg-[#161b22] border mt-5 border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
             <div className="flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-[#8b949e]" />
               <h2 className="text-lg font-bold text-[#c9d1d9]">Work Experience</h2>

@@ -90,7 +90,7 @@ function PublicPortfolio() {
         );
     }
 
-    const repos = user?.repositories || [];
+    const repos = user?.Filteredrepositories || [];
     const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
     const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
     const skillsCount = (user?.skills || []).length;
@@ -238,8 +238,6 @@ function PublicPortfolio() {
                         ))}
                     </div>
                 </section>
-
-                {/* ======================= SKILLS ===================== */}
                 {skillsCount > 0 && (
                     <section id="skills" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel index="01" title="Skills" />
@@ -261,8 +259,6 @@ function PublicPortfolio() {
                         </ul>
                     </section>
                 )}
-
-                {/* =================== TOP LANGUAGES ================== */}
                 {langCount > 0 && (
                     <section className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel index="02" title="Languages" />
@@ -284,8 +280,6 @@ function PublicPortfolio() {
                         </div>
                     </section>
                 )}
-
-                {/* ===================== PROJECTS ===================== */}
                 {repos.length > 0 && (
                     <section id="work" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel
@@ -335,8 +329,6 @@ function PublicPortfolio() {
                         </div>
                     </section>
                 )}
-
-                {/* ==================== EDUCATION ===================== */}
                 {user?.education?.length > 0 && (
                     <section id="education" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel index="04" title="Education" />
@@ -353,8 +345,6 @@ function PublicPortfolio() {
                         </div>
                     </section>
                 )}
-
-                {/* ================== WORK EXPERIENCE ================= */}
                 {user?.workExperience?.length > 0 && (
                     <section id="experience" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel index="05" title="Experience" />
@@ -382,8 +372,6 @@ function PublicPortfolio() {
                         </div>
                     </section>
                 )}
-
-                {/* ====================== FOOTER ====================== */}
                 <footer className="pt-20 pb-10" style={{ borderTop: `1px solid ${LINE}` }}>
                     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
                         <div>

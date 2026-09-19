@@ -73,8 +73,6 @@ function Navbar({ onSelectTab }) {
             <LogOut className="w-4 h-4 text-gray-400 group-hover:text-[var(--pulse-cyan)] transition-colors duration-200" />
           </button>
         </div>
-
-        {/* Mobile Hamburger Button */}
         <div className="flex md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -85,8 +83,6 @@ function Navbar({ onSelectTab }) {
           </button>
         </div>
       </div>
-
-      {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0d1117] border-b border-[#30363d] px-4 pt-2 pb-4 space-y-2 animate-fadeIn">
           <button
