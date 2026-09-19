@@ -162,3 +162,23 @@
     transform: translateY(0);
   }
 }
+/* Scrollbar ki overall width */
+::-webkit-scrollbar {
+  width: 3px;
+  height:20%;
+}
+
+/* Scrollbar ka background track */
+::-webkit-scrollbar-track {
+  background: #131324; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2f2e41; 
+  border-radius: 4px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #01023d;
+}

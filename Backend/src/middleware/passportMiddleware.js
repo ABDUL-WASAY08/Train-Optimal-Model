@@ -27,7 +27,7 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Business logic outsourced to controller function
+        
         const user = await processGithubProfile(accessToken, profile);
         return done(null, user);
       } catch (error) {

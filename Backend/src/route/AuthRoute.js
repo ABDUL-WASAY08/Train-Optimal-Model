@@ -5,6 +5,7 @@ const {
   getProfile,
   logout,
 } = require("../controller/AuthController");
+const ensureAuthenticated = require("../middleware/isAuthenticate");
 
 const router = express.Router();
 router.get(
@@ -17,8 +18,8 @@ router.get(
   passport.authenticate("github", { failureRedirect: "http://localhost:5173/Autorization?error=true" }),
   githubCallback
 );
-router.get("/me", getProfile);
+router.get("/me",ensureAuthenticated, getProfile);
 
-router.post("/logout", logout);
+router.post("/logout",ensureAuthenticated, logout);
 
 module.exports = router;

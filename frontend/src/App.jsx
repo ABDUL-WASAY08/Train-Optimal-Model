@@ -11,6 +11,7 @@ import { Toaster } from "sonner"
 import ProtectedMiddleware from './Middleware/ProtectedMiddleware'
 import { useAuthStore } from './zustand/useAuthStore'
 import { useEffect } from 'react'
+import PublicPortfolio from './Screen/publicPortfolio'
 
 function App() {
   const { fetchProfile, loading } = useAuthStore();
@@ -23,7 +24,14 @@ function App() {
   if (loading) {
     return (
       <>
-        <Toaster theme="dark" position="top-right" richColors />
+        <Toaster theme="dark" position="top-center" richColors
+          toastOptions={{
+            style: {
+              background: '#00040c', // Tailwind blue-600
+              color: '#ffffff',
+              border: '1px solid #bec7df',
+            },
+          }} />
         <AccountSkelton />
       </>
     );
@@ -31,7 +39,14 @@ function App() {
 
   return (
     <>
-      <Toaster theme="dark" position="top-right" richColors />
+      <Toaster theme="dark" position="top-center" richColors
+        toastOptions={{
+          style: {
+            background: '#00040c', // Tailwind blue-600
+            color: '#ffffff',
+            border: '1px solid #bec7df',
+          },
+        }} />
       <BrowserRouter>
         <Routes>
 
@@ -39,10 +54,9 @@ function App() {
           <Route path='/Authorization' element={<AuthScreen />} />
           <Route path="/dashboard" element={<MainScreen />} />
           <Route element={<ProtectedMiddleware />}>
-
             <Route path="/account" element={<Accounts />} />
           </Route>
-
+          <Route path="/user/portfolio/:username" element={<PublicPortfolio />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

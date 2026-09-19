@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema(
         has_readme: Boolean,
       },
     ],
-    // Direct Inline Arrays (No separate sub-schemas)
     skills: {
       type: [String],
       default: [],
@@ -40,6 +39,7 @@ const userSchema = new mongoose.Schema(
     githubUrl: String,
     twitterUrl: String,
     websiteUrl: String,
+    portfolioUrl: String,
   },
   { timestamps: true }
 );

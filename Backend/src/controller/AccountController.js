@@ -2,7 +2,6 @@ const User = require("../model/user");
 
 const updateAccountDetails = async (req, res) => {
   try {
-    // Check Passport authentication user
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
@@ -18,7 +17,7 @@ const updateAccountDetails = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: updateData },
-      { new: true }
+      { returnDocument:"after" }
     );
 
     res.status(200).json({
@@ -45,7 +44,7 @@ const updateDob = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { dob },
-      { new: true }
+      { returnDocument:"after" }
     );
 
     res.status(200).json({ success: true, user: updatedUser });

@@ -94,6 +94,7 @@ const processGithubProfile = async (accessToken, profile) => {
       ? `https://twitter.com/${profile._json.twitter_username}`
       : "",
     websiteUrl: profile._json.blog || "",
+    portfolioUrl:`user/portfolio/${profile.username}`
   };
 
   let user = await User.findOne({ githubId: profile.id });
