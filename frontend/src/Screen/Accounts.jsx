@@ -50,21 +50,8 @@ function Accounts() {
   }, [user]);
   return (
     <div
-      className="min-h-screen bg-[#0d1117] text-[#c9d1d9] relative overflow-hidden"
+      className="min-h-screen  text-[#c9d1d9] relative overflow-hidden"
     >
-
-      <div className="fixed inset-0 pointer-events-none z-0">
-
-        <div className="absolute inset-0 opacity-[0.035] bg-[linear-gradient(#8b949e_1px,transparent_1px),linear-gradient(90deg,#8b949e_1px,transparent_1px)] bg-[size:45px_45px] animate-[gridMove_18s_linear_infinite]" />
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[650px] h-[350px] rounded-full bg-[#238636] opacity-[0.06] blur-[120px] animate-[slowPulse_7s_ease-in-out_infinite]" />
-
-        <div className="absolute top-[35%] -right-40 w-[350px] h-[350px] rounded-full bg-[#58a6ff] opacity-[0.035] blur-[120px] animate-[floatGlow_9s_ease-in-out_infinite]" />
-
-        <div className="absolute bottom-[10%] -left-40 w-[350px] h-[350px] rounded-full bg-[#8957e5] opacity-[0.025] blur-[120px] animate-[floatGlow_11s_ease-in-out_infinite_reverse]" />
-
-      </div>
-
-
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
 
         <section className="portfolio-reveal">

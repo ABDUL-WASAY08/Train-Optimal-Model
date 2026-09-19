@@ -18,6 +18,7 @@ function MainScreen() {
   const timerRef = useRef(null);
   const containerRef = useRef(null);
   const [showUrl, setShowUrl] = useState(false);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
@@ -30,6 +31,7 @@ function MainScreen() {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
+
   const handleShare = async () => {
     const response = await getPortfolioUrl();
     if (response.success) {
@@ -45,6 +47,7 @@ function MainScreen() {
       toast.error(response.error || "Sorry, we have a problem");
     }
   };
+
   const renderContent = () => {
     switch (activeItem) {
       case 'Accounts':
@@ -102,7 +105,7 @@ function MainScreen() {
                   Your link is ready to share with others.
                 </p>
                 <div className='mt-1 bg-gray-950/80 border border-gray-800 rounded-lg px-2.5 py-1.5'>
-                  <span className='text-xs text-blue-300 font-mono break-all select-all' >
+                  <span className='text-xs text-blue-300 font-mono break-all select-all'>
                     {url}
                   </span>
                 </div>
@@ -110,7 +113,7 @@ function MainScreen() {
             )}
             <div ref={containerRef} className='relative'>
               <div
-                className='flex items-center justify-end gap-2 mx-[8em] mt-[-32px]  cursor-pointer group'
+                className='flex items-center justify-end gap-2 mx-[8em] mt-[-32px] cursor-pointer group'
                 onClick={handleShare}
               >
                 <button className='flex items-center gap-2 text-gray-100 group-hover:text-blue-300 text-xs sm:text-sm font-medium transition-colors duration-200 cursor-pointer'>
@@ -129,12 +132,11 @@ function MainScreen() {
       case 'Settings':
         return <Setting />;
       case "SharePortfolio":
-        return <SharePortfolio />
+        return <SharePortfolio />;
       default:
         return <Accounts />;
     }
   };
-
 
   const handleLogout = async () => {
     try {
@@ -151,18 +153,25 @@ function MainScreen() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#0d1117] overflow-hidden">
+    <div className="flex h-screen w-full bg-[#0d1117] overflow-hidden relative">
+      {/* Background Animated Grid & Glow Effects */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 opacity-[0.035] bg-[linear-gradient(#8b949e_1px,transparent_1px),linear-gradient(90deg,#8b949e_1px,transparent_1px)] bg-[size:45px_45px] animate-[gridMove_18s_linear_infinite]" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[650px] h-[350px] rounded-full bg-[#238636] opacity-[0.06] blur-[120px] animate-[slowPulse_7s_ease-in-out_infinite]" />
+        <div className="absolute top-[35%] -right-40 w-[350px] h-[350px] rounded-full bg-[#58a6ff] opacity-[0.035] blur-[120px] animate-[floatGlow_9s_ease-in-out_infinite]" />
+        <div className="absolute bottom-[10%] -left-40 w-[350px] h-[350px] rounded-full bg-[#8957e5] opacity-[0.025] blur-[120px] animate-[floatGlow_11s_ease-in-out_infinite_reverse]" />
+      </div>
+
       <Sidebar
         activeItem={activeItem}
         onSelect={(selectedLabel) => setActiveItem(selectedLabel)}
       />
-      <main className="flex-1 overflow-y-auto min-w-0 pt-5">
+      <main className="flex-1 overflow-y-auto min-w-0 pt-5 relative z-10">
         <div className="flex justify-end px-6 py-3">
           <button
             type="button"
             onClick={handleLogout}
             className='group text-sm font-medium flex items-center gap-2 cursor-pointer text-gray-300 hover:text-[var(--pulse-cyan)] transition-colors duration-200 focus:outline-none z-20'
-
           >
             <span>SIGN OUT</span>
             <LogOut className='w-4 h-4 text-gray-400 group-hover:text-[var(--pulse-cyan)] transition-colors duration-200' />

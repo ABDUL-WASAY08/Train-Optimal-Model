@@ -147,7 +147,7 @@ function Setting() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] p-4 sm:p-8 font-sans">
+    <div className="min-h-screen  text-[#c9d1d9] p-4 sm:p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">

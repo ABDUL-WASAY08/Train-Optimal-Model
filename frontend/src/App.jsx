@@ -21,7 +21,7 @@ function App() {
   }, [fetchProfile]);
   if (loading) {
     return (
-      <>
+      <div>
         <Toaster theme="dark" position="top-center" richColors
           toastOptions={{
             style: {
@@ -31,12 +31,13 @@ function App() {
             },
           }} />
         <AccountSkelton />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div>
+
       <Toaster theme="dark" position="top-center" richColors
         toastOptions={{
           style: {
@@ -58,7 +59,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 

@@ -42,15 +42,15 @@ export default function Sidebar({ activeItem, onSelect }) {
       )}
 
       <aside
-        style={{ backgroundColor: "var(--side-bar, #1e1e2e)" }}
-        className={`fixed md:static inset-y-0 left-0 z-50 flex flex-col justify-between
+        style={{ backgroundColor: "var( #0d0d18)" }}
+        className={`fixed  md:static inset-y-0 left-0 z-50 flex flex-col justify-between
           transition-all duration-300 ease-in-out shrink-0
           ${isOpen ? "w-64 translate-x-0" : "-translate-x-full md:translate-x-0 md:w-20"}`}
       >
        
         <div>
         
-          <div className="flex items-center justify-between px-4 h-16  border-white/10">
+          <div className="flex items-center px-4 h-16  border-white/10">
             {isOpen ? (
               <h1 className="text-lg font-bold text-white tracking-wide truncate">
                 TOM
