@@ -85,7 +85,7 @@ function Setting() {
     if (res.success) {
       setSkills(res.user?.skills || updatedSkills);
       toast.success('Skill removed!');
-       setUser(res.user);
+      setUser(res.user);
     } else {
       toast.error(res.error);
     }
@@ -99,7 +99,7 @@ function Setting() {
         setEducationList(res.user?.education || updatedList);
         setEduForm({ degree: '', institution: '', year: '' });
         toast.success('Education record saved!');
-         setUser(res.user);
+        setUser(res.user);
       } else {
         toast.error(res.error);
       }
@@ -112,7 +112,7 @@ function Setting() {
     if (res.success) {
       setEducationList(res.user?.education || updatedList);
       toast.success('Education record deleted!');
-       setUser(res.user);
+      setUser(res.user);
     } else {
       toast.error(res.error);
     }
@@ -127,7 +127,7 @@ function Setting() {
         setExperienceList(res.user?.workExperience || updatedList);
         setExpForm({ company: '', role: '', period: '', description: '' });
         toast.success('Work experience saved!');
-         setUser(res.user);
+        setUser(res.user);
       } else {
         toast.error(res.error);
       }
@@ -140,7 +140,7 @@ function Setting() {
     if (res.success) {
       setExperienceList(res.user?.workExperience || updatedList);
       toast.success('Work experience record deleted!');
-       setUser(res.user);
+      setUser(res.user);
     } else {
       toast.error(res.error);
     }
@@ -149,8 +149,6 @@ function Setting() {
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] p-4 sm:p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-8">
-
-        {/* Profile Card */}
         <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
             <div className="flex items-center gap-5">
@@ -211,14 +209,22 @@ function Setting() {
             </p>
           </div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800/80 pb-4 mb-6">
           <div>
-            <p className='text-white'>Account details </p>
-            <p className='text-gray-500'>Here you can edit your details for your portfolio </p>
+            <h2 className='text-base font-semibold text-gray-100 tracking-wide'>
+              Account details
+            </h2>
+            <p className='text-xs text-gray-400 mt-0.5'>
+              Here you can edit your details for your portfolio
+            </p>
           </div>
 
-          <button className='px-5 py-1 text-white bg-gray-900 rounded-xl hover:bg-gray-800 cursor-pointer ' onClick={() => openaccountInfo(!accountInfo)}>
-            {accountInfo ? "CLOSE" : "OPEN"}
+          <button
+            type="button"
+            className='px-4 py-2 text-xs font-medium text-gray-200 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 cursor-pointer shadow-sm self-start sm:self-auto'
+            onClick={() => openaccountInfo(!accountInfo)}
+          >
+            {accountInfo ? "CLOSE" : "EDIT"}
           </button>
         </div>
         {accountInfo && <div>
@@ -529,8 +535,6 @@ function Setting() {
           </div>
 
         </div>}
-
-        {/* delete account  */}
         <section>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-red-500 mb-3">
             Danger Zone

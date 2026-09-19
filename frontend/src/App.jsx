@@ -19,15 +19,13 @@ function App() {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
-
-  // Global App Loading View (Skeletal Screen)
   if (loading) {
     return (
       <>
         <Toaster theme="dark" position="top-center" richColors
           toastOptions={{
             style: {
-              background: '#00040c', // Tailwind blue-600
+              background: '#00040c',
               color: '#ffffff',
               border: '1px solid #bec7df',
             },
@@ -42,7 +40,7 @@ function App() {
       <Toaster theme="dark" position="top-center" richColors
         toastOptions={{
           style: {
-            background: '#00040c', // Tailwind blue-600
+            background: '#00040c', 
             color: '#ffffff',
             border: '1px solid #bec7df',
           },

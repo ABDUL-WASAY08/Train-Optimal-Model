@@ -5,6 +5,8 @@ export const useUtilityStore = create((set) => ({
   loading: false,
   error: null,
   url: "",
+
+  // account details update
   updateAccountDetails: async (updateData) => {
     set({ loading: true, error: null });
     try {
@@ -23,6 +25,7 @@ export const useUtilityStore = create((set) => ({
       return { success: false, error: errorMessage };
     }
   },
+  // this is to get profile url this will give us url from backend 
   getPortfolioUrl: async () => {
     set({ loading: true, error: null });
 

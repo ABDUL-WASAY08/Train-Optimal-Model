@@ -16,10 +16,6 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
-
-/* ------------------------------------------------------------------ */
-/*  Minimal monochrome system — one accent, hairlines, big type        */
-/* ------------------------------------------------------------------ */
 const BG = "#0a0a0a";
 const PANEL = "#0f0f0f";
 const LINE = "#1f1f1f";
@@ -51,7 +47,7 @@ function PublicPortfolio() {
         getData();
     }, [username]);
 
-    /* ------------------------------ Loading ----------------------- */
+
     if (loading) {
         return (
             <div
@@ -72,7 +68,7 @@ function PublicPortfolio() {
         );
     }
 
-    /* ------------------------------ Error ------------------------- */
+
     if (error) {
         return (
             <div
@@ -94,7 +90,6 @@ function PublicPortfolio() {
         );
     }
 
-    /* -------------------- Calculated stats ------------------------ */
     const repos = user?.repositories || [];
     const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
     const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
@@ -115,7 +110,7 @@ function PublicPortfolio() {
             className="min-h-screen antialiased selection:bg-white selection:text-black"
             style={{ background: BG, color: TEXT }}
         >
-            {/* ======================= NAV ========================= */}
+       
             <header
                 className="sticky top-0 z-20 backdrop-blur-md"
                 style={{ background: "rgba(10,10,10,0.82)", borderBottom: `1px solid ${LINE_SOFT}` }}
@@ -148,7 +143,7 @@ function PublicPortfolio() {
 
             <main id="top" className="max-w-6xl mx-auto px-6 sm:px-10">
 
-                {/* ======================= HERO ======================= */}
+               
                 <section className="pt-20 sm:pt-28 pb-16 sm:pb-24">
                     {/* meta row */}
                     <div
@@ -182,7 +177,7 @@ function PublicPortfolio() {
                                 </p>
                             )}
 
-                            {/* links as quiet editorial text */}
+                            
                             <div className="flex flex-wrap gap-x-8 gap-y-3 mt-10">
                                 {user?.githubUrl && (
                                     <TextLink href={user.githubUrl}>GitHub</TextLink>

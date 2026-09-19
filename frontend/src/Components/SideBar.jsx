@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   UserCheck,
+  LucideShare2,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,7 +22,8 @@ const NAV_ITEMS = [
   { label: "Train", icon: Cpu },
   { label: "Marketplace", icon: ShoppingBag },
   { label: "Portfolio", icon: Briefcase },
-  { label: "Settings", icon: Settings },
+  { label: "SharePortfolio", icon: LucideShare2 },
+   { label: "Settings", icon: Settings },
   
 ];
 
