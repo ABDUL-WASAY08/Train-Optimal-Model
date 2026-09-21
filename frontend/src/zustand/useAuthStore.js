@@ -7,8 +7,10 @@ export const useAuthStore = create((set) => ({
   loading: true,
   error: null,
 
-  loginWithGithub: () => {
-    window.location.href = import.meta.env.VITE_GITHUB_URL;
+  loginWithGithub: (role = "developer") => {
+    const githubUrl = new URL(import.meta.env.VITE_GITHUB_URL || "http://localhost:5000/api/auth/github");
+    githubUrl.searchParams.set("role", role);
+    window.location.href = githubUrl.toString();
   },
 
   fetchProfile: async () => {

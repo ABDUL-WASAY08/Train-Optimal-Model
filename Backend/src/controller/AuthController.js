@@ -69,7 +69,7 @@ const fetchGithubRepoData = async (accessToken) => {
   }
 };
 
-const processGithubProfile = async (accessToken, profile) => {
+const processGithubProfile = async (accessToken, profile, role = "developer") => {
   let email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
   if (!email) {
     email = await fetchPrivateEmail(accessToken);
@@ -93,7 +93,8 @@ const processGithubProfile = async (accessToken, profile) => {
       ? `https://twitter.com/${profile._json.twitter_username}`
       : "",
     websiteUrl: profile._json.blog || "",
-    portfolioUrl:`user/portfolio/${profile.username}`
+    portfolioUrl:`user/portfolio/${profile.username}`,
+    role,
   };
 
   let user = await User.findOne({ githubId: profile.id });
@@ -108,10 +109,23 @@ const processGithubProfile = async (accessToken, profile) => {
 };
 
 // 2. Redirect Handler
-const githubCallback = (req, res) => {
+const githubCallback = async (req, res) => {
   try {
+    const role = req.session?.signupRole || req.user?.role || "developer";
+
+    if (req.user && req.user._id) {
+      await User.findByIdAndUpdate(req.user._id, { role }, { new: true });
+    }
+
     const frontendUri = process.env.FRONTEND_URI || "http://localhost:5173";
-    res.redirect(frontendUri);
+    const redirectPath =
+      role === "client"
+        ? "/client-dashboard"
+        : role === "admin"
+          ? "/admin-dashboard"
+          : "/dashboard";
+
+    res.redirect(`${frontendUri}${redirectPath}`);
   } catch (error) {
     res.status(500).json({ message: "Auth Redirect Failed", error: error.message });
   }

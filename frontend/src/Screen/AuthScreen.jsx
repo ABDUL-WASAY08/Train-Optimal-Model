@@ -26,27 +26,20 @@ function AuthScreen() {
     if (error) setError('');
   };
 
-  const handleAuth = (e) => {
+  const handleAuth = async (e) => {
     if (e) e.preventDefault();
 
     if (brole === 'users') {
-      if (role === 'client') {
-        console.log('Google Sign In clicked');
-       
-      } else {
-        loginWithGithub();
+      if (role === 'developer') {
+        await loginWithGithub('developer');
+        return;
       }
-    } else {
-      const envEmail = import.meta.env.VITE_ADMIN_EMAIL;
-      const envPassword = import.meta.env.VITE_ADMIN_PASSWORD;
-      if (adminData.email === envEmail && adminData.password === envPassword) {
-        console.log('Admin login successful!');
-        setError('');
-        navigate('/Main');
-      } else {
-        setError('Invalid Admin Email or Password!');
-      }
+
+      console.log(`${role} login is still dummy for now`);
+      return;
     }
+
+    console.log('Admin login is still dummy for now');
   };
 
   return (

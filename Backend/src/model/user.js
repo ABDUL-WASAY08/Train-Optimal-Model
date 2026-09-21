@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema(
     bio: String,
     email: String,
     avatarUrl: String,
+    role: {
+      type: String,
+      enum: ["developer", "client", "admin"],
+      default: "developer",
+    },
     accessToken: String,
     topLanguages: Array,
     repositories: [
