@@ -27,7 +27,7 @@ function SplashScreen() {
             <span>Upgrade to Pro</span>
           </a>
           <button
-            onClick={() => navigate('Authorization')}
+            onClick={() => navigate('/Authorization')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface hover:bg-slate-800 border border-slate text-body-custom text-xs font-medium transition-colors cursor-pointer"
           >
             <LogIn className="w-3.5 h-3.5 text-subheading" />
@@ -97,7 +97,7 @@ function SplashScreen() {
 
             <div className="pt-4 flex items-center gap-4">
               <button
-                onClick={() => navigate('/Autorization')}
+                onClick={() => navigate('/Authorization')}
                 className="px-6 py-3 bg-surface hover:bg-slate-800 text-body-custom border border-slate text-xs font-bold rounded-xl transition-all cursor-pointer"
               >
                 Explore Platform
@@ -158,7 +158,7 @@ function SplashScreen() {
               </div>
 
               <button
-                onClick={() => navigate('/Autorization')}
+                onClick={() => navigate('/Authorization')}
                 className="w-full py-2.5 px-4 bg-main hover:bg-slate-800 text-body-custom text-xs font-semibold rounded-lg border border-slate transition-colors cursor-pointer"
               >
                 Get Started Free
@@ -207,7 +207,7 @@ function SplashScreen() {
                 </div>
               </div>
               <button
-                onClick={() => navigate('/Autorization')}
+                onClick={() => navigate('/Authorization')}
                 className="w-full py-2.5 px-4 bg-pulse-cyan hover:bg-cyan-400 text-main text-xs font-bold rounded-lg transition-colors cursor-pointer"
               >
                 Upgrade to Pro

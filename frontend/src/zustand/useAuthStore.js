@@ -1,19 +1,19 @@
 import { create } from "zustand";
 import api from "../api/axios";
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   loading: true,
   error: null,
 
   loginWithGithub: (role = "developer") => {
-    const githubUrl = new URL(import.meta.env.VITE_GITHUB_URL || "http://localhost:5000/api/auth/github");
+    const githubUrl = new URL(import.meta.env.VITE_GITHUB_URL);
     githubUrl.searchParams.set("role", role);
     window.location.href = githubUrl.toString();
   },
 
-  fetchProfile: async () => {
+  fetchProfile: async (force = false) => {
     set({ loading: true, error: null });
     try {
       const response = await api.get("/auth/me");
@@ -31,9 +31,10 @@ export const useAuthStore = create((set) => ({
       });
     }
   },
+
   setUser: (userData) =>
     set((state) => ({ user: { ...state.user, ...userData } })),
-  // 2. Update Date of Birth Endpoint
+
   updateDob: async (dob) => {
     try {
       const response = await api.put("/auth/update-dob", { dob });
@@ -59,7 +60,6 @@ export const useAuthStore = create((set) => ({
         loading: false,
         error: null,
       });
-
       return { success: true };
     } catch (err) {
       set({ loading: false });
@@ -69,5 +69,6 @@ export const useAuthStore = create((set) => ({
       };
     }
   },
+
   clearError: () => set({ error: null }),
 }));

@@ -6,13 +6,14 @@ const updateAccountDetails = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
 
-    const { skills, education, workExperience, dob } = req.body;
+    const { skills, education, workExperience, dob,SetRepo } = req.body;
 
     const updateData = {};
     if (skills !== undefined) updateData.skills = skills;
     if (education !== undefined) updateData.education = education;
     if (workExperience !== undefined) updateData.workExperience = workExperience;
     if (dob !== undefined) updateData.dob = dob ? new Date(dob) : null;
+    if (SetRepo !== undefined) updateData.SetRepo = SetRepo;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,

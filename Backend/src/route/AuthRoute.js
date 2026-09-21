@@ -11,7 +11,7 @@ const router = express.Router();
 router.get(
   "/github",
   (req, res, next) => {
-    req.session.signupRole = req.query.role || "developer";
+    req.session.signupRole = req.query.role;
     next();
   },
   passport.authenticate("github", { scope: ["user:email", "read:user", "repo"] })
@@ -19,7 +19,7 @@ router.get(
 
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "http://localhost:5173/Autorization?error=true" }),
+  passport.authenticate("github", { failureRedirect: "http://localhost:5173/Authorization?error=true" }),
   githubCallback
 );
 router.get("/me",ensureAuthenticated, getProfile);
