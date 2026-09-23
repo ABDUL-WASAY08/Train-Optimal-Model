@@ -25,6 +25,8 @@ import { toast } from 'sonner';
 function Setting() {
   const { user, fetchProfile, setUser } = useAuthStore();
   const { updateAccountDetails, loading } = useUtilityStore();
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
   const [dob, setDob] = useState('');
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
@@ -33,6 +35,7 @@ function Setting() {
   const [experienceList, setExperienceList] = useState([]);
   const [expForm, setExpForm] = useState({ company: '', role: '', period: '', description: '' });
   const [accountInfo, openaccountInfo] = useState(false)
+  const [initialized, setInitialized] = useState(false);
   // for adding repo 
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,7 +44,9 @@ function Setting() {
   useEffect(() => {
     if (!user) {
       fetchProfile();
-    } else {
+    } else if (!initialized) {
+      setUsername(user.username || '');
+      setBio(user.bio || '');
       if (user.skills && Array.isArray(user.skills)) {
         setSkills(user.skills);
       }
@@ -54,8 +59,9 @@ function Setting() {
       if (user.dob) {
         setDob(new Date(user.dob).toISOString().split('T')[0]);
       }
+      setInitialized(true);
     }
-  }, [user, fetchProfile]);
+  }, [user, fetchProfile, initialized]);
   // for search querry
   const filteredRepos = user?.repositories?.filter(repo =>
     repo.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -68,6 +74,62 @@ function Setting() {
       setUser(res.user);
     } else {
       toast.error(res?.error || 'Failed to update Date of Birth');
+    }
+  };
+
+  const handleSaveUsername = async () => {
+    const trimmed = username.trim();
+    if (!trimmed) {
+      toast.error('Username cannot be empty');
+      return;
+    }
+    const res = await updateAccountDetails({ username: trimmed });
+    if (res?.success) {
+      toast.success('Username updated!');
+      setUser(res.user);
+    } else {
+      toast.error(res?.error || 'Failed to update username');
+    }
+  };
+
+  const handleSaveBio = async () => {
+    const res = await updateAccountDetails({ bio: bio.trim() });
+    if (res?.success) {
+      toast.success('Bio updated!');
+      setUser(res.user);
+    } else {
+      toast.error(res?.error || 'Failed to update bio');
+    }
+  };
+
+  const handleAddRepo = async (repo) => {
+    const alreadyAdded = user?.Filteredrepositories?.some(r => r.name === repo.name);
+    if (alreadyAdded) {
+      toast.error('Repository already added');
+      setSearchQuery('');
+      setIsDropdownOpen(false);
+      return;
+    }
+    const updatedRepos = [...(user?.Filteredrepositories || []), repo];
+    const res = await updateAccountDetails({ Filteredrepositories: updatedRepos });
+    if (res?.success) {
+      setUser(res.user);
+      toast.success('Repository added!');
+      setSearchQuery('');
+      setIsDropdownOpen(false);
+    } else {
+      toast.error(res?.error || 'Failed to add repository');
+    }
+  };
+
+  const handleRemoveRepo = async (repoName) => {
+    const updatedRepos = (user?.Filteredrepositories || []).filter(r => r.name !== repoName);
+    const res = await updateAccountDetails({ Filteredrepositories: updatedRepos });
+    if (res?.success) {
+      setUser(res.user);
+      toast.success('Repository removed!');
+    } else {
+      toast.error(res?.error || 'Failed to remove repository');
     }
   };
 
@@ -242,27 +304,74 @@ function Setting() {
               <h2 className="text-lg font-bold text-[#c9d1d9]">Personal Details</h2>
             </div>
 
-            <form onSubmit={handleSaveDob} className="flex flex-col sm:flex-row items-end gap-4">
-              <div className="flex-1 w-full space-y-2">
-                <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
-                  Date of Birth
-                </label>
-                <input
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
-                  required
-                />
+            <div className="space-y-4 mb-4">
+              <div className="flex flex-col sm:flex-row items-end gap-4">
+                <div className="flex-1 w-full space-y-2">
+                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                    placeholder="Your username"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveUsername}
+                  disabled={loading}
+                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  {loading ? 'Saving...' : 'Save Username'}
+                </button>
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
-              >
-                {loading ? 'Saving...' : 'Save DOB'}
-              </button>
-            </form>
+
+              <div className="flex flex-col sm:flex-row items-end gap-4">
+                <div className="flex-1 w-full space-y-2">
+                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                    Bio
+                  </label>
+                  <textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[60px]"
+                    placeholder="Tell us about yourself..."
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveBio}
+                  disabled={loading}
+                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  {loading ? 'Saving...' : 'Save Bio'}
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveDob} className="flex flex-col sm:flex-row items-end gap-4">
+                <div className="flex-1 w-full space-y-2">
+                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  {loading ? 'Saving...' : 'Save DOB'}
+                </button>
+              </form>
+            </div>
           </div>
 
           {/* GitHub & Skills Section */}
@@ -376,10 +485,7 @@ function Setting() {
                         filteredRepos.map((repo,index) => (
                           <div
                            key={index}
-                            onClick={() => {
-                              setSearchQuery(repo.name); 
-                              setIsDropdownOpen(false); 
-                            }}
+                            onClick={() => handleAddRepo(repo)}
                             className="px-4 py-2.5 text-xs text-[#c9d1d9] hover:bg-[#21262d] hover:text-white cursor-pointer border-b border-[#2a3441]/50 last:border-none flex items-center justify-between"
                           >
                             <span className="font-medium">{repo.name}</span>
@@ -411,7 +517,7 @@ function Setting() {
 
                           <div className="flex items-center gap-3">
                             {/* delete repo  */}
-                            <button type="button" className='text-gray-400 hover:text-red-400 transition-colors cursor-pointer'>
+                            <button type="button" onClick={() => handleRemoveRepo(repo.name)} className='text-gray-400 hover:text-red-400 transition-colors cursor-pointer'>
                               <Trash2 className="w-4 h-4" />
                             </button>
 
