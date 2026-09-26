@@ -11,6 +11,7 @@ const authRoutes = require("./src/route/AuthRoute");
 const accountRoute=require("./src/route/AccountRoute")
 require("./src/middleware/passportMiddleware");
 const portfolioRoute= require("./src/route/portfolioRoute");
+const imageRoute= require("./src/route/ImageRoute");
 
 const app = express();
 app.use(
@@ -39,6 +40,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/account",accountRoute );
 // public portfolio route
 app.use("/api/user",portfolioRoute);
+// certificates/images route
+app.use("/api/user",imageRoute);
 
 const PORT = process.env.PORT || 5000;
 

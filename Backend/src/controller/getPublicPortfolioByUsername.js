@@ -1,11 +1,14 @@
 const User = require("../model/user");
+const Certificate = require("../model/userData");
+
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const GetPublicPortfolio = async (req, res) => {
     try {
         const { username } = req.params;
-        
-        const user = await User.findOne({ 
-            username: { $regex: new RegExp(`^${username}$`, "i") } 
+
+        const user = await User.findOne({
+            username: { $regex: new RegExp(`^${escapeRegex(username)}$`, "i") }
         });
 
         if (!user) {
@@ -15,10 +18,19 @@ const GetPublicPortfolio = async (req, res) => {
             });
         }
 
+        const certificates = await Certificate.find({ userId: user._id })
+            .select("-publicId -__v")
+            .sort({ createdAt: -1 });
+
         res.status(200).json({
             success: true,
             message: "Portfolio fetched successfully",
-            data: user,
+            data: {
+                ...user.toObject(),
+                accessToken: undefined,
+                githubId: undefined,
+                certificates,
+            },
         });
 
     } catch (error) {
@@ -47,7 +59,9 @@ const GetportfolioUrl = async (req, res) => {
         message: "User not found",
       });
     }
-    const portfolioURL = user.portfolioUrl;
+    const portfolioURL = user.username
+      ? `user/portfolio/${user.username}`
+      : user.portfolioUrl;
     res.status(200).json({
       status: true,
       message: "url Copied sussessfully",

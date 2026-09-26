@@ -4,7 +4,10 @@ import {
     ArrowRight,
     Asterisk,
     Award,
+    BadgeCheck,
     Briefcase,
+    Building2,
+    Calendar,
     Code,
     FolderGit2,
     GitFork,
@@ -95,6 +98,7 @@ function PublicPortfolio() {
     const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
     const skillsCount = (user?.skills || []).length;
     const langCount = (user?.topLanguages || []).length;
+    const certificates = user?.certificates || [];
 
     const stats = [
         { value: repos.length, label: "Projects" },
@@ -104,6 +108,17 @@ function PublicPortfolio() {
     ];
 
     const firstName = (user?.name || user?.username || "Developer").split(" ")[0];
+
+    const visibleSections = [];
+    if (skillsCount > 0) visibleSections.push("skills");
+    if (langCount > 0) visibleSections.push("languages");
+    if (repos.length > 0) visibleSections.push("work");
+    if (certificates.length > 0) visibleSections.push("certificates");
+    if (user?.education?.length > 0) visibleSections.push("education");
+    if (user?.workExperience?.length > 0) visibleSections.push("experience");
+
+    const sectionIndex = (key) =>
+        String(visibleSections.indexOf(key) + 1).padStart(2, "0");
 
     return (
         <div
@@ -124,6 +139,7 @@ function PublicPortfolio() {
                     <nav className="hidden md:flex items-center gap-8 font-mono text-[11px] tracking-[0.15em] uppercase" style={{ color: MUTED }}>
                         {user?.skills?.length > 0 && <a href="#skills" className="hover:text-white transition-colors">Skills</a>}
                         {repos.length > 0 && <a href="#work" className="hover:text-white transition-colors">Work</a>}
+                        {certificates.length > 0 && <a href="#certificates" className="hover:text-white transition-colors">Certificates</a>}
                         {user?.education?.length > 0 && <a href="#education" className="hover:text-white transition-colors">Education</a>}
                         {user?.workExperience?.length > 0 && <a href="#experience" className="hover:text-white transition-colors">Experience</a>}
                     </nav>
@@ -240,7 +256,7 @@ function PublicPortfolio() {
                 </section>
                 {skillsCount > 0 && (
                     <section id="skills" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index="01" title="Skills" />
+                        <SectionLabel index={sectionIndex("skills")} title="Skills" />
                         <ul className="mt-10">
                             {user.skills.map((skill, i) => (
                                 <li
@@ -261,7 +277,7 @@ function PublicPortfolio() {
                 )}
                 {langCount > 0 && (
                     <section className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index="02" title="Languages" />
+                        <SectionLabel index={sectionIndex("languages")} title="Languages" />
                         <div className="mt-10 max-w-3xl space-y-7">
                             {user.topLanguages.map((item, i) => (
                                 <div key={i} className="flex items-center gap-5">
@@ -283,7 +299,7 @@ function PublicPortfolio() {
                 {repos.length > 0 && (
                     <section id="work" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
                         <SectionLabel
-                            index={skillsCount > 0 ? (langCount > 0 ? "03" : "02") : "01"}
+                            index={sectionIndex("work")}
                             title="Selected Work"
                             right={
                                 <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: FAINT }}>
@@ -329,9 +345,89 @@ function PublicPortfolio() {
                         </div>
                     </section>
                 )}
+                {certificates.length > 0 && (
+                    <section id="certificates" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
+                        <SectionLabel
+                            index={sectionIndex("certificates")}
+                            title="Certificates"
+                            right={
+                                <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: FAINT }}>
+                                    {certificates.length} verified
+                                </span>
+                            }
+                        />
+                        <div className="mt-10 grid sm:grid-cols-2 gap-px" style={{ background: LINE_SOFT }}>
+                            {certificates.map((cert) => (
+                                <article
+                                    key={cert._id}
+                                    className="group flex flex-col"
+                                    style={{ background: BG }}
+                                >
+                                    <a
+                                        href={cert.certificateUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="block h-52 overflow-hidden relative"
+                                        style={{ background: PANEL, borderBottom: `1px solid ${LINE_SOFT}` }}
+                                    >
+                                        <img
+                                            src={cert.certificateUrl}
+                                            alt={cert.certificateName}
+                                            loading="lazy"
+                                            className="w-full h-full object-cover object-top grayscale-[0.35] group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-500"
+                                        />
+                                        <span
+                                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                            style={{ background: "rgba(10,10,10,0.35)" }}
+                                        />
+                                        <span
+                                            className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                            style={{ background: ACCENT, color: "#0a0a0a" }}
+                                        >
+                                            View <ArrowUpRight className="w-3 h-3" />
+                                        </span>
+                                    </a>
+
+                                    <div className="p-7 flex flex-col gap-3 flex-1">
+                                        <div className="flex items-start gap-3">
+                                            <BadgeCheck className="w-4 h-4 mt-0.5 shrink-0" style={{ color: ACCENT }} />
+                                            <h3 className="text-lg font-medium tracking-tight leading-snug">
+                                                {cert.certificateName}
+                                            </h3>
+                                        </div>
+
+                                        <p className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
+                                            <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: FAINT }} />
+                                            {cert.companyName}
+                                        </p>
+
+                                        {cert.role && (
+                                            <p className="text-sm" style={{ color: MUTED }}>
+                                                {cert.role}
+                                            </p>
+                                        )}
+
+                                        {cert.issueDate && (
+                                            <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase" style={{ color: FAINT }}>
+                                                <Calendar className="w-3 h-3" />
+                                                {cert.issueDate}
+                                            </p>
+                                        )}
+
+                                        {cert.description && (
+                                            <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
+                                                {cert.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+                )}
                 {user?.education?.length > 0 && (
                     <section id="education" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index="04" title="Education" />
+                        <SectionLabel index={sectionIndex("education")} title="Education" />
                         <div className="mt-10 grid sm:grid-cols-2 gap-px" style={{ background: LINE_SOFT }}>
                             {user.education.map((edu, i) => (
                                 <div key={i} className="p-8" style={{ background: BG }}>
@@ -347,7 +443,7 @@ function PublicPortfolio() {
                 )}
                 {user?.workExperience?.length > 0 && (
                     <section id="experience" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index="05" title="Experience" />
+                        <SectionLabel index={sectionIndex("experience")} title="Experience" />
                         <div className="mt-10 max-w-3xl">
                             {user.workExperience.map((exp, i) => (
                                 <div

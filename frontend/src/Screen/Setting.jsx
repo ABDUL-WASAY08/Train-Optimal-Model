@@ -16,7 +16,12 @@ import {
   GitBranch,
   Briefcase,
   AlertTriangle,
-  Cross
+  Cross,
+  BadgeCheck,
+  Upload,
+  Loader2,
+  FileImage,
+  Building2
 } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
@@ -25,6 +30,13 @@ import { toast } from 'sonner';
 function Setting() {
   const { user, fetchProfile, setUser } = useAuthStore();
   const { updateAccountDetails, loading } = useUtilityStore();
+  const {
+    certificates,
+    certificatesLoading,
+    uploadCertificates,
+    getCertificates,
+    deleteCertificates,
+  } = useUtilityStore();
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [dob, setDob] = useState('');
@@ -39,6 +51,18 @@ function Setting() {
   // for adding repo 
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // for certificates
+  const [openCertificates, setOpenCertificates] = useState(false);
+  const [certificateForm, setCertificateForm] = useState({
+    image: null,
+    certificateName: '',
+    companyName: '',
+    role: '',
+    issueDate: '',
+    description: '',
+  });
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [deletingId, setDeletingId] = useState(null);
 
   // fetching the profile 
   useEffect(() => {
@@ -213,6 +237,93 @@ function Setting() {
       setUser(res.user);
     } else {
       toast.error(res.error);
+    }
+  };
+
+  // ---------------- certificates ----------------
+  const loadCertificates = async () => {
+    const res = await getCertificates();
+    if (!res.success) {
+      toast.error(res.error || 'Failed to load certificates');
+    }
+  };
+
+  const handleToggleCertificates = () => {
+    const next = !openCertificates;
+    setOpenCertificates(next);
+    if (next && certificates.length === 0) {
+      loadCertificates();
+    }
+  };
+
+  const handleCertificateFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Only image files are allowed');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be smaller than 5MB');
+      return;
+    }
+
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(URL.createObjectURL(file));
+    setCertificateForm((prev) => ({ ...prev, image: file }));
+  };
+
+  const resetCertificateForm = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl('');
+    setCertificateForm({
+      image: null,
+      certificateName: '',
+      companyName: '',
+      role: '',
+      issueDate: '',
+      description: '',
+    });
+  };
+
+  const handleUploadCertificate = async (e) => {
+    e.preventDefault();
+    if (!certificateForm.image) {
+      toast.error('Please select a certificate image');
+      return;
+    }
+    if (!certificateForm.certificateName.trim() || !certificateForm.companyName.trim()) {
+      toast.error('Certificate name and company name are required');
+      return;
+    }
+
+    const res = await uploadCertificates({
+      image: certificateForm.image,
+      certificateName: certificateForm.certificateName.trim(),
+      companyName: certificateForm.companyName.trim(),
+      role: certificateForm.role.trim(),
+      issueDate: certificateForm.issueDate,
+      description: certificateForm.description.trim(),
+    });
+
+    if (res.success) {
+      toast.success('Certificate uploaded!');
+      resetCertificateForm();
+    } else {
+      toast.error(res.error || 'Failed to upload certificate');
+    }
+  };
+
+  const handleDeleteCertificate = async (id) => {
+    setDeletingId(id);
+    const res = await deleteCertificates(id);
+    setDeletingId(null);
+
+    if (res.success) {
+      toast.success('Certificate deleted!');
+    } else {
+      toast.error(res.error || 'Failed to delete certificate');
     }
   };
 
@@ -701,6 +812,296 @@ function Setting() {
           </div>
 
         </div>}
+
+        {/* ================= Certificates ================= */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800/80 pb-4">
+          <div>
+            <h2 className='text-base font-semibold text-gray-100 tracking-wide'>
+              Certificates
+            </h2>
+            <p className='text-xs text-gray-400 mt-0.5'>
+              Upload and manage the certificates shown on your portfolio
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className='px-4 py-2 text-xs font-medium text-gray-200 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 cursor-pointer shadow-sm self-start sm:self-auto'
+            onClick={handleToggleCertificates}
+          >
+            {openCertificates ? "CLOSE" : "Certificates"}
+          </button>
+        </div>
+
+        {openCertificates && (
+          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <BadgeCheck className="w-5 h-5 text-[#8b949e]" />
+                <h2 className="text-lg font-bold text-[#c9d1d9]">Your Certificates</h2>
+              </div>
+              <button
+                type="button"
+                onClick={loadCertificates}
+                disabled={certificatesLoading}
+                className="text-[11px] text-[#8b949e] hover:text-[#c9d1d9] transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {certificatesLoading ? 'Refreshing...' : 'Refresh'}
+              </button>
+            </div>
+
+            {/* uploaded list */}
+            {certificates.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {certificates.map((cert) => (
+                  <div
+                    key={cert._id}
+                    className="bg-[#0d1117] border border-[#2a3441] rounded-xl overflow-hidden flex flex-col group"
+                  >
+                    <a
+                      href={cert.certificateUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block h-36 bg-[#010409] border-b border-[#2a3441] overflow-hidden"
+                    >
+                      <img
+                        src={cert.certificateUrl}
+                        alt={cert.certificateName}
+                        className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </a>
+
+                    <div className="p-4 flex flex-col justify-between gap-3 flex-1">
+                      <div>
+                        <h4 className="text-sm font-bold text-[#c9d1d9] leading-snug">
+                          {cert.certificateName}
+                        </h4>
+
+                        <p className="text-xs text-[#8b949e] mt-1 flex items-center gap-1.5">
+                          <Building2 className="w-3 h-3 shrink-0" />
+                          {cert.companyName}
+                        </p>
+
+                        {cert.role && (
+                          <p className="text-[11px] text-[#6e7681] mt-1">{cert.role}</p>
+                        )}
+
+                        {cert.issueDate && (
+                          <p className="text-[10px] text-[#6e7681] font-mono mt-1">
+                            Issued {cert.issueDate}
+                          </p>
+                        )}
+
+                        {cert.description && (
+                          <p className="text-xs text-[#8b949e] mt-2 leading-relaxed line-clamp-3">
+                            {cert.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#2a3441]/40">
+                        <a
+                          href={cert.certificateUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[11px] text-[#58a6ff] hover:underline flex items-center gap-1"
+                        >
+                          View <ExternalLink className="w-3 h-3" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCertificate(cert._id)}
+                          disabled={deletingId === cert._id}
+                          className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1 disabled:opacity-50"
+                          title="Delete certificate"
+                        >
+                          {deletingId === cert._id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="border border-dashed border-[#2a3441] rounded-xl py-10 px-6 text-center">
+                <FileImage className="w-7 h-7 mx-auto mb-3 text-[#484f58]" />
+                <p className="text-xs text-[#8b949e] italic">
+                  {certificatesLoading
+                    ? 'Loading certificates...'
+                    : 'No certificates uploaded yet.'}
+                </p>
+              </div>
+            )}
+
+            {/* upload form */}
+            <form
+              onSubmit={handleUploadCertificate}
+              className="pt-6 border-t border-[#2a3441] space-y-4"
+            >
+              <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
+                Upload New Certificate
+              </h3>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                {/* image picker */}
+                <div className="space-y-2">
+                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                    Certificate Image
+                  </label>
+
+                  <label
+                    htmlFor="certificate-image"
+                    className="flex flex-col items-center justify-center gap-2 h-40 rounded-xl border border-dashed border-[#2a3441] bg-[#0d1117] cursor-pointer hover:border-[#8b949e] transition-colors overflow-hidden"
+                  >
+                    {previewUrl ? (
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    ) : (
+                      <>
+                        <Upload className="w-6 h-6 text-[#8b949e]" />
+                        <span className="text-[11px] text-[#8b949e] text-center px-4">
+                          Click to select an image
+                          <br />
+                          JPEG, JPG, PNG, WEBP — max 5MB
+                        </span>
+                      </>
+                    )}
+                  </label>
+
+                  <input
+                    id="certificate-image"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    onChange={handleCertificateFile}
+                    className="hidden"
+                  />
+
+                  {certificateForm.image && (
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-[#6e7681] truncate">
+                        {certificateForm.image.name}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={resetCertificateForm}
+                        className="text-[11px] text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer shrink-0"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* metadata */}
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                      Certificate Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. AWS Certified Solutions Architect"
+                      value={certificateForm.certificateName}
+                      onChange={(e) => setCertificateForm({ ...certificateForm, certificateName: e.target.value })}
+                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                        Issuing Company
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Amazon Web Services"
+                        value={certificateForm.companyName}
+                        onChange={(e) => setCertificateForm({ ...certificateForm, companyName: e.target.value })}
+                        className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                        Issue Date
+                      </label>
+                      <input
+                        type="date"
+                        value={certificateForm.issueDate}
+                        onChange={(e) => setCertificateForm({ ...certificateForm, issueDate: e.target.value })}
+                        className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                      Role <span className="normal-case tracking-normal text-[#484f58]">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Cloud Practitioner"
+                      value={certificateForm.role}
+                      onChange={(e) => setCertificateForm({ ...certificateForm, role: e.target.value })}
+                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                      Description <span className="normal-case tracking-normal text-[#484f58]">(optional)</span>
+                    </label>
+                    <textarea
+                      placeholder="What does this certificate prove?"
+                      value={certificateForm.description}
+                      onChange={(e) => setCertificateForm({ ...certificateForm, description: e.target.value })}
+                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[60px]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={certificatesLoading}
+                  className="px-5 py-2.5 bg-[#238636] border border-[#2ea043] text-white hover:bg-[#2ea043] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {certificatesLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4" /> Upload Certificate
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={resetCertificateForm}
+                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                >
+                  Clear Form
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
         <section>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-red-500 mb-3">
             Danger Zone

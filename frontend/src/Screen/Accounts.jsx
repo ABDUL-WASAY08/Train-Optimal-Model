@@ -16,18 +16,29 @@ import {
   Sparkles,
   ArrowUpRight,
   MapPin,
+  BadgeCheck,
+  Building2,
 } from 'lucide-react';
 
 import { useAuthStore } from '../zustand/useAuthStore';
+import { useUtilityStore } from '../zustand/useUtilityStore';
 
 function Accounts() {
   const { user, fetchProfile } = useAuthStore();
+  const { certificates, certificatesLoading, getCertificates } = useUtilityStore();
 
   useEffect(() => {
     if (!user) {
       fetchProfile();
     }
   }, [user, fetchProfile]);
+
+  useEffect(() => {
+    if (user) {
+      getCertificates();
+    }
+  }, [user, getCertificates]);
+
   useEffect(() => {
     const elements = document.querySelectorAll('.portfolio-reveal');
 
@@ -376,6 +387,102 @@ function Accounts() {
 
           </section>
         )}
+
+
+
+        {certificates.length > 0 ? (
+          <section className="portfolio-reveal pt-14">
+
+            <SectionTitle
+              icon={<BadgeCheck className="w-4 h-4" />}
+              title="Certificates"
+            />
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              {certificates.map((cert) => (
+
+                <div
+                  key={cert._id}
+                  className="group border border-[#21262d] rounded-lg overflow-hidden flex flex-col hover:border-[#30363d] transition-colors duration-500"
+                >
+
+                  <a
+                    href={cert.certificateUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block h-40 bg-[#010409] border-b border-[#21262d] overflow-hidden relative"
+                  >
+
+                    <img
+                      src={cert.certificateUrl}
+                      alt={cert.certificateName}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-500"
+                    />
+
+                    <span className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-[#e6edf3] text-[#0d1117] text-[10px] font-mono tracking-wider uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      View
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </span>
+
+                  </a>
+
+                  <div className="p-4 flex flex-col gap-2 flex-1">
+
+                    <h3 className="text-sm font-medium text-white">
+                      {cert.certificateName}
+                    </h3>
+
+                    <p className="flex items-center gap-1.5 text-xs text-[#8b949e]">
+                      <Building2 className="w-3 h-3 shrink-0 text-[#484f58]" />
+                      {cert.companyName}
+                    </p>
+
+                    {cert.role && (
+                      <p className="text-[11px] text-[#6e7681]">
+                        {cert.role}
+                      </p>
+                    )}
+
+                    {cert.issueDate && (
+                      <p className="flex items-center gap-1.5 text-[10px] text-[#484f58] font-mono">
+                        <Calendar className="w-2.5 h-2.5" />
+                        {cert.issueDate}
+                      </p>
+                    )}
+
+                    {cert.description && (
+                      <p className="text-xs text-[#6e7681] leading-5 mt-1 line-clamp-3">
+                        {cert.description}
+                      </p>
+                    )}
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </section>
+        ) : certificatesLoading ? (
+          <section className="portfolio-reveal pt-14">
+
+            <SectionTitle
+              icon={<BadgeCheck className="w-4 h-4" />}
+              title="Certificates"
+            />
+
+            <p className="mt-6 text-xs text-[#6e7681] italic">
+              Loading certificates...
+            </p>
+
+          </section>
+        ) : null}
 
 
 

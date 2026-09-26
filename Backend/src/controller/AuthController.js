@@ -74,7 +74,6 @@ const processGithubProfile = async (accessToken, profile, role = "developer") =>
   if (!email) {
     email = await fetchPrivateEmail(accessToken);
   }
-
   const { repositories, topLanguages } = await fetchGithubRepoData(accessToken);
 
   const userData = {
@@ -96,7 +95,6 @@ const processGithubProfile = async (accessToken, profile, role = "developer") =>
     portfolioUrl:`user/portfolio/${profile.username}`,
     role,
   };
-
   let user = await User.findOne({ githubId: profile.id });
 
   if (user) {
@@ -117,7 +115,7 @@ const githubCallback = async (req, res) => {
       await User.findByIdAndUpdate(req.user._id, { role }, { new: true });
     }
 
-    const frontendUri = process.env.FRONTEND_URI || "http://localhost:5173";
+    const frontendUri = process.env.FRONTEND_URI;
     const redirectPath =
       role === "client"
         ? "/client-dashboard"

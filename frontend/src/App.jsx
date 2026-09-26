@@ -5,7 +5,7 @@ import PageNotFound from './Screen/pageNotFound'
 import SplashScreen from './Screen/SplashScreen'
 import Accounts from './Screen/Accounts'
 import AccountSkelton from './Screen/AccountSkelton'
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import './index.css'
 import { Toaster } from "sonner"
 import ProtectedMiddleware from './Middleware/ProtectedMiddleware'
@@ -25,39 +25,48 @@ const AdminDashboardPlaceholder = () => (
   </div>
 );
 
+const PUBLIC_ROUTE_PREFIXES = [
+  '/',
+  '/authorization',
+  '/user/portfolio',
+];
+
+function isPublicRoute(pathname) {
+  const path = pathname.toLowerCase();
+  return PUBLIC_ROUTE_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`)
+  );
+}
+
 function AppRoutes() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { fetchProfile, loading, user } = useAuthStore();
+
+  const onPublicRoute = isPublicRoute(location.pathname);
 
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
 
   useEffect(() => {
-    if (!loading && user) {
-      const role = user.role;
+    if (onPublicRoute) return;
+    if (loading || !user) return;
 
-      if (role === 'client') {
-        navigate('/client-dashboard', { replace: true });
-        return;
-      }
+    const role = user.role;
+    const roleRoutes = {
+      client: '/client-dashboard',
+      admin: '/admin-dashboard',
+      developer: '/dashboard',
+    };
 
-      if (role === 'admin') {
-        navigate('/admin-dashboard', { replace: true });
-        return;
-      }
-      if (role === 'developer') {
-       
-          navigate('/dashboard', { replace: true });
-          return;
-       
-      }
-
-
+    const target = roleRoutes[role];
+    if (target && location.pathname !== target) {
+      navigate(target, { replace: true });
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate, onPublicRoute, location.pathname]);
 
-  if (loading) {
+  if (loading && !onPublicRoute) {
     return (
       <div>
         <Toaster theme="dark" position="top-center" richColors
