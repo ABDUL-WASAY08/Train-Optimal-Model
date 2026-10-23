@@ -223,7 +223,7 @@ function Architecture() {
                 </div>
 
                 {/* BOTTOM CALL TO ACTION */}
-                <div className="mx-4 sm:mx-12 bg-indigo-600 text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
+                <div className="mx-4 sm:mx-12 bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
                     <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to test the system live?</h2>
                     <p className="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto">
                         Explore core modules or sign in to evaluate the platform workspace workflows[cite: 4].

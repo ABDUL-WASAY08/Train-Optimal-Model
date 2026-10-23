@@ -156,7 +156,7 @@ function SplashScreen() {
                   className="bg-white border border-slate-200/90 p-5 sm:p-6 rounded-2xl flex flex-col justify-between hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-50/50 transition-all group"
                 >
                   <div className="space-y-3 sm:space-y-4">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-[#131B2E] flex items-center justify-center border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                       <IconComp size={20} />
                     </div>
                     <div>
@@ -196,7 +196,6 @@ function SplashScreen() {
                   <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
                     {item.step}
                   </span>
-                  <span className="text-2xl sm:text-3xl font-extrabold text-slate-200 select-none">{item.step}</span>
                 </div>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-slate-900">{item.title}</h3>
@@ -207,7 +206,7 @@ function SplashScreen() {
           </div>
         </div>
 
-        {/* FULL-WIDTH DARK SECTION - CORE AI CONCEPT (RAG VISUAL EXPLANATION) */}
+     
         <div id="architecture" className="w-full bg-[#0B0F19] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 shadow-2xl relative overflow-hidden">
           {/* Subtle Background Glow */}
           <div className="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />

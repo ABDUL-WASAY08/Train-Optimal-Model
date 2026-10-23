@@ -170,7 +170,7 @@ function Features() {
                                         onClick={() => setSelectedFeature(idx)}
                                         className={`cursor-pointer p-5 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
                                             isSelected
-                                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-200 scale-[1.02]'
+                                                ? 'bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white border-indigo-600 shadow-lg shadow-indigo-200 scale-[1.02]'
                                                 : 'bg-white text-slate-800 border-slate-200 hover:border-indigo-300 hover:shadow-md'
                                         }`}
                                     >
@@ -199,7 +199,7 @@ function Features() {
                         </div>
 
                         {/* Right Panel: Detailed View Box (5 Cols) */}
-                        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-xl sticky top-24">
+                        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-xl mt-10 top-24">
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
@@ -295,7 +295,7 @@ function Features() {
                 </div>
 
                 {/* BOTTOM CALL TO ACTION */}
-                <div className="mx-4 sm:mx-12 bg-indigo-600 text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
+                <div className="mx-4 sm:mx-12 bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
                     <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to experience these features live?</h2>
                     <p className="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto">
                         Sign in to test role-based dashboards, GitHub syncing, and repository AI capabilities[cite: 4].
