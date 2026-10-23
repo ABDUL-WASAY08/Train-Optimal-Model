@@ -1,5 +1,7 @@
 const axios = require("axios");
 const User = require("../model/user");
+const Certificate = require("../model/userData");
+const cloudinary = require("../api/cloudinary");
 
 // Private Helper: Email Fetching Logic
 const fetchPrivateEmail = async (accessToken) => {
@@ -178,9 +180,78 @@ const logout = (req, res) => {
     });
   });
 };
+// 5. Delete Account Handler (permanent, self only)
+const deleteAccount = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
+  }
+
+  const userId = req.user._id;
+
+  try {
+    // 1. remove the cloudinary assets first, isolating each destroy so one
+    // failure cannot abort the rest and leave the account half deleted
+    const certificates = await Certificate.find({ userId }).select("publicId");
+
+    await Promise.all(
+      certificates.map(async (certificate) => {
+        try {
+          await cloudinary.uploader.destroy(certificate.publicId);
+        } catch (cloudError) {
+          console.error(`Failed to destroy cloudinary asset ${certificate.publicId}:`, cloudError.message);
+        }
+      })
+    );
+
+    // 2. drop the certificate documents (model/userData.js), then the user (model/user.js)
+    await Certificate.deleteMany({ userId });
+    await User.findByIdAndDelete(userId);
+
+    // 3. destroy the session so the old cookie cannot be reused
+    req.logout((logoutErr) => {
+      if (logoutErr) {
+        return res.status(500).json({
+          success: false,
+          message: "Account deleted but logout failed, please clear cookies manually",
+          error: logoutErr.message,
+        });
+      }
+
+      req.session.destroy((sessionErr) => {
+        if (sessionErr) {
+          return res.status(500).json({
+            success: false,
+            message: "Account deleted but session could not be destroyed",
+            error: sessionErr.message,
+          });
+        }
+
+        res.clearCookie("connect.sid", {
+          path: "/",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "Account deleted successfully",
+        });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete account",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   processGithubProfile,
   githubCallback,
   getProfile,
-  logout
+  logout,
+  deleteAccount
 };

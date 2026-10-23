@@ -12,15 +12,18 @@ import ProtectedMiddleware from './Middleware/ProtectedMiddleware'
 import { useAuthStore } from './zustand/useAuthStore'
 import { useEffect } from 'react'
 import PublicPortfolio from './Screen/publicPortfolio'
+import Features from './Screen/features'
+import About from './Screen/About'
+import Architecture from './Screen/Architecture'
 
 const ClientDashboardPlaceholder = () => (
-  <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center">
+  <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
     <h1 className="text-2xl font-bold">Client Dashboard Coming Soon</h1>
   </div>
 );
 
 const AdminDashboardPlaceholder = () => (
-  <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center">
+  <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
     <h1 className="text-2xl font-bold">Admin Dashboard Coming Soon</h1>
   </div>
 );
@@ -69,12 +72,12 @@ function AppRoutes() {
   if (loading && !onPublicRoute) {
     return (
       <div>
-        <Toaster theme="dark" position="top-center" richColors
+        <Toaster theme="light" position="top-center" richColors
           toastOptions={{
             style: {
-              background: '#00040c',
-              color: '#ffffff',
-              border: '1px solid #bec7df',
+              background: '#ffffff',
+              color: '#0f172a',
+              border: '1px solid #e2e8f0',
             },
           }} />
         <AccountSkelton />
@@ -95,7 +98,9 @@ function AppRoutes() {
       <Routes>
         <Route path='/' element={<SplashScreen />} />
         <Route path='/Authorization' element={<AuthScreen />} />
-
+        <Route path='/Features' element={<Features/>}/>
+        <Route path='/About' element={<About />} />
+        <Route path='/Architecture' element={<Architecture />} />
         <Route element={<ProtectedMiddleware />}>
           <Route path="/account" element={<Accounts />} />
           <Route path="/dashboard" element={<MainScreen />} />

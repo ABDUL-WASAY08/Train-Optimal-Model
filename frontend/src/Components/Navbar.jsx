@@ -33,13 +33,13 @@ function Navbar({ onSelectTab }) {
   };
 
   return (
-    <header className="absolute top-0 left-0 z-50 w-full backdrop-blur-md border-b border-[#30363d] bg-[#0d1117]/80">
+    <header className="sticky top-0 z-30 w-full shrink-0 backdrop-blur border-b border-slate-200 bg-white/90">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => onSelectTab?.('Portfolio')}>
-          <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400">
-           <Cat />
-          </div>
-          <span className="text-sm font-bold text-white tracking-wide">
+        <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => onSelectTab?.('Portfolio')}>
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
+            <Cat size={16} />
+          </span>
+          <span className="text-sm font-bold text-slate-900 tracking-tight">
             TOM
           </span>
         </div>
@@ -49,64 +49,64 @@ function Navbar({ onSelectTab }) {
           <button
             onClick={handleDummyEdit}
             type="button"
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#21262d] hover:bg-[#30363d] hover:text-white border border-[#30363d] rounded-xl transition-all duration-200 cursor-pointer"
+            className="btn-secondary btn-sm"
           >
-            <Edit3 className="w-4 h-4 text-gray-400" />
+            <Edit3 size={15} className="text-slate-400" />
             <span>Edit Portfolio</span>
           </button>
 
           <button
             onClick={handleDummyShare}
             type="button"
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#21262d] hover:bg-[#30363d] hover:text-white border border-[#30363d] rounded-xl transition-all duration-200 cursor-pointer"
+            className="btn-secondary btn-sm"
           >
-            <Share2 className="w-4 h-4 text-gray-400" />
+            <Share2 size={15} className="text-slate-400" />
             <span>Share Portfolio</span>
           </button>
 
           <button
             onClick={handleLogout}
             type="button"
-            className="group flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-gray-300 hover:text-[var(--pulse-cyan)] bg-transparent hover:bg-gray-800/50 border border-transparent hover:border-gray-700/50 rounded-xl transition-all duration-200 cursor-pointer ml-2"
+            className="btn-ghost btn-sm text-slate-500 hover:text-rose-600 ml-1"
           >
             <span>Sign Out</span>
-            <LogOut className="w-4 h-4 text-gray-400 group-hover:text-[var(--pulse-cyan)] transition-colors duration-200" />
+            <LogOut size={15} className="text-slate-400" />
           </button>
         </div>
         <div className="flex md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             type="button"
-            className="p-2 text-gray-400 hover:text-white bg-[#21262d] border border-[#30363d] rounded-xl transition-colors cursor-pointer"
+            className="p-2 text-slate-600 hover:bg-slate-100 border border-slate-300 rounded-lg transition-colors cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0d1117] border-b border-[#30363d] px-4 pt-2 pb-4 space-y-2 animate-fadeIn">
+        <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 animate-fade-in">
           <button
             onClick={() => { setMobileMenuOpen(false); handleDummyEdit(); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-medium text-gray-200 hover:bg-[#21262d] rounded-xl transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           >
-            <Edit3 className="w-4 h-4 text-gray-400" />
+            <Edit3 className="w-4 h-4 text-slate-400" />
             <span>Edit Portfolio</span>
           </button>
 
           <button
             onClick={() => { setMobileMenuOpen(false); handleDummyShare(); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-medium text-gray-200 hover:bg-[#21262d] rounded-xl transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           >
-            <Share2 className="w-4 h-4 text-gray-400" />
+            <Share2 className="w-4 h-4 text-slate-400" />
             <span>Share Portfolio</span>
           </button>
 
-          <div className="pt-2 border-t border-[#30363d]">
+          <div className="pt-1 border-t border-slate-200">
             <button
               onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
             >
-              <LogOut className="w-4 h-4 text-red-400" />
+              <LogOut className="w-4 h-4" />
               <span>Sign Out</span>
             </button>
           </div>

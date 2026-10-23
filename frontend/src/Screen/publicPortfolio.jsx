@@ -1,33 +1,23 @@
 import React, { useEffect, useState } from "react";
 import {
-    ArrowUpRight,
-    ArrowRight,
-    Asterisk,
-    Award,
-    BadgeCheck,
-    Briefcase,
-    Building2,
-    Calendar,
-    Code,
-    FolderGit2,
-    GitFork,
-    GraduationCap,
-    Mail,
-    Star,
-    Terminal,
-    User,
+  ArrowLeft,
+  ArrowUpRight,
+  BadgeCheck,
+  Briefcase,
+  Building2,
+  Calendar,
+  Code,
+  FolderGit2,
+  GitFork,
+  GraduationCap,
+  Mail,
+  MapPin,
+  Sparkles,
+  Star,
+  User,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "../api/axios";
-const BG = "#0a0a0a";
-const PANEL = "#0f0f0f";
-const LINE = "#1f1f1f";
-const LINE_SOFT = "#161616";
-const TEXT = "#f5f5f4";
-const MUTED = "#8a8a85";
-const FAINT = "#555550";
-const ACCENT = "#d6ff4b"; // single restrained pop — used only 3-4 times
-const GREEN = "#4ade80"; // availability dot only
 
 function PublicPortfolio() {
     const { username } = useParams();
@@ -53,20 +43,11 @@ function PublicPortfolio() {
 
     if (loading) {
         return (
-            <div
-                className="min-h-screen flex flex-col items-center justify-center gap-6"
-                style={{ background: BG, color: TEXT }}
-            >
-                <span className="font-mono text-xs tracking-[0.35em] uppercase" style={{ color: MUTED }}>
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
+                <span className="h-8 w-8 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin" />
+                <span className="text-xs font-mono tracking-[0.3em] uppercase text-slate-400">
                     Loading
                 </span>
-                <div className="w-40 h-px relative overflow-hidden" style={{ background: LINE }}>
-                    <div
-                        className="absolute inset-y-0 left-0 w-1/3 animate-[load_1.1s_ease-in-out_infinite]"
-                        style={{ background: TEXT }}
-                    />
-                </div>
-                <style>{`@keyframes load { 0%{transform:translateX(-100%)} 100%{transform:translateX(400%)} }`}</style>
             </div>
         );
     }
@@ -74,20 +55,19 @@ function PublicPortfolio() {
 
     if (error) {
         return (
-            <div
-                className="min-h-screen flex items-center justify-center px-6"
-                style={{ background: BG, color: TEXT }}
-            >
-                <div className="text-center max-w-sm w-full">
-                    <Terminal className="w-6 h-6 mx-auto mb-6" style={{ color: FAINT }} />
-                    <p className="font-mono text-[11px] tracking-[0.3em] uppercase mb-3" style={{ color: MUTED }}>
+            <div className="min-h-screen flex items-center justify-center px-6 bg-slate-50">
+                <div className="card p-10 text-center max-w-sm w-full">
+                    <div className="mx-auto h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
+                        <FolderGit2 size={22} />
+                    </div>
+                    <p className="mt-4 font-mono text-[11px] tracking-[0.3em] uppercase text-slate-400">
                         Error — 404
                     </p>
-                    <h1 className="text-3xl font-semibold tracking-tight">Portfolio not found</h1>
-                    <p className="text-sm mt-4 leading-relaxed" style={{ color: MUTED }}>
-                        {error}
-                    </p>
-                    <div className="mt-10 h-px w-16 mx-auto" style={{ background: LINE }} />
+                    <h1 className="mt-2 text-2xl font-bold text-slate-900">Portfolio not found</h1>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-500">{error}</p>
+                    <Link to="/" className="btn-primary mt-6">
+                        <ArrowLeft size={15} /> Back to home
+                    </Link>
                 </div>
             </div>
         );
@@ -99,6 +79,7 @@ function PublicPortfolio() {
     const skillsCount = (user?.skills || []).length;
     const langCount = (user?.topLanguages || []).length;
     const certificates = user?.certificates || [];
+    const firstName = (user?.name || user?.username || "Developer").split(" ")[0];
 
     const stats = [
         { value: repos.length, label: "Projects" },
@@ -107,441 +88,295 @@ function PublicPortfolio() {
         { value: Math.max(skillsCount, langCount), label: "Technologies" },
     ];
 
-    const firstName = (user?.name || user?.username || "Developer").split(" ")[0];
-
-    const visibleSections = [];
-    if (skillsCount > 0) visibleSections.push("skills");
-    if (langCount > 0) visibleSections.push("languages");
-    if (repos.length > 0) visibleSections.push("work");
-    if (certificates.length > 0) visibleSections.push("certificates");
-    if (user?.education?.length > 0) visibleSections.push("education");
-    if (user?.workExperience?.length > 0) visibleSections.push("experience");
-
-    const sectionIndex = (key) =>
-        String(visibleSections.indexOf(key) + 1).padStart(2, "0");
-
     return (
-        <div
-            className="min-h-screen antialiased selection:bg-white selection:text-black"
-            style={{ background: BG, color: TEXT }}
-        >
-       
-            <header
-                className="sticky top-0 z-20 backdrop-blur-md"
-                style={{ background: "rgba(10,10,10,0.82)", borderBottom: `1px solid ${LINE_SOFT}` }}
-            >
-                <div className="max-w-6xl mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
-                    <a href="#top" className="flex items-baseline gap-1 text-sm font-semibold tracking-tight">
-                        {firstName}
-                        <Asterisk className="w-3.5 h-3.5 -translate-y-0.5" style={{ color: ACCENT }} strokeWidth={2.5} />
-                    </a>
+        <div className="min-h-screen bg-slate-50 text-slate-800">
 
-                    <nav className="hidden md:flex items-center gap-8 font-mono text-[11px] tracking-[0.15em] uppercase" style={{ color: MUTED }}>
-                        {user?.skills?.length > 0 && <a href="#skills" className="hover:text-white transition-colors">Skills</a>}
-                        {repos.length > 0 && <a href="#work" className="hover:text-white transition-colors">Work</a>}
-                        {certificates.length > 0 && <a href="#certificates" className="hover:text-white transition-colors">Certificates</a>}
-                        {user?.education?.length > 0 && <a href="#education" className="hover:text-white transition-colors">Education</a>}
-                        {user?.workExperience?.length > 0 && <a href="#experience" className="hover:text-white transition-colors">Experience</a>}
+            <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200">
+                <div className="max-w-6xl mx-auto px-6 sm:px-10 h-16 flex items-center justify-between gap-4">
+                    <Link to="/" className="flex items-center gap-2.5">
+                        <span className="h-8 w-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">T</span>
+                        <span className="font-bold text-slate-900 tracking-tight">TOM</span>
+                        <span className="hidden sm:inline text-xs text-slate-400 border-l border-slate-200 pl-2.5">Portfolio</span>
+                    </Link>
+
+                    <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+                        {skillsCount > 0 && <a href="#skills" className="hover:text-indigo-700 transition-colors">Skills</a>}
+                        {repos.length > 0 && <a href="#work" className="hover:text-indigo-700 transition-colors">Work</a>}
+                        {certificates.length > 0 && <a href="#certificates" className="hover:text-indigo-700 transition-colors">Certificates</a>}
+                        {user?.education?.length > 0 && <a href="#education" className="hover:text-indigo-700 transition-colors">Education</a>}
+                        {user?.workExperience?.length > 0 && <a href="#experience" className="hover:text-indigo-700 transition-colors">Experience</a>}
                     </nav>
 
                     {user?.email && (
-                        <a
-                            href={`mailto:${user.email}`}
-                            className="group flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase transition-colors"
-                            style={{ color: TEXT }}
-                        >
-                            Contact
-                            <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: ACCENT }} />
+                        <a href={`mailto:${user.email}`} className="btn-primary btn-sm">
+                            Contact <ArrowUpRight size={14} />
                         </a>
                     )}
                 </div>
             </header>
 
-            <main id="top" className="max-w-6xl mx-auto px-6 sm:px-10">
-
-               
-                <section className="pt-20 sm:pt-28 pb-16 sm:pb-24">
-                    {/* meta row */}
-                    <div
-                        className="flex flex-wrap items-center justify-between gap-3 pb-8 mb-12 font-mono text-[11px] tracking-[0.2em] uppercase"
-                        style={{ borderBottom: `1px solid ${LINE}`, color: MUTED }}
-                    >
-                        <span className="flex items-center gap-2.5">
-                            <span className="relative flex h-1.5 w-1.5">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: GREEN }} />
-                                <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: GREEN }} />
-                            </span>
-                            Available for work
-                        </span>
-                        <span>@{user?.username}</span>
-                        <span className="hidden sm:inline">© {new Date().getFullYear()}</span>
-                    </div>
-
-                    <div className="grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-end">
-                        <div>
-                            <h1 className="text-[13vw] sm:text-7xl lg:text-8xl font-semibold leading-[0.95] tracking-[-0.04em]">
-                                {user?.name || user?.username || "Developer"}
-                            </h1>
-
-                            {user?.bio ? (
-                                <p className="mt-8 max-w-xl text-base sm:text-lg leading-relaxed" style={{ color: MUTED }}>
-                                    {user.bio}
-                                </p>
+            {/* Hero */}
+            <section className="bg-slate-900 text-white">
+                <div className="max-w-6xl mx-auto px-6 sm:px-10 py-14">
+                    <div className="flex flex-wrap items-center gap-6">
+                        <div className="h-24 w-24 rounded-full overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                            {user?.avatarUrl ? (
+                                <img src={user.avatarUrl} alt={user.name || "Avatar"} className="h-full w-full object-cover" />
+                            ) : user?.name ? (
+                                <span className="text-3xl font-bold text-slate-300">{user.name.charAt(0).toUpperCase()}</span>
                             ) : (
-                                <p className="mt-8 max-w-xl text-base sm:text-lg leading-relaxed" style={{ color: MUTED }}>
-                                    Software developer building thoughtful, reliable products.
-                                </p>
+                                <User className="w-9 h-9 text-slate-400" />
                             )}
+                        </div>
 
-                            
-                            <div className="flex flex-wrap gap-x-8 gap-y-3 mt-10">
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <h1 className="text-3xl font-bold tracking-tight">{user?.name || user?.username || "Developer"}</h1>
+                                <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                    Available for work
+                                </span>
+                            </div>
+                            {user?.username && (
+                                <p className="text-slate-400 mt-1">@{user.username}</p>
+                            )}
+                            {user?.bio && (
+                                <p className="text-slate-300 mt-3 max-w-2xl leading-relaxed">{user.bio}</p>
+                            )}
+                            <div className="flex flex-wrap items-center gap-5 mt-4 text-sm text-slate-300">
+                                {user?.email && (
+                                    <span className="flex items-center gap-1.5"><Mail size={14} /> {user.email}</span>
+                                )}
                                 {user?.githubUrl && (
-                                    <TextLink href={user.githubUrl}>GitHub</TextLink>
+                                    <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                        <Sparkles size={14} /> GitHub
+                                    </a>
                                 )}
                                 {user?.websiteUrl && (
-                                    <TextLink href={user.websiteUrl}>Website</TextLink>
-                                )}
-                                {user?.email && (
-                                    <TextLink href={`mailto:${user.email}`}>Email</TextLink>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* avatar — strict square, hairline frame, no decoration */}
-                        <div className="hidden lg:block">
-                            <div
-                                className="w-52 h-64 flex items-center justify-center overflow-hidden"
-                                style={{ border: `1px solid ${LINE}` }}
-                            >
-                                {user?.avatarUrl ? (
-                                    <img
-                                        src={user.avatarUrl}
-                                        alt={user.name || "Avatar"}
-                                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                                    />
-                                ) : user?.name ? (
-                                    <span className="text-6xl font-semibold tracking-tight" style={{ color: FAINT }}>
-                                        {user.name.charAt(0).toUpperCase()}
-                                    </span>
-                                ) : (
-                                    <User className="w-10 h-10" style={{ color: FAINT }} />
+                                    <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                        Website
+                                    </a>
                                 )}
                             </div>
-                            <p className="mt-3 font-mono text-[10px] tracking-[0.2em] uppercase text-right" style={{ color: FAINT }}>
-                                Fig. 01 — {firstName}
-                            </p>
                         </div>
                     </div>
 
-                    {/* stats — plain typographic row, no cards */}
-                    <div
-                        className="grid grid-cols-2 md:grid-cols-4 mt-16 sm:mt-24"
-                        style={{ borderTop: `1px solid ${LINE}` }}
-                    >
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10 max-w-3xl">
                         {stats.map((s, i) => (
-                            <div
-                                key={i}
-                                className="py-8 pr-6"
-                                style={{ borderRight: i < stats.length - 1 ? `1px solid ${LINE_SOFT}` : "none" }}
-                            >
-                                <span className="block text-4xl sm:text-5xl font-semibold tracking-tight tabular-nums">
-                                    {String(s.value).padStart(2, "0")}
-                                </span>
-                                <span className="block mt-2 font-mono text-[10px] tracking-[0.25em] uppercase" style={{ color: MUTED }}>
-                                    {s.label}
-                                </span>
+                            <div key={i} className="rounded-xl bg-white/5 border border-white/10 p-4">
+                                <p className="text-2xl font-bold tabular-nums">{String(s.value).padStart(2, "0")}</p>
+                                <p className="mt-0.5 text-xs text-slate-400">{s.label}</p>
                             </div>
                         ))}
                     </div>
-                </section>
-                {skillsCount > 0 && (
-                    <section id="skills" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index={sectionIndex("skills")} title="Skills" />
-                        <ul className="mt-10">
-                            {user.skills.map((skill, i) => (
-                                <li
-                                    key={i}
-                                    className="group flex items-baseline justify-between gap-4 py-5 transition-colors"
-                                    style={{ borderBottom: `1px solid ${LINE_SOFT}` }}
-                                >
-                                    <span className="text-xl sm:text-2xl font-medium tracking-tight group-hover:translate-x-2 transition-transform duration-300">
+                </div>
+            </section>
+
+            <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12 grid lg:grid-cols-3 gap-8">
+                {/* Left column */}
+                <div className="space-y-6">
+                    {skillsCount > 0 && (
+                        <div id="skills" className="card p-6">
+                            <h2 className="section-title">Skills</h2>
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                {user.skills.map((skill, i) => (
+                                    <span key={i} className="text-xs font-semibold bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200 rounded-full px-3 py-1">
                                         {skill}
                                     </span>
-                                    <span className="font-mono text-[11px] tracking-[0.2em]" style={{ color: FAINT }}>
-                                        {String(i + 1).padStart(2, "0")}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                )}
-                {langCount > 0 && (
-                    <section className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index={sectionIndex("languages")} title="Languages" />
-                        <div className="mt-10 max-w-3xl space-y-7">
-                            {user.topLanguages.map((item, i) => (
-                                <div key={i} className="flex items-center gap-5">
-                                    <span className="w-28 shrink-0 text-sm font-medium">{item.language}</span>
-                                    <div className="flex-1 h-px relative" style={{ background: LINE }}>
-                                        <div
-                                            className="absolute inset-y-0 left-0 -my-px h-[3px]"
-                                            style={{ width: `${item.percentage}%`, background: TEXT }}
-                                        />
-                                    </div>
-                                    <span className="w-12 text-right font-mono text-[11px] tabular-nums" style={{ color: MUTED }}>
-                                        {item.percentage}%
-                                    </span>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </section>
-                )}
-                {repos.length > 0 && (
-                    <section id="work" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel
-                            index={sectionIndex("work")}
-                            title="Selected Work"
-                            right={
-                                <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: FAINT }}>
+                    )}
+
+                    {langCount > 0 && (
+                        <div className="card p-6">
+                            <h2 className="section-title flex items-center gap-2"><Code size={16} className="text-indigo-600" /> Languages</h2>
+                            <div className="mt-4 space-y-4">
+                                {user.topLanguages.map((item, i) => (
+                                    <div key={i}>
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span className="font-medium text-slate-700">{item.language}</span>
+                                            <span className="text-slate-400 font-mono">{item.percentage}%</span>
+                                        </div>
+                                        <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                            <div className="h-full rounded-full bg-indigo-500" style={{ width: `${item.percentage}%` }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {user?.education?.length > 0 && (
+                        <div id="education" className="card p-6">
+                            <h2 className="section-title flex items-center gap-2"><GraduationCap size={16} className="text-indigo-600" /> Education</h2>
+                            <div className="mt-4 space-y-3">
+                                {user.education.map((edu, i) => (
+                                    <div key={edu._id || edu.id || i} className="rounded-lg border border-slate-200 p-3">
+                                        <p className="text-sm font-semibold text-slate-900">{edu.degree}</p>
+                                        <p className="text-xs text-slate-500 mt-0.5">{edu.institution}{edu.year ? ` · ${edu.year}` : ""}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Right column */}
+                <div className="lg:col-span-2 space-y-8">
+                    {repos.length > 0 && (
+                        <section id="work">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-bold text-slate-900">Selected Projects</h2>
+                                <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/20">
                                     {repos.length} repositories
                                 </span>
-                            }
-                        />
-                        <div className="mt-10" style={{ borderTop: `1px solid ${LINE}` }}>
-                            {repos.map((repo, i) => (
-                                <a
-                                    key={i}
-                                    href={repo.html_url || "#"}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_1fr_1.2fr_auto] items-center gap-x-6 gap-y-1 py-6 transition-colors"
-                                    style={{ borderBottom: `1px solid ${LINE_SOFT}` }}
-                                >
-                                    <span className="font-mono text-[11px] tabular-nums" style={{ color: FAINT }}>
-                                        {String(i + 1).padStart(2, "0")}
-                                    </span>
-                                    <span className="text-lg sm:text-xl font-medium tracking-tight flex items-center gap-2">
-                                        {repo.name}
-                                        <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all" style={{ color: ACCENT }} />
-                                    </span>
-                                    <span className="hidden sm:block text-sm truncate" style={{ color: MUTED }}>
-                                        {repo.description || "—"}
-                                    </span>
-                                    <span className="flex items-center gap-4 font-mono text-[11px] tabular-nums justify-self-end" style={{ color: MUTED }}>
-                                        {repo.language && <span className="hidden sm:inline">{repo.language}</span>}
-                                        {(repo.stargazers_count || 0) > 0 && (
-                                            <span className="flex items-center gap-1">
-                                                <Star className="w-3 h-3" /> {repo.stargazers_count}
-                                            </span>
-                                        )}
-                                        {(repo.forks_count || 0) > 0 && (
-                                            <span className="flex items-center gap-1">
-                                                <GitFork className="w-3 h-3" /> {repo.forks_count}
-                                            </span>
-                                        )}
-                                    </span>
-                                </a>
-                            ))}
-                        </div>
-                    </section>
-                )}
-                {certificates.length > 0 && (
-                    <section id="certificates" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel
-                            index={sectionIndex("certificates")}
-                            title="Certificates"
-                            right={
-                                <span className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: FAINT }}>
-                                    {certificates.length} verified
-                                </span>
-                            }
-                        />
-                        <div className="mt-10 grid sm:grid-cols-2 gap-px" style={{ background: LINE_SOFT }}>
-                            {certificates.map((cert) => (
-                                <article
-                                    key={cert._id}
-                                    className="group flex flex-col"
-                                    style={{ background: BG }}
-                                >
+                            </div>
+                            <div className="grid sm:grid-cols-2 gap-5">
+                                {repos.map((repo, i) => (
                                     <a
-                                        href={cert.certificateUrl}
+                                        key={i}
+                                        href={repo.html_url || "#"}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="block h-52 overflow-hidden relative"
-                                        style={{ background: PANEL, borderBottom: `1px solid ${LINE_SOFT}` }}
+                                        className="card p-5 hover:shadow-pop transition-shadow"
                                     >
-                                        <img
-                                            src={cert.certificateUrl}
-                                            alt={cert.certificateName}
-                                            loading="lazy"
-                                            className="w-full h-full object-cover object-top grayscale-[0.35] group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-500"
-                                        />
-                                        <span
-                                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                            style={{ background: "rgba(10,10,10,0.35)" }}
-                                        />
-                                        <span
-                                            className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                            style={{ background: ACCENT, color: "#0a0a0a" }}
-                                        >
-                                            View <ArrowUpRight className="w-3 h-3" />
-                                        </span>
-                                    </a>
-
-                                    <div className="p-7 flex flex-col gap-3 flex-1">
-                                        <div className="flex items-start gap-3">
-                                            <BadgeCheck className="w-4 h-4 mt-0.5 shrink-0" style={{ color: ACCENT }} />
-                                            <h3 className="text-lg font-medium tracking-tight leading-snug">
-                                                {cert.certificateName}
-                                            </h3>
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <span className="h-9 w-9 rounded-lg bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+                                                    {(repo.name || "R").slice(0, 2).toUpperCase()}
+                                                </span>
+                                                <p className="font-semibold text-slate-900 truncate">{repo.name}</p>
+                                            </div>
+                                            <ArrowUpRight size={15} className="shrink-0 text-slate-400" />
                                         </div>
-
-                                        <p className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
-                                            <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: FAINT }} />
-                                            {cert.companyName}
+                                        <p className="text-sm text-slate-600 mt-3 line-clamp-2">
+                                            {repo.description || "No description provided."}
                                         </p>
+                                        <div className="flex flex-wrap gap-1.5 mt-3">
+                                            {repo.language && (
+                                                <span className="text-[11px] font-medium bg-slate-100 text-slate-600 rounded px-2 py-0.5">{repo.language}</span>
+                                            )}
+                                            {(repo.stargazers_count || 0) > 0 && (
+                                                <span className="text-[11px] font-medium bg-slate-100 text-slate-600 rounded px-2 py-0.5 flex items-center gap-1">
+                                                    <Star size={11} /> {repo.stargazers_count}
+                                                </span>
+                                            )}
+                                            {(repo.forks_count || 0) > 0 && (
+                                                <span className="text-[11px] font-medium bg-slate-100 text-slate-600 rounded px-2 py-0.5 flex items-center gap-1">
+                                                    <GitFork size={11} /> {repo.forks_count}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
-                                        {cert.role && (
-                                            <p className="text-sm" style={{ color: MUTED }}>
-                                                {cert.role}
+                    {certificates.length > 0 && (
+                        <section id="certificates">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-bold text-slate-900">Certificates</h2>
+                                <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                    {certificates.length} verified
+                                </span>
+                            </div>
+                            <div className="grid sm:grid-cols-2 gap-5">
+                                {certificates.map((cert) => (
+                                    <article key={cert._id} className="card overflow-hidden flex flex-col">
+                                        <a
+                                            href={cert.certificateUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="block h-52 overflow-hidden bg-slate-50 border-b border-slate-100"
+                                        >
+                                            <img
+                                                src={cert.certificateUrl}
+                                                alt={cert.certificateName}
+                                                loading="lazy"
+                                                className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-[1.04]"
+                                            />
+                                        </a>
+                                        <div className="p-6 flex flex-col gap-3 flex-1">
+                                            <div className="flex items-start gap-2.5">
+                                                <BadgeCheck className="w-4 h-4 mt-0.5 shrink-0 text-indigo-600" />
+                                                <h3 className="text-base font-semibold tracking-tight leading-snug text-slate-900">
+                                                    {cert.certificateName}
+                                                </h3>
+                                            </div>
+                                            <p className="flex items-center gap-2 text-sm text-slate-500">
+                                                <Building2 className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                                                {cert.companyName}
                                             </p>
-                                        )}
+                                            {cert.role && <p className="text-sm text-slate-500">{cert.role}</p>}
+                                            {cert.issueDate && (
+                                                <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wide text-slate-400">
+                                                    <Calendar className="w-3 h-3" /> {cert.issueDate}
+                                                </p>
+                                            )}
+                                            {cert.description && (
+                                                <p className="text-sm leading-relaxed text-slate-500">{cert.description}</p>
+                                            )}
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
-                                        {cert.issueDate && (
-                                            <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase" style={{ color: FAINT }}>
-                                                <Calendar className="w-3 h-3" />
-                                                {cert.issueDate}
-                                            </p>
-                                        )}
-
-                                        {cert.description && (
-                                            <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
-                                                {cert.description}
-                                            </p>
-                                        )}
+                    {user?.workExperience?.length > 0 && (
+                        <section id="experience">
+                            <h2 className="text-lg font-bold text-slate-900 mb-4">Experience</h2>
+                            <div className="card p-6 space-y-5">
+                                {user.workExperience.map((exp, i) => (
+                                    <div key={exp._id || exp.id || i} className="flex gap-4">
+                                        <span className="mt-1.5 h-2.5 w-2.5 rounded-full bg-indigo-500 shrink-0" />
+                                        <div className="border-l border-slate-200 pl-4">
+                                            <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                                                <div>
+                                                    <p className="text-sm font-semibold text-slate-900">{exp.role}</p>
+                                                    <p className="text-xs text-slate-500">{exp.company}</p>
+                                                </div>
+                                                {exp.period && <span className="text-[11px] text-slate-400">{exp.period}</span>}
+                                            </div>
+                                            {exp.description && (
+                                                <p className="text-sm text-slate-500 mt-2 leading-relaxed">{exp.description}</p>
+                                            )}
+                                        </div>
                                     </div>
-                                </article>
-                            ))}
-                        </div>
-                    </section>
-                )}
-                {user?.education?.length > 0 && (
-                    <section id="education" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index={sectionIndex("education")} title="Education" />
-                        <div className="mt-10 grid sm:grid-cols-2 gap-px" style={{ background: LINE_SOFT }}>
-                            {user.education.map((edu, i) => (
-                                <div key={i} className="p-8" style={{ background: BG }}>
-                                    <p className="font-mono text-[11px] tracking-[0.2em] uppercase" style={{ color: ACCENT }}>
-                                        {edu.year}
-                                    </p>
-                                    <h3 className="mt-4 text-lg font-medium tracking-tight leading-snug">{edu.degree}</h3>
-                                    <p className="mt-2 text-sm" style={{ color: MUTED }}>{edu.institution}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
-                {user?.workExperience?.length > 0 && (
-                    <section id="experience" className="py-16 sm:py-20" style={{ borderTop: `1px solid ${LINE}` }}>
-                        <SectionLabel index={sectionIndex("experience")} title="Experience" />
-                        <div className="mt-10 max-w-3xl">
-                            {user.workExperience.map((exp, i) => (
-                                <div
-                                    key={i}
-                                    className="grid sm:grid-cols-[10rem_1fr] gap-2 sm:gap-8 py-7"
-                                    style={{ borderBottom: `1px solid ${LINE_SOFT}` }}
-                                >
-                                    <span className="font-mono text-[11px] tracking-[0.15em] uppercase pt-1" style={{ color: MUTED }}>
-                                        {exp.period}
-                                    </span>
-                                    <div>
-                                        <h3 className="text-lg font-medium tracking-tight">{exp.role}</h3>
-                                        <p className="text-sm mt-1" style={{ color: ACCENT }}>{exp.company}</p>
-                                        {exp.description && (
-                                            <p className="text-sm leading-relaxed mt-3" style={{ color: MUTED }}>
-                                                {exp.description}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
-                <footer className="pt-20 pb-10" style={{ borderTop: `1px solid ${LINE}` }}>
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    <section className="card p-6 flex flex-wrap items-center justify-between gap-4 bg-indigo-600 border-indigo-600 text-white">
                         <div>
-                            <p className="font-mono text-[11px] tracking-[0.25em] uppercase mb-4" style={{ color: MUTED }}>
-                                Got a project?
-                            </p>
-                            <a
-                                href={user?.email ? `mailto:${user.email}` : "#"}
-                                className="group inline-flex items-center gap-3 text-3xl sm:text-5xl font-semibold tracking-tight"
-                            >
-                                Let's work together
-                                <ArrowRight className="w-7 h-7 sm:w-9 sm:h-9 transition-transform group-hover:translate-x-2" style={{ color: ACCENT }} />
-                            </a>
+                            <h2 className="text-lg font-bold flex items-center gap-2">
+                                <Briefcase size={18} /> Want {firstName} on your project?
+                            </h2>
+                            <p className="text-sm text-indigo-100 mt-1">Reach out by email to start a conversation.</p>
                         </div>
-                        <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-8 lg:items-end font-mono text-[11px] tracking-[0.15em] uppercase" style={{ color: MUTED }}>
+                        <div className="flex gap-3">
                             {user?.email && (
-                                <a href={`mailto:${user.email}`} className="flex items-center gap-2 hover:text-white transition-colors">
-                                    <Mail className="w-3.5 h-3.5" /> {user.email}
+                                <a href={`mailto:${user.email}`} className="btn bg-white text-indigo-700 hover:bg-indigo-50">
+                                    <Mail size={15} /> Contact
                                 </a>
                             )}
-                            {user?.githubUrl && (
-                                <a href={user.githubUrl} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub ↗</a>
-                            )}
-                            <span style={{ color: FAINT }}>© {new Date().getFullYear()} — TOM Platform</span>
                         </div>
-                    </div>
-
-                    {/* oversized watermark name */}
-                    <div className="mt-16 overflow-hidden select-none pointer-events-none" aria-hidden>
-                        <p
-                            className="text-[18vw] leading-[0.8] font-semibold tracking-[-0.05em] whitespace-nowrap text-center"
-                            style={{ color: PANEL, WebkitTextStroke: `1px ${LINE}` }}
-                        >
-                            {firstName.toUpperCase()}
-                        </p>
-                    </div>
-                </footer>
+                    </section>
+                </div>
             </main>
-        </div>
-    );
-}
 
-/* ------------------------------------------------------------------ */
-/*  Small presentational helpers                                       */
-/* ------------------------------------------------------------------ */
-
-function TextLink({ href, children }) {
-    const external = href.startsWith("http");
-    return (
-        <a
-            href={href}
-            target={external ? "_blank" : undefined}
-            rel="noreferrer"
-            className="group flex items-center gap-1.5 text-sm font-medium pb-1 transition-colors"
-            style={{ borderBottom: `1px solid ${LINE}` }}
-        >
-            <span className="group-hover:text-white transition-colors" style={{ color: MUTED }}>
-                {children}
-            </span>
-            <ArrowUpRight className="w-3.5 h-3.5" style={{ color: MUTED }} />
-        </a>
-    );
-}
-
-function SectionLabel({ index, title, right }) {
-    return (
-        <div className="flex items-baseline justify-between gap-6">
-            <div className="flex items-baseline gap-4">
-                <span className="font-mono text-[11px] tracking-[0.2em]" style={{ color: ACCENT }}>
-                    {index}
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{title}</h2>
-            </div>
-            {right}
+            <footer className="border-t border-slate-200 bg-white">
+                <div className="max-w-6xl mx-auto px-6 sm:px-10 py-6 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
+                    <p className="flex items-center gap-2">
+                        <MapPin size={14} /> © {new Date().getFullYear()} TOM — Train Optimal Model. Public portfolio.
+                    </p>
+                    <Link to="/" className="inline-flex items-center gap-1.5 hover:text-indigo-700">
+                        <ArrowLeft size={14} /> Back to home
+                    </Link>
+                </div>
+            </footer>
         </div>
     );
 }

@@ -44,6 +44,7 @@ fyp/
 | GET | `/github/callback` | No | GitHub OAuth callback |
 | GET | `/me` | Yes | Get logged-in user profile |
 | POST | `/logout` | Yes | Logout + destroy session |
+| DELETE | `/delete-account` | Yes | Permanently delete the logged-in user + their certificates |
 
 ### Account Routes (`/api/account`)
 | Method | Endpoint | Auth | Description |
@@ -406,4 +407,142 @@ const portfolioURL = user.username ? `user/portfolio/${user.username}` : user.po
   `githubId`. If you add new sensitive fields to `user.js`, strip them there too.
 - `imageRoute` and `portfolioRoute` share the `/api/user` prefix; `portfolioRoute`
   is registered first, so it wins for `/portfolio/:username` and `/getprofile`.
+
+---
+
+# Delete Account
+
+Irreversible self-service account deletion, wired to the **Delete Account** button
+in the "Danger Zone" of `frontend/src/Screen/Setting.jsx`.
+
+| Method | Endpoint | Middleware | Controller |
+|--------|----------|------------|------------|
+| DELETE | `/api/auth/delete-account` | `ensureAuthenticated` | `deleteAccount` |
+
+## 1. Backend — `Backend/src/controller/AuthController.js`
+
+`deleteAccount(req, res)` lives next to `logout` because it reuses the same
+session teardown, and it is registered on the **auth** router (not the account
+router) since it destroys the authenticated identity itself.
+
+```javascript
+const deleteAccount = async (req, res) => {
+  if (!req.user) return res.status(401).json({ success: false, ... });
+
+  const userId = req.user._id;
+
+  // 1. pull every certificate and destroy its cloudinary asset
+  const certificates = await Certificate.find({ userId }).select("publicId");
+  await Promise.all(certificates.map(async (certificate) => {
+    try {
+      await cloudinary.uploader.destroy(certificate.publicId);
+    } catch (cloudError) {
+      console.error(`Failed to destroy cloudinary asset ...`, cloudError.message);
+    }
+  }));
+
+  // 2. drop the documents
+  await Certificate.deleteMany({ userId });
+  await User.findByIdAndDelete(userId);
+
+  // 3. destroy the session so the browser cannot keep using the old cookie
+  req.logout((logoutErr) => { ... req.session.destroy((sessionErr) => {
+    res.clearCookie("connect.sid", { path: "/", httpOnly: true, ... });
+    res.status(200).json({ success: true, message: "Account deleted successfully" });
+  })});
+};
+```
+
+Ordering notes:
+- **Cloudinary first, then Mongo.** Each `destroy` is wrapped in its own
+  `try/catch` inside `Promise.all` so one failing asset cannot abort the
+  remaining deletions — otherwise a single Cloudinary error would leave the
+  account half-deleted and the user still logged in.
+- `deleteMany({ userId })` instead of per-document deletes: certificates have no
+  dependent records.
+- The user id comes from `req.user._id` (Passport), **never** from
+  `req.body`/`req.params`, so a user can only ever delete their own account.
+- The `clearCookie` options are byte-identical to `logout` — a mismatch on
+  `path`/`sameSite`/`secure` leaves the old `connect.sid` cookie in the browser.
+- `req.logout` + `req.session.destroy` is mandatory here: the user document is
+  already gone, so a surviving session would fail on the next `ensureAuthenticated`
+  lookup instead of logging them out cleanly.
+
+## 2. Route — `Backend/src/route/AuthRoute.js`
+
+```javascript
+const { githubCallback, getProfile, logout, deleteAccount } = require("../controller/AuthController");
+
+router.delete("/delete-account", ensureAuthenticated, deleteAccount);
+```
+
+The router is mounted at `/api/auth` in `app.js`, so the full path is
+`DELETE /api/auth/delete-account`. `DELETE` is already in the CORS `methods`
+allow-list, and no new middleware is needed.
+
+## 3. Frontend — `frontend/src/zustand/useAuthStore.js`
+
+The call lives in the **auth** store (not `useUtilityStore`) because the
+response also logs the user out:
+
+```javascript
+deleteAccount: async () => {
+  set({ loading: true, error: null });
+  try {
+    const response = await api.delete("/auth/delete-account");
+    set({ user: null, isAuthenticated: false, loading: false, error: null });
+    return { success: true, message: response.data?.message || "Account deleted successfully" };
+  } catch (err) {
+    set({ loading: false });
+    return { success: false, error: err.response?.data?.message || "Failed to delete account" };
+  }
+},
+```
+
+It **returns** `{ success, error }` instead of throwing, matching `logout` and
+`updateAccountDetails` — callers must check `res.success`. Note it sets
+`loading: false` on both paths; leaving it `true` would strand the whole app on
+`AccountSkelton` (`App.jsx` returns the skeleton whenever `loading && !onPublicRoute`).
+
+## 4. Frontend — `frontend/src/Screen/Setting.jsx`
+
+The Danger Zone card is a two-step confirm, because a single stray click must
+never destroy a profile:
+
+- First click on **Delete Account** only sets `confirmDeleteAccount = true`; the
+  row is swapped for **Cancel** + **Yes, Delete Account** and a red
+  "this cannot be undone" warning is revealed.
+- **Cancel** (or a successful delete) resets `confirmDeleteAccount`.
+- **Yes, Delete Account** calls `handleDeleteAccount()`, which shows a
+  `Loader2` spinner via `deletingAccount` and disables both buttons, so a
+  double-click cannot fire two deletes.
+- On success it toasts the server message and does
+  `navigate('/Authorization', { replace: true })`. Belt-and-braces: the store
+  already nulled `user`, so `ProtectedMiddleware` would redirect on its own —
+  the explicit `replace: true` avoids leaving the dead account in history.
+- On failure it clears both flags and toasts `res.error`, so the card returns to
+  its default state and the user can retry.
+
+## 5. Flow summary
+
+1. `Setting.jsx` → **Delete Account** → inline confirm → **Yes, Delete Account**.
+2. `useAuthStore.deleteAccount()` → `DELETE /api/auth/delete-account`.
+3. `ensureAuthenticated` resolves `req.user` from the session cookie.
+4. `deleteAccount` destroys each certificate's Cloudinary asset, then
+   `Certificate.deleteMany` + `User.findByIdAndDelete`.
+5. Session is destroyed and `connect.sid` cleared; `200 { success: true }`.
+6. Store clears `user`/`isAuthenticated`; UI navigates to `/Authorization`.
+
+## 6. Gotchas
+- The endpoint is **not idempotent from the client's view**: a second call
+  returns `401` because the session no longer exists, even though the first call
+  already succeeded. Never retry it automatically.
+- Re-logging in with the same GitHub account **recreates** the user from
+  `processGithubProfile` (a fresh `User.create`), and the old certificates are
+  gone — deletion is not a soft-delete/restore flow.
+- The shared portfolio URL (`/api/user/portfolio/:username`) starts 404ing
+  immediately after deletion because `GetPublicPortfolio` can no longer find the
+  user.
+- Any new per-user collection added later must be cleaned up inside
+  `deleteAccount`, or it will be orphaned in Mongo.
 

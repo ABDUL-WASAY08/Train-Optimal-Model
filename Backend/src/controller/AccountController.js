@@ -5,9 +5,7 @@ const updateAccountDetails = async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
-
     const { username, bio, skills, education, workExperience, dob, SetRepo, Filteredrepositories } = req.body;
-
     const updateData = {};
     if (username !== undefined) updateData.username = username;
     if (bio !== undefined) updateData.bio = bio;

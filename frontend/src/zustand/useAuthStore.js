@@ -70,5 +70,28 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  deleteAccount: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.delete("/auth/delete-account");
+      set({
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null,
+      });
+      return {
+        success: true,
+        message: response.data?.message || "Account deleted successfully",
+      };
+    } catch (err) {
+      set({ loading: false });
+      return {
+        success: false,
+        error: err.response?.data?.message || "Failed to delete account",
+      };
+    }
+  },
+
   clearError: () => set({ error: null }),
 }));

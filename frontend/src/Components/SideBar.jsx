@@ -42,33 +42,38 @@ export default function Sidebar({ activeItem, onSelect }) {
       )}
 
       <aside
-        style={{ backgroundColor: "var( #0d0d18)" }}
-        className={`sticky mt-20 md:static inset-y-0 left-0 z-50 flex flex-col justify-between
+        className={`sticky top-0 h-screen md:static z-50 flex flex-col justify-between bg-slate-900
           transition-all duration-300 ease-in-out shrink-0
           ${isOpen ? "w-64 translate-x-0" : "-translate-x-full md:translate-x-0 md:w-20"}`}
       >
        
         <div>
         
-          <div className="flex items-center px-4 h-16  border-white/10">
+          <div className="flex items-center px-4 h-16 border-b border-slate-800">
             {isOpen ? (
-              <h1 className="text-lg font-bold text-white tracking-wide truncate">
-                Features
-              </h1>
+              <div className="flex items-center gap-2.5 truncate">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
+                  T
+                </span>
+                <div className="leading-tight">
+                  <p className="text-sm font-bold tracking-wide text-white">TOM</p>
+                  <p className="text-[11px] text-slate-400">Developer Portal</p>
+                </div>
+              </div>
             ) : (
-              <span className="hidden md:block w-4" />
+              <span className="hidden md:block h-8 w-8 shrink-0 rounded-lg bg-indigo-600" />
             )}
 
             
             <button
               onClick={toggleSidebar}
-              className="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              className="ml-auto text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors"
               aria-label="Toggle navigation"
             >
               {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
             </button>
           </div>
-          <nav className="p-3 space-y-1.5">
+          <nav className="p-3 space-y-0.5 overflow-y-auto scrollbar-thin">
             {NAV_ITEMS.map(({ label, icon: Icon }) => {
               const isActive = activeItem === label;
               return (
@@ -77,15 +82,15 @@ export default function Sidebar({ activeItem, onSelect }) {
                   onClick={() => onSelect(label)}
                   title={!isOpen ? label : undefined}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                    transition-all duration-200
+                    transition-colors
                     ${
                       isActive
-                        ? "bg-white/20 text-white shadow-sm"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
+                        ? "bg-indigo-600 text-white shadow-sm"
+                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
                     }
                     ${isOpen ? "justify-start" : "md:justify-center"}`}
                 >
-                  <Icon size={20} className="shrink-0" />
+                  <Icon size={18} className="shrink-0" />
                   {isOpen && <span className="truncate">{label}</span>}
                 </button>
               );

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  Share2,
   Mail,
   User,
   Code,
@@ -13,7 +12,6 @@ import {
   Star,
   GitBranch,
   Briefcase,
-  Sparkles,
   ArrowUpRight,
   MapPin,
   BadgeCheck,
@@ -39,811 +37,274 @@ function Accounts() {
     }
   }, [user, getCertificates]);
 
-  useEffect(() => {
-    const elements = document.querySelectorAll('.portfolio-reveal');
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('portfolio-visible');
-          }
-        });
-      },
-      {
-        threshold: 0.12,
-      }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, [user]);
   return (
-    <div
-      className="min-h-screen  text-[#c9d1d9] relative overflow-hidden"
-    >
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 lg:px-10 py-12">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
 
-        <section className="portfolio-reveal">
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8">
-
+        {/* Header */}
+        <section className="card p-6 sm:p-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-5">
-
-
-              <div className="relative">
-
-
-                <div className="absolute -inset-[5px] rounded-full border border-[#30363d] animate-[profileRing_4s_ease-in-out_infinite]" />
-
-                <div className="absolute -inset-[9px] rounded-full border border-[#238636]/20 animate-[profileRing2_6s_linear_infinite]" />
-
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-[#30363d] overflow-hidden flex items-center justify-center bg-[#0d1117] shadow-[0_0_35px_rgba(35,134,54,0.08)] transition-all duration-500 hover:scale-105 hover:shadow-[0_0_45px_rgba(35,134,54,0.18)]">
-
-                  {user?.avatarUrl ? (
-                    <img
-                      src={user.avatarUrl}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : user?.name ? (
-                    <span className="text-2xl font-semibold text-white">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                  ) : (
-                    <User className="w-8 h-8 text-[#6e7681]" />
-                  )}
-
-                </div>
-
-                <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-[#238636] border-2 border-[#0d1117] shadow-[0_0_10px_rgba(35,134,54,0.7)] animate-[statusPulse_2s_ease-in-out_infinite]" />
-
+              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-50 sm:h-24 sm:w-24">
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                ) : user?.name ? (
+                  <span className="flex h-full w-full items-center justify-center text-2xl font-semibold text-slate-700">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <User className="m-auto h-8 w-8 text-slate-400" />
+                )}
               </div>
 
               <div>
-
-                <div className="flex items-center gap-2 mb-1">
-
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#6e7681]">
-                    Developer
-                  </p>
-
-                  <Sparkles className="w-3 h-3 text-[#8b949e] animate-[sparkle_2.5s_ease-in-out_infinite]" />
-
-                </div>
-
-                <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Developer</p>
+                <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                   {user?.name || user?.username || 'Developer Name'}
                 </h1>
-
                 {user?.username && (
-                  <p className="text-xs text-[#6e7681] mt-1">
-                    @{user.username}
-                  </p>
+                  <p className="mt-1 text-xs text-slate-500">@{user.username}</p>
                 )}
-
               </div>
-
             </div>
-
-
           </div>
 
-
           {user?.bio && (
-            <p className="mt-8 max-w-2xl text-sm leading-6 text-[#8b949e]">
-              {user.bio}
-            </p>
+            <p className="mt-6 max-w-2xl text-sm leading-6 text-slate-600">{user.bio}</p>
           )}
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-5">
-
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
             {user?.email && (
-              <span className="group flex items-center gap-1.5 text-xs text-[#6e7681] hover:text-[#c9d1d9] transition-colors">
-                <Mail className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
-                {user.email}
+              <span className="flex items-center gap-1.5 text-xs text-slate-500">
+                <Mail className="w-3.5 h-3.5" /> {user.email}
               </span>
             )}
 
             {user?.githubUrl && (
-              <a
-                href={user.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-1.5 text-xs text-[#6e7681] hover:text-white transition-colors"
-              >
-                <GitBranch className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
-                GitHub
-                <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                <GitBranch className="w-3.5 h-3.5" /> GitHub <ArrowUpRight className="w-3 h-3" />
               </a>
             )}
 
             {user?.twitterUrl && (
-              <a
-                href={user.twitterUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-1.5 text-xs text-[#6e7681] hover:text-white transition-colors"
-              >
-                Twitter
-                <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                Twitter <ArrowUpRight className="w-3 h-3" />
               </a>
             )}
 
             {user?.websiteUrl && (
-              <a
-                href={user.websiteUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center gap-1.5 text-xs text-[#6e7681] hover:text-white transition-colors"
-              >
-                <Globe className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
-                Website
-                <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                <Globe className="w-3.5 h-3.5" /> Website <ArrowUpRight className="w-3 h-3" />
               </a>
             )}
-
           </div>
-
         </section>
 
-        <div className="mt-12 h-px bg-gradient-to-r from-transparent via-[#30363d] to-transparent" />
-
         {user?.dob && (
-          <section className="portfolio-reveal pt-12">
-
-            <SectionTitle
-              icon={<Calendar className="w-4 h-4" />}
-              title="Personal Details"
-            />
-
-            <div className="mt-5 group inline-flex items-center gap-3 transition-transform duration-300 hover:translate-x-1">
-
-              <span className="text-xs text-[#6e7681]">
-                Date of Birth
-              </span>
-
-              <span className="text-xs text-[#c9d1d9]">
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<Calendar className="w-4 h-4" />} title="Personal Details" />
+            <div className="mt-5 inline-flex items-center gap-3">
+              <span className="text-xs text-slate-500">Date of Birth</span>
+              <span className="text-xs font-medium text-slate-700">
                 {new Date(user.dob).toLocaleDateString()}
               </span>
-
             </div>
-
           </section>
         )}
 
         {user?.skills?.length > 0 && (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<Award className="w-4 h-4" />}
-              title="Skills & Technologies"
-            />
-
-            <div className="flex flex-wrap gap-2 mt-5">
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<Award className="w-4 h-4" />} title="Skills & Technologies" />
+            <div className="mt-5 flex flex-wrap gap-2">
               {user.skills.map((skill, index) => (
-
                 <span
                   key={index}
-                  className="group relative overflow-hidden px-3 py-1.5 border border-[#30363d] rounded-md text-xs text-[#a8b0ba] cursor-default transition-all duration-300 hover:text-white hover:border-[#8b949e] hover:-translate-y-1 hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)]"
+                  className="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700"
                 >
-
-
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
-
-                  <span className="relative">
-                    {skill}
-                  </span>
-
+                  {skill}
                 </span>
-
               ))}
-
             </div>
-
           </section>
         )}
 
         {user?.topLanguages?.length > 0 && (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<Code className="w-4 h-4" />}
-              title="GitHub Languages"
-            />
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<Code className="w-4 h-4" />} title="GitHub Languages" />
             <div className="mt-6 max-w-xl space-y-5">
-
               {user.topLanguages.map((item, index) => (
-
-                <div
-                  key={index}
-                  className="group"
-                >
-
-                  <div className="flex justify-between mb-2">
-
-                    <span className="text-xs text-[#c9d1d9] group-hover:text-white transition-colors">
-                      {item.language}
-                    </span>
-
-                    <span className="text-[11px] text-[#6e7681]">
-                      {item.percentage}%
-                    </span>
-
+                <div key={index}>
+                  <div className="mb-2 flex justify-between">
+                    <span className="text-xs text-slate-700">{item.language}</span>
+                    <span className="text-[11px] text-slate-400">{item.percentage}%</span>
                   </div>
-
-                  <div className="relative h-1 bg-[#21262d] rounded-full overflow-hidden">
-
+                  <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className="language-bar h-full bg-gradient-to-r from-[#6e7681] to-[#c9d1d9] rounded-full"
-                      style={{
-                        '--bar-width': `${item.percentage}%`,
-                        animationDelay: `${index * 150}ms`,
-                      }}
+                      className="h-full rounded-full bg-indigo-500"
+                      style={{ width: `${item.percentage}%` }}
                     />
-
-                    {/* Moving highlight */}
-
-                    <div className="absolute top-0 left-0 h-full w-12 bg-white/20 blur-sm animate-[barShine_3s_ease-in-out_infinite]" />
-
                   </div>
-
                 </div>
-
               ))}
-
             </div>
-
           </section>
         )}
+
         {user?.Filteredrepositories?.length > 0 && (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<FolderGit2 className="w-4 h-4" />}
-              title="Projects & Repositories"
-            />
-
-            <div className="mt-6 divide-y divide-[#21262d] border-y border-[#21262d]">
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<FolderGit2 className="w-4 h-4" />} title="Projects & Repositories" />
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {user.Filteredrepositories.map((repo, index) => (
-
                 <a
                   key={index}
                   href={repo.html_url || '#'}
                   target="_blank"
                   rel="noreferrer"
-                  className="project-item group relative block py-6 transition-all duration-500 hover:pl-3"
+                  className="rounded-xl border border-slate-200 p-4 transition-colors hover:border-indigo-300"
                 >
-
-
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-10 bg-[#8b949e]/10 blur-xl group-hover:w-32 transition-all duration-500" />
-
-
-                  <div className="relative flex justify-between gap-5">
-
-                    <div className="min-w-0">
-
-                      <div className="flex items-center gap-3">
-
-                        <span className="text-[10px] text-[#484f58] font-mono group-hover:text-[#8b949e] transition-colors">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-
-                        <h3 className="text-sm font-medium text-white group-hover:text-[#e6edf3] transition-colors">
-                          {repo.name}
-                        </h3>
-
-                      </div>
-
-                      <p className="text-xs text-[#6e7681] leading-5 mt-2 ml-7 max-w-2xl group-hover:text-[#8b949e] transition-colors">
-                        {repo.description || 'No description provided.'}
-                      </p>
-
-                      <div className="flex items-center gap-4 mt-3 ml-7">
-
-                        {repo.language && (
-                          <span className="text-[11px] text-[#8b949e]">
-                            {repo.language}
-                          </span>
-                        )}
-
-                        {repo.stargazers_count !== undefined && (
-                          <span className="flex items-center gap-1 text-[11px] text-[#6e7681]">
-                            <Star className="w-3 h-3 group-hover:scale-110 transition-transform" />
-                            {repo.stargazers_count}
-                          </span>
-                        )}
-
-                        {repo.has_readme && (
-                          <span className="text-[11px] text-[#6e7681]">
-                            README
-                          </span>
-                        )}
-
-                      </div>
-
-                    </div>
-
-
-                    <div className="shrink-0 pt-1">
-
-                      <ExternalLink
-                        className="w-4 h-4 text-[#484f58] group-hover:text-white transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      />
-
-                    </div>
-
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-sm font-semibold text-slate-900">{repo.name}</h3>
+                    <ExternalLink className="h-4 w-4 shrink-0 text-slate-400" />
                   </div>
-
+                  <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">
+                    {repo.description || 'No description provided.'}
+                  </p>
+                  <div className="mt-3 flex items-center gap-4">
+                    {repo.language && <span className="text-[11px] text-slate-500">{repo.language}</span>}
+                    {repo.stargazers_count !== undefined && (
+                      <span className="flex items-center gap-1 text-[11px] text-slate-500">
+                        <Star className="w-3 h-3" /> {repo.stargazers_count}
+                      </span>
+                    )}
+                    {repo.has_readme && <span className="text-[11px] text-slate-400">README</span>}
+                  </div>
                 </a>
-
               ))}
-
             </div>
-
           </section>
         )}
 
-
-
         {certificates.length > 0 ? (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<BadgeCheck className="w-4 h-4" />}
-              title="Certificates"
-            />
-
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<BadgeCheck className="w-4 h-4" />} title="Certificates" />
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
               {certificates.map((cert) => (
-
                 <div
                   key={cert._id}
-                  className="group border border-[#21262d] rounded-lg overflow-hidden flex flex-col hover:border-[#30363d] transition-colors duration-500"
+                  className="flex flex-col overflow-hidden rounded-xl border border-slate-200 transition-shadow hover:shadow-pop"
                 >
-
                   <a
                     href={cert.certificateUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="block h-40 bg-[#010409] border-b border-[#21262d] overflow-hidden relative"
+                    className="block h-40 overflow-hidden border-b border-slate-100 bg-slate-50"
                   >
-
                     <img
                       src={cert.certificateUrl}
                       alt={cert.certificateName}
                       loading="lazy"
-                      className="w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-500"
+                      className="h-full w-full object-cover object-top transition-transform duration-500 hover:scale-[1.04]"
                     />
-
-                    <span className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-[#e6edf3] text-[#0d1117] text-[10px] font-mono tracking-wider uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      View
-                      <ExternalLink className="w-2.5 h-2.5" />
-                    </span>
-
                   </a>
-
-                  <div className="p-4 flex flex-col gap-2 flex-1">
-
-                    <h3 className="text-sm font-medium text-white">
-                      {cert.certificateName}
-                    </h3>
-
-                    <p className="flex items-center gap-1.5 text-xs text-[#8b949e]">
-                      <Building2 className="w-3 h-3 shrink-0 text-[#484f58]" />
-                      {cert.companyName}
+                  <div className="flex flex-1 flex-col gap-2 p-4">
+                    <h3 className="text-sm font-semibold text-slate-900">{cert.certificateName}</h3>
+                    <p className="flex items-center gap-1.5 text-xs text-slate-500">
+                      <Building2 className="w-3 h-3 shrink-0 text-slate-400" /> {cert.companyName}
                     </p>
-
-                    {cert.role && (
-                      <p className="text-[11px] text-[#6e7681]">
-                        {cert.role}
-                      </p>
-                    )}
-
+                    {cert.role && <p className="text-[11px] text-slate-500">{cert.role}</p>}
                     {cert.issueDate && (
-                      <p className="flex items-center gap-1.5 text-[10px] text-[#484f58] font-mono">
-                        <Calendar className="w-2.5 h-2.5" />
-                        {cert.issueDate}
+                      <p className="flex items-center gap-1.5 font-mono text-[10px] text-slate-400">
+                        <Calendar className="w-2.5 h-2.5" /> {cert.issueDate}
                       </p>
                     )}
-
                     {cert.description && (
-                      <p className="text-xs text-[#6e7681] leading-5 mt-1 line-clamp-3">
-                        {cert.description}
-                      </p>
+                      <p className="mt-1 line-clamp-3 text-xs leading-5 text-slate-500">{cert.description}</p>
                     )}
-
                   </div>
-
                 </div>
-
               ))}
-
             </div>
-
           </section>
         ) : certificatesLoading ? (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<BadgeCheck className="w-4 h-4" />}
-              title="Certificates"
-            />
-
-            <p className="mt-6 text-xs text-[#6e7681] italic">
-              Loading certificates...
-            </p>
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<BadgeCheck className="w-4 h-4" />} title="Certificates" />
+            <p className="mt-6 text-xs italic text-slate-400">Loading certificates...</p>
           </section>
         ) : null}
 
-
-
         {user?.education?.length > 0 ? (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<GraduationCap className="w-4 h-4" />}
-              title="Education"
-            />
-
-            <div className="relative mt-7 ml-1">
-
-
-              <div className="absolute left-[3px] top-2 bottom-2 w-px bg-gradient-to-b from-[#6e7681] via-[#30363d] to-transparent" />
-
-              <div className="space-y-8">
-
-                {user.education.map((edu, index) => (
-
-                  <div
-                    key={edu._id || edu.id || index}
-                    className="group relative flex gap-5 pl-6"
-                  >
-
-                    <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-[#6e7681] ring-4 ring-[#0d1117] group-hover:bg-white group-hover:scale-125 transition-all duration-300" />
-
-                    <div>
-
-                      <h3 className="text-sm font-medium text-white group-hover:text-[#e6edf3] transition-colors">
-                        {edu.degree}
-                      </h3>
-
-                      <p className="text-xs text-[#8b949e] mt-1">
-                        {edu.institution}
-                      </p>
-
-                      <p className="text-[11px] text-[#6e7681] mt-1">
-                        {edu.year}
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                ))}
-
-              </div>
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<GraduationCap className="w-4 h-4" />} title="Education" />
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {user.education.map((edu, index) => (
+                <div key={edu._id || edu.id || index} className="rounded-xl border border-slate-200 p-4">
+                  <h3 className="text-sm font-semibold text-slate-900">{edu.degree}</h3>
+                  <p className="mt-1 text-xs text-slate-500">{edu.institution}</p>
+                  {edu.year && <p className="mt-1 font-mono text-[11px] text-slate-400">{edu.year}</p>}
+                </div>
+              ))}
             </div>
-
           </section>
-        ) : (<div className='mb-5 mt-5'>
-          <SectionTitle
-            icon={<GraduationCap className="w-4 h-4" />}
-            title="Education"
-          />
-          <p className='mt-7 text-gray-700'>You can add your education by click edit Portfolio in navbar or just go to setting</p>
-        </div>)}
-
+        ) : (
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<GraduationCap className="w-4 h-4" />} title="Education" />
+            <p className="mt-6 text-sm text-slate-500">
+              You can add your education by clicking Edit Portfolio in the navbar or by going to Settings.
+            </p>
+          </section>
+        )}
 
         {user?.workExperience?.length > 0 ? (
-          <section className="portfolio-reveal pt-14">
-
-            <SectionTitle
-              icon={<Briefcase className="w-4 h-4" />}
-              title="Work Experience"
-            />
-
-            <div className="mt-7 space-y-8">
-
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<Briefcase className="w-4 h-4" />} title="Work Experience" />
+            <div className="mt-6 space-y-5">
               {user.workExperience.map((exp, index) => (
-
-                <div
-                  key={exp._id || exp.id || index}
-                  className="group relative pl-5 border-l border-[#30363d] hover:border-[#8b949e] transition-colors duration-500"
-                >
-
-                  <div className="absolute -left-[4px] top-1.5 w-[7px] h-[7px] rounded-full bg-[#484f58] ring-4 ring-[#0d1117] group-hover:bg-white transition-all duration-300" />
-
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-
-                    <div>
-
-                      <h3 className="text-sm font-medium text-white group-hover:text-[#e6edf3] transition-colors">
-                        {exp.role}
-                      </h3>
-
-                      <p className="text-xs text-[#8b949e] mt-1">
-                        {exp.company}
-                      </p>
-
+                <div key={exp._id || exp.id || index} className="flex gap-4">
+                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-500" />
+                  <div className="border-l border-slate-200 pl-4">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h3 className="text-sm font-semibold text-slate-900">{exp.role}</h3>
+                        <p className="mt-0.5 text-xs text-slate-500">{exp.company}</p>
+                      </div>
+                      {exp.period && <span className="text-[11px] text-slate-400">{exp.period}</span>}
                     </div>
-
-                    <span className="text-[11px] text-[#6e7681]">
-                      {exp.period}
-                    </span>
-
+                    {exp.description && (
+                      <p className="mt-2 max-w-3xl text-xs leading-6 text-slate-500">{exp.description}</p>
+                    )}
                   </div>
-
-                  {exp.description && (
-                    <p className="text-xs text-[#6e7681] leading-6 mt-3 max-w-3xl group-hover:text-[#8b949e] transition-colors">
-                      {exp.description}
-                    </p>
-                  )}
-
                 </div>
-
               ))}
-
             </div>
-
           </section>
-        ) : (<div className='mb-5'>
-          <SectionTitle
-            icon={<Briefcase className="w-4 h-4" />}
-            title="Work Experience"
-          />
-          <p className='mt-7 text-gray-700'>You can add your workExperience by click edit Portfolio in navbar or just go to setting</p>
-        </div>)}
-
-        <footer className="portfolio-reveal mt-20 pt-7 border-t border-[#21262d]">
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-
-            <p className="text-[10px] text-[#484f58] tracking-[0.18em]">
-              TOM
+        ) : (
+          <section className="card mt-6 p-6 sm:p-8">
+            <SectionTitle icon={<Briefcase className="w-4 h-4" />} title="Work Experience" />
+            <p className="mt-6 text-sm text-slate-500">
+              You can add your work experience by clicking Edit Portfolio in the navbar or by going to Settings.
             </p>
+          </section>
+        )}
 
-            <div className="flex items-center gap-2 text-[10px] text-[#484f58]">
+        <footer className="mt-10 border-t border-slate-200 pt-6">
+          <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <p className="text-[10px] tracking-[0.18em] text-slate-400">TOM</p>
+            <div className="flex items-center gap-2 text-[10px] text-slate-400">
               <MapPin className="w-3 h-3" />
               <span>Contact me</span>
             </div>
-
           </div>
-
         </footer>
-
       </div>
-
-
-      {/* =====================================================
-          ANIMATIONS
-      ===================================================== */}
-
-      <style>
-        {`
-
-          /* PAGE REVEAL */
-
-          .portfolio-reveal {
-            opacity: 0;
-            transform: translateY(22px);
-            transition:
-              opacity 0.8s ease,
-              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-          }
-
-          .portfolio-visible {
-            opacity: 1;
-            transform: translateY(0);
-          }
-
-
-          /* BACKGROUND GRID */
-
-          @keyframes gridMove {
-
-            0% {
-              transform: translateY(0);
-            }
-
-            100% {
-              transform: translateY(45px);
-            }
-
-          }
-
-
-          /* PROFILE RINGS */
-
-          @keyframes profileRing {
-
-            0%,
-            100% {
-              transform: scale(1);
-              opacity: 0.5;
-            }
-
-            50% {
-              transform: scale(1.04);
-              opacity: 0.9;
-            }
-
-          }
-
-
-          @keyframes profileRing2 {
-
-            0% {
-              transform: rotate(0deg) scale(1);
-            }
-
-            100% {
-              transform: rotate(360deg) scale(1);
-            }
-
-          }
-
-
-          /* ONLINE STATUS */
-
-          @keyframes statusPulse {
-
-            0%,
-            100% {
-              box-shadow: 0 0 5px rgba(35,134,54,0.4);
-            }
-
-            50% {
-              box-shadow: 0 0 14px rgba(35,134,54,0.8);
-            }
-
-          }
-
-
-          /* SPARKLE */
-
-          @keyframes sparkle {
-
-            0%,
-            100% {
-              opacity: 0.3;
-              transform: rotate(0deg) scale(0.9);
-            }
-
-            50% {
-              opacity: 1;
-              transform: rotate(15deg) scale(1.15);
-            }
-
-          }
-
-
-          /* BACKGROUND GLOW */
-
-          @keyframes slowPulse {
-
-            0%,
-            100% {
-              transform: translateX(-50%) scale(1);
-              opacity: 0.04;
-            }
-
-            50% {
-              transform: translateX(-50%) scale(1.15);
-              opacity: 0.08;
-            }
-
-          }
-
-
-          @keyframes floatGlow {
-
-            0%,
-            100% {
-              transform: translateY(0) translateX(0);
-            }
-
-            50% {
-              transform: translateY(-35px) translateX(-20px);
-            }
-
-          }
-
-
-          /* LANGUAGE BARS */
-
-          .language-bar {
-            width: 0;
-            animation: languageFill 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          }
-
-          @keyframes languageFill {
-
-            from {
-              width: 0;
-            }
-
-            to {
-              width: var(--bar-width);
-            }
-
-          }
-
-
-          /* BAR SHINE */
-
-          @keyframes barShine {
-
-            0% {
-              transform: translateX(-60px);
-              opacity: 0;
-            }
-
-            30% {
-              opacity: 1;
-            }
-
-            70% {
-              opacity: 1;
-            }
-
-            100% {
-              transform: translateX(600px);
-              opacity: 0;
-            }
-
-          }
-
-
-          /* REDUCE MOTION */
-
-          @media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
-              animation-duration: 0.01ms !important;
-              animation-iteration-count: 1 !important;
-              transition-duration: 0.01ms !important;
-            }
-
-          }
-
-        `}
-      </style>
-
     </div>
   );
 }
 
-
-/* =====================================================
-   SECTION TITLE
-===================================================== */
-
 function SectionTitle({ icon, title }) {
   return (
-    <div className="group flex items-center gap-2.5">
-
-      <div className="text-[#6e7681] transition-all duration-300 group-hover:text-[#c9d1d9] group-hover:scale-110">
-        {icon}
-      </div>
-
-      <h2 className="text-sm font-medium text-[#d5dbe1] tracking-tight">
-        {title}
-      </h2>
-
-      <div className="h-px w-10 bg-[#30363d] group-hover:w-16 transition-all duration-500" />
-
+    <div className="flex items-center gap-2.5">
+      <span className="text-indigo-600">{icon}</span>
+      <h2 className="text-sm font-semibold tracking-tight text-slate-900">{title}</h2>
     </div>
   );
 }

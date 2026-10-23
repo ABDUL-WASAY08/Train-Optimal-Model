@@ -4,6 +4,7 @@ const {
   githubCallback,
   getProfile,
   logout,
+  deleteAccount,
 } = require("../controller/AuthController");
 const ensureAuthenticated = require("../middleware/isAuthenticate");
 
@@ -25,5 +26,7 @@ router.get(
 router.get("/me",ensureAuthenticated, getProfile);
 
 router.post("/logout",ensureAuthenticated, logout);
+
+router.delete("/delete-account",ensureAuthenticated, deleteAccount);
 
 module.exports = router;

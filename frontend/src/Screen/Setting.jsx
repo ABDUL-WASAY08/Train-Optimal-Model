@@ -16,7 +16,6 @@ import {
   GitBranch,
   Briefcase,
   AlertTriangle,
-  Cross,
   BadgeCheck,
   Upload,
   Loader2,
@@ -25,10 +24,12 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function Setting() {
-  const { user, fetchProfile, setUser } = useAuthStore();
+  const navigate = useNavigate();
+  const { user, fetchProfile, setUser, deleteAccount } = useAuthStore();
   const { updateAccountDetails, loading } = useUtilityStore();
   const {
     certificates,
@@ -63,6 +64,9 @@ function Setting() {
   });
   const [previewUrl, setPreviewUrl] = useState('');
   const [deletingId, setDeletingId] = useState(null);
+  // for deleting the account
+  const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   // fetching the profile 
   useEffect(() => {
@@ -327,32 +331,47 @@ function Setting() {
     }
   };
 
+  // ---------------- delete account ----------------
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+    const res = await deleteAccount();
+
+    if (res?.success) {
+      toast.success(res.message || 'Account deleted successfully');
+      navigate('/Authorization', { replace: true });
+    } else {
+      setDeletingAccount(false);
+      setConfirmDeleteAccount(false);
+      toast.error(res?.error || 'Failed to delete account');
+    }
+  };
+
   return (
-    <div className="min-h-screen  text-[#c9d1d9] p-4 sm:p-8 font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-800 p-4 sm:p-8 font-sans">
       <div className="max-w-5xl mx-auto space-y-8">
-        <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        <div className="card p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full bg-[#0d1117] border border-[#2a3441] flex items-center justify-center text-[#c9d1d9] font-bold text-2xl shadow-inner overflow-hidden">
+              <div className="w-20 h-20 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 font-bold text-2xl overflow-hidden">
                 {user?.avatarUrl ? (
                   <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                 ) : user?.name ? (
                   user.name.charAt(0).toUpperCase()
                 ) : (
-                  <User className="w-9 h-9" />
+                  <User className="w-9 h-9 text-slate-400" />
                 )}
               </div>
 
               <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#c9d1d9] flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-2">
                   {user?.name || user?.username || 'Developer'}
                 </h1>
-                <div className="flex items-center gap-2 text-xs text-[#8b949e] mt-1">
-                  <Mail className="w-3.5 h-3.5 text-[#8b949e]" />
+                <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+                  <Mail className="w-3.5 h-3.5 text-slate-400" />
                   <span>{user?.email || 'No email associated'}</span>
                 </div>
                 {user?.username && (
-                  <span className="inline-block mt-2 px-2.5 py-0.5 bg-[#0d1117] border border-[#2a3441] text-[#8b949e] text-[10px] font-mono rounded-md">
+                  <span className="inline-block mt-2 px-2.5 py-0.5 bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-mono rounded-md">
                     @{user.username}
                   </span>
                 )}
@@ -362,20 +381,20 @@ function Setting() {
 
           <div className="mt-5 flex flex-wrap items-center gap-4 text-xs">
             {user?.githubUrl && (
-              <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-indigo-600 transition-colors">
                 <GitBranch className="w-4 h-4" />
                 <span>GitHub</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
             {user?.twitterUrl && (
-              <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-indigo-600 transition-colors">
                 <span>Twitter</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
             {user?.websiteUrl && (
-              <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-[#8b949e] hover:text-[#c9d1d9] transition-colors">
+              <a href={user.websiteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-indigo-600 transition-colors">
                 <Globe className="w-4 h-4" />
                 <span>Website</span>
                 <ExternalLink className="w-3 h-3" />
@@ -383,49 +402,49 @@ function Setting() {
             )}
           </div>
 
-          <div className="mt-6 pt-6 border-t border-[#2a3441]">
-            <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">Bio</h3>
-            <p className="text-sm text-[#c9d1d9] leading-relaxed">
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Bio</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
               {user?.bio || 'No bio available for this account yet.'}
             </p>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800/80 pb-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
           <div>
-            <h2 className='text-base font-semibold text-gray-100 tracking-wide'>
+            <h2 className='text-base font-semibold text-slate-900 tracking-wide'>
               Account details
             </h2>
-            <p className='text-xs text-gray-400 mt-0.5'>
+            <p className='text-xs text-slate-500 mt-0.5'>
               Here you can edit your details for your portfolio
             </p>
           </div>
 
           <button
             type="button"
-            className='px-4 py-2 text-xs font-medium text-gray-200 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 cursor-pointer shadow-sm self-start sm:self-auto'
+            className='btn-secondary btn-sm self-start sm:self-auto'
             onClick={() => openaccountInfo(!accountInfo)}
           >
             {accountInfo ? "CLOSE" : "EDIT"}
           </button>
         </div>
         {accountInfo && <div>
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl mb-5">
+          <div className="card p-6 mb-5">
             <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-5 h-5 text-[#8b949e]" />
-              <h2 className="text-lg font-bold text-[#c9d1d9]">Personal Details</h2>
+              <Calendar className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg font-semibold text-slate-900">Personal Details</h2>
             </div>
 
             <div className="space-y-4 mb-4">
               <div className="flex flex-col sm:flex-row items-end gap-4">
                 <div className="flex-1 w-full space-y-2">
-                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                  <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                     Username
                   </label>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                    className="input"
                     placeholder="Your username"
                   />
                 </div>
@@ -433,7 +452,7 @@ function Setting() {
                   type="button"
                   onClick={handleSaveUsername}
                   disabled={loading}
-                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="btn-secondary"
                 >
                   {loading ? 'Saving...' : 'Save Username'}
                 </button>
@@ -441,13 +460,13 @@ function Setting() {
 
               <div className="flex flex-col sm:flex-row items-end gap-4">
                 <div className="flex-1 w-full space-y-2">
-                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                  <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                     Bio
                   </label>
                   <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[60px]"
+                    className="input min-h-[60px]"
                     placeholder="Tell us about yourself..."
                   />
                 </div>
@@ -455,7 +474,7 @@ function Setting() {
                   type="button"
                   onClick={handleSaveBio}
                   disabled={loading}
-                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="btn-secondary"
                 >
                   {loading ? 'Saving...' : 'Save Bio'}
                 </button>
@@ -463,21 +482,21 @@ function Setting() {
 
               <form onSubmit={handleSaveDob} className="flex flex-col sm:flex-row items-end gap-4">
                 <div className="flex-1 w-full space-y-2">
-                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                  <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                     Date of Birth
                   </label>
                   <input
                     type="date"
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
-                    className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                    className="input"
                     required
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="btn-secondary"
                 >
                   {loading ? 'Saving...' : 'Save DOB'}
                 </button>
@@ -488,11 +507,11 @@ function Setting() {
           {/* GitHub & Skills Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-5">
 
-            <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+            <div className="card p-6 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-6">
-                  <Code className="w-5 h-5 text-[#8b949e]" />
-                  <h2 className="text-lg font-bold text-[#c9d1d9]">GitHub Language Share</h2>
+                  <Code className="w-5 h-5 text-indigo-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">GitHub Language Share</h2>
                 </div>
 
                 {user?.topLanguages && user.topLanguages.length > 0 ? (
@@ -500,12 +519,12 @@ function Setting() {
                     {user.topLanguages.map((item, idx) => (
                       <div key={idx} className="space-y-1.5">
                         <div className="flex justify-between text-xs">
-                          <span className="font-semibold text-[#c9d1d9]">{item.language}</span>
-                          <span className="text-[#8b949e] font-mono">{item.percentage}%</span>
+                          <span className="font-semibold text-slate-700">{item.language}</span>
+                          <span className="text-slate-500 font-mono">{item.percentage}%</span>
                         </div>
-                        <div className="w-full bg-[#0d1117] h-2 rounded-full overflow-hidden border border-[#2a3441]">
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                           <div
-                            className="bg-[#8b949e] h-full rounded-full transition-all duration-500"
+                            className="bg-indigo-500 h-full rounded-full transition-all duration-500"
                             style={{ width: `${item.percentage}%` }}
                           />
                         </div>
@@ -513,18 +532,18 @@ function Setting() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-[#8b949e] italic">
+                  <p className="text-xs text-slate-500 italic">
                     No GitHub repository language data available.
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
+            <div className="card p-6 flex flex-col justify-between space-y-6">
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <Award className="w-5 h-5 text-[#8b949e]" />
-                  <h2 className="text-lg font-bold text-[#c9d1d9]">Skills & Competencies</h2>
+                  <Award className="w-5 h-5 text-indigo-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Skills & Competencies</h2>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
@@ -532,20 +551,20 @@ function Setting() {
                     skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="flex items-center gap-1.5 px-3 py-1 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] text-xs font-medium rounded-lg"
+                        className="flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-medium rounded-lg"
                       >
                         {skill}
                         <button
                           type="button"
                           onClick={() => handleRemoveSkill(skill)}
-                          className="hover:text-red-400 transition-colors cursor-pointer"
+                          className="hover:text-rose-500 transition-colors cursor-pointer"
                         >
                           &times;
                         </button>
                       </span>
                     ))
                   ) : (
-                    <p className="text-xs text-[#8b949e] italic">No skills added yet.</p>
+                    <p className="text-xs text-slate-500 italic">No skills added yet.</p>
                   )}
                 </div>
               </div>
@@ -556,11 +575,11 @@ function Setting() {
                   placeholder="Add skill (e.g. Python, Docker)"
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  className="flex-1 bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input flex-1"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                  className="btn-secondary"
                 >
                   <Plus className="w-4 h-4" /> Add
                 </button>
@@ -568,14 +587,14 @@ function Setting() {
             </div>
           </div>
 
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="card p-6 sm:p-8 space-y-6">
             <div className="flex items-center gap-2">
-              <FolderGit2 className="w-5 h-5 text-[#8b949e]" />
-              <h2 className="text-lg font-bold text-[#c9d1d9]">Repositories & Projects</h2>
+              <FolderGit2 className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg font-semibold text-slate-900">Repositories & Projects</h2>
             </div>
             <div className="relative">
               <div className='flex justify-between items-center gap-4'>
-                <span className="text-sm font-bold text-[#c9d1d9]">Add repositories</span>
+                <span className="text-sm font-semibold text-slate-900">Add repositories</span>
                 <div className="relative flex-1 max-w-md">
                   <input
                     type='text'
@@ -585,26 +604,26 @@ function Setting() {
                       setIsDropdownOpen(true); 
                     }}
                     onFocus={() => setIsDropdownOpen(true)}
-                    className='w-full border rounded border-white/50 bg-[#0d1117] text-white px-4 py-1.5 text-xs focus:outline-none focus:border-blue-500'
+                    className='input'
                     placeholder='Search Your Repositories To Add...'
                   />
 
                   {/* Dropdown Suggestions List */}
                   {isDropdownOpen && searchQuery.trim() !== "" && (
-                    <div className="absolute left-0 right-0 top-full mt-1 bg-[#0d1117] border border-[#2a3441] rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto">
+                    <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-pop z-50 max-h-60 overflow-y-auto scrollbar-thin">
                       {filteredRepos.length > 0 ? (
                         filteredRepos.map((repo,index) => (
                           <div
                            key={index}
                             onClick={() => handleAddRepo(repo)}
-                            className="px-4 py-2.5 text-xs text-[#c9d1d9] hover:bg-[#21262d] hover:text-white cursor-pointer border-b border-[#2a3441]/50 last:border-none flex items-center justify-between"
+                            className="px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-none flex items-center justify-between"
                           >
-                            <span className="font-medium">{repo.name}</span>
-                            <span className="text-[10px] text-[#8b949e] font-mono">{repo.language || 'Code'}</span>
+                            <span className="font-medium text-slate-800">{repo.name}</span>
+                            <span className="text-[10px] text-slate-500 font-mono">{repo.language || 'Code'}</span>
                           </div>
                         ))
                       ) : (
-                        <div className="px-4 py-3 text-xs text-[#8b949e] italic">
+                        <div className="px-4 py-3 text-xs text-slate-500 italic">
                           No matching repositories found.
                         </div>
                       )}
@@ -618,35 +637,35 @@ function Setting() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {user.Filteredrepositories.map((repo, idx) => (
                   <div key={idx}>
-                    <div className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex flex-col justify-between space-y-3">
+                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col justify-between space-y-3">
                       <div>
                         <div className="flex items-center justify-between">
-                          <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-bold text-[#c9d1d9] hover:underline flex items-center gap-1.5">
+                          <a href={repo.html_url || '#'} target="_blank" rel="noreferrer" className="text-sm font-semibold text-slate-900 hover:text-indigo-700 flex items-center gap-1.5">
                             {repo.name}
-                            <ExternalLink className="w-3 h-3 text-[#8b949e]" />
+                            <ExternalLink className="w-3 h-3 text-slate-400" />
                           </a>
 
                           <div className="flex items-center gap-3">
                             {/* delete repo  */}
-                            <button type="button" onClick={() => handleRemoveRepo(repo.name)} className='text-gray-400 hover:text-red-400 transition-colors cursor-pointer'>
+                            <button type="button" onClick={() => handleRemoveRepo(repo.name)} className='text-slate-400 hover:text-rose-500 transition-colors cursor-pointer'>
                               <Trash2 className="w-4 h-4" />
                             </button>
 
                             {repo.stargazers_count !== undefined && (
-                              <div className="flex items-center gap-1 text-xs text-[#8b949e]">
-                                <Star className="w-3.5 h-3.5 text-[#8b949e]" />
+                              <div className="flex items-center gap-1 text-xs text-slate-500">
+                                <Star className="w-3.5 h-3.5 text-slate-400" />
                                 <span>{repo.stargazers_count}</span>
                               </div>
                             )}
                           </div>
                         </div>
 
-                        <p className="text-xs text-[#8b949e] mt-2 line-clamp-2">
+                        <p className="text-xs text-slate-500 mt-2 line-clamp-2">
                           {repo.description || 'No description provided.'}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-[#8b949e] pt-2 border-t border-[#2a3441]/40">
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200">
                         {repo.language && <span className="font-mono">{repo.language}</span>}
                         {repo.has_readme && <span>README</span>}
                       </div>
@@ -655,37 +674,37 @@ function Setting() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#8b949e] italic">
+              <p className="text-xs text-slate-500 italic">
                 No synced repositories available.
               </p>
             )}
           </div>
 
           {/* Education Section */}
-          <div className="bg-[#161b22] border border-[#2a3441] mt-5 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="card mt-5 p-6 sm:p-8 space-y-6">
             <div className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-[#8b949e]" />
-              <h2 className="text-lg font-bold text-[#c9d1d9]">Education Background</h2>
+              <GraduationCap className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg font-semibold text-slate-900">Education Background</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {educationList.map((edu) => (
                 <div
                   key={edu._id || edu.id}
-                  className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex justify-between items-start"
+                  className="bg-slate-50 border border-slate-200 p-4 rounded-xl flex justify-between items-start"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-[#8b949e] shrink-0" />
-                      <h4 className="text-sm font-bold text-[#c9d1d9]">{edu.degree}</h4>
+                      <BookOpen className="w-4 h-4 text-slate-400 shrink-0" />
+                      <h4 className="text-sm font-semibold text-slate-900">{edu.degree}</h4>
                     </div>
-                    <p className="text-xs text-[#8b949e]">{edu.institution}</p>
-                    <p className="text-[10px] text-[#8b949e] font-mono">{edu.year}</p>
+                    <p className="text-xs text-slate-500">{edu.institution}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{edu.year}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDeleteEducation(edu._id || edu.id)}
-                    className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1"
+                    className="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer p-1"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -693,8 +712,8 @@ function Setting() {
               ))}
             </div>
 
-            <form onSubmit={handleAddEducation} className="pt-4 border-t border-[#2a3441] space-y-4">
-              <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
+            <form onSubmit={handleAddEducation} className="pt-4 border-t border-slate-200 space-y-4">
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Add New Education Record
               </h3>
 
@@ -704,7 +723,7 @@ function Setting() {
                   placeholder="Degree (e.g. BSCS)"
                   value={eduForm.degree}
                   onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
                 <input
@@ -712,7 +731,7 @@ function Setting() {
                   placeholder="Institution / University"
                   value={eduForm.institution}
                   onChange={(e) => setEduForm({ ...eduForm, institution: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
                 <input
@@ -720,41 +739,41 @@ function Setting() {
                   placeholder="Year (e.g. 2020 - 2024)"
                   value={eduForm.year}
                   onChange={(e) => setEduForm({ ...eduForm, year: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
               </div>
 
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="btn-secondary flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" /> Save Education Record
               </button>
             </form>
           </div>
-          <div className="bg-[#161b22] border mt-5 border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="card mt-5 p-6 sm:p-8 space-y-6">
             <div className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-[#8b949e]" />
-              <h2 className="text-lg font-bold text-[#c9d1d9]">Work Experience</h2>
+              <Briefcase className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg font-semibold text-slate-900">Work Experience</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {experienceList.map((exp) => (
                 <div
                   key={exp._id || exp.id}
-                  className="bg-[#0d1117] border border-[#2a3441] p-4 rounded-xl flex justify-between items-start"
+                  className="bg-slate-50 border border-slate-200 p-4 rounded-xl flex justify-between items-start"
                 >
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-[#c9d1d9]">{exp.role}</h4>
-                    <p className="text-xs text-[#8b949e] font-medium">{exp.company}</p>
-                    <p className="text-[10px] text-[#8b949e] font-mono">{exp.period}</p>
-                    <p className="text-xs text-[#8b949e] mt-2 leading-relaxed">{exp.description}</p>
+                    <h4 className="text-sm font-semibold text-slate-900">{exp.role}</h4>
+                    <p className="text-xs text-slate-500 font-medium">{exp.company}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{exp.period}</p>
+                    <p className="text-xs text-slate-500 mt-2 leading-relaxed">{exp.description}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDeleteExperience(exp._id || exp.id)}
-                    className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1 shrink-0"
+                    className="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer p-1 shrink-0"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -762,8 +781,8 @@ function Setting() {
               ))}
             </div>
 
-            <form onSubmit={handleAddExperience} className="pt-4 border-t border-[#2a3441] space-y-4">
-              <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
+            <form onSubmit={handleAddExperience} className="pt-4 border-t border-slate-200 space-y-4">
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Add Work Experience
               </h3>
 
@@ -773,7 +792,7 @@ function Setting() {
                   placeholder="Company Name"
                   value={expForm.company}
                   onChange={(e) => setExpForm({ ...expForm, company: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
                 <input
@@ -781,7 +800,7 @@ function Setting() {
                   placeholder="Role / Position"
                   value={expForm.role}
                   onChange={(e) => setExpForm({ ...expForm, role: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
                 <input
@@ -789,7 +808,7 @@ function Setting() {
                   placeholder="Period (e.g. 2022 - Present)"
                   value={expForm.period}
                   onChange={(e) => setExpForm({ ...expForm, period: e.target.value })}
-                  className="bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                  className="input"
                   required
                 />
               </div>
@@ -798,13 +817,13 @@ function Setting() {
                 placeholder="Description of responsibilities and achievements..."
                 value={expForm.description}
                 onChange={(e) => setExpForm({ ...expForm, description: e.target.value })}
-                className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[80px]"
+                className="input min-h-[80px]"
                 required
               />
 
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="btn-secondary flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" /> Save Experience Record
               </button>
@@ -814,19 +833,19 @@ function Setting() {
         </div>}
 
         {/* ================= Certificates ================= */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800/80 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
-            <h2 className='text-base font-semibold text-gray-100 tracking-wide'>
+            <h2 className='text-base font-semibold text-slate-900 tracking-wide'>
               Certificates
             </h2>
-            <p className='text-xs text-gray-400 mt-0.5'>
+            <p className='text-xs text-slate-500 mt-0.5'>
               Upload and manage the certificates shown on your portfolio
             </p>
           </div>
 
           <button
             type="button"
-            className='px-4 py-2 text-xs font-medium text-gray-200 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 cursor-pointer shadow-sm self-start sm:self-auto'
+            className='btn-secondary btn-sm self-start sm:self-auto'
             onClick={handleToggleCertificates}
           >
             {openCertificates ? "CLOSE" : "Certificates"}
@@ -834,18 +853,18 @@ function Setting() {
         </div>
 
         {openCertificates && (
-          <div className="bg-[#161b22] border border-[#2a3441] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="card p-6 sm:p-8 space-y-6">
 
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-2">
-                <BadgeCheck className="w-5 h-5 text-[#8b949e]" />
-                <h2 className="text-lg font-bold text-[#c9d1d9]">Your Certificates</h2>
+                <BadgeCheck className="w-5 h-5 text-indigo-600" />
+                <h2 className="text-lg font-semibold text-slate-900">Your Certificates</h2>
               </div>
               <button
                 type="button"
                 onClick={loadCertificates}
                 disabled={certificatesLoading}
-                className="text-[11px] text-[#8b949e] hover:text-[#c9d1d9] transition-colors cursor-pointer disabled:opacity-50"
+                className="text-[11px] text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer disabled:opacity-50"
               >
                 {certificatesLoading ? 'Refreshing...' : 'Refresh'}
               </button>
@@ -857,13 +876,13 @@ function Setting() {
                 {certificates.map((cert) => (
                   <div
                     key={cert._id}
-                    className="bg-[#0d1117] border border-[#2a3441] rounded-xl overflow-hidden flex flex-col group"
+                    className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden flex flex-col group"
                   >
                     <a
                       href={cert.certificateUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="block h-36 bg-[#010409] border-b border-[#2a3441] overflow-hidden"
+                      className="block h-36 bg-white border-b border-slate-200 overflow-hidden"
                     >
                       <img
                         src={cert.certificateUrl}
@@ -875,38 +894,38 @@ function Setting() {
 
                     <div className="p-4 flex flex-col justify-between gap-3 flex-1">
                       <div>
-                        <h4 className="text-sm font-bold text-[#c9d1d9] leading-snug">
+                        <h4 className="text-sm font-semibold text-slate-900 leading-snug">
                           {cert.certificateName}
                         </h4>
 
-                        <p className="text-xs text-[#8b949e] mt-1 flex items-center gap-1.5">
-                          <Building2 className="w-3 h-3 shrink-0" />
+                        <p className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                          <Building2 className="w-3 h-3 shrink-0 text-slate-400" />
                           {cert.companyName}
                         </p>
 
                         {cert.role && (
-                          <p className="text-[11px] text-[#6e7681] mt-1">{cert.role}</p>
+                          <p className="text-[11px] text-slate-500 mt-1">{cert.role}</p>
                         )}
 
                         {cert.issueDate && (
-                          <p className="text-[10px] text-[#6e7681] font-mono mt-1">
+                          <p className="text-[10px] text-slate-400 font-mono mt-1">
                             Issued {cert.issueDate}
                           </p>
                         )}
 
                         {cert.description && (
-                          <p className="text-xs text-[#8b949e] mt-2 leading-relaxed line-clamp-3">
+                          <p className="text-xs text-slate-500 mt-2 leading-relaxed line-clamp-3">
                             {cert.description}
                           </p>
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#2a3441]/40">
+                      <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-200">
                         <a
                           href={cert.certificateUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[11px] text-[#58a6ff] hover:underline flex items-center gap-1"
+                          className="text-[11px] text-indigo-600 hover:underline flex items-center gap-1"
                         >
                           View <ExternalLink className="w-3 h-3" />
                         </a>
@@ -915,7 +934,7 @@ function Setting() {
                           type="button"
                           onClick={() => handleDeleteCertificate(cert._id)}
                           disabled={deletingId === cert._id}
-                          className="text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer p-1 disabled:opacity-50"
+                          className="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer p-1 disabled:opacity-50"
                           title="Delete certificate"
                         >
                           {deletingId === cert._id ? (
@@ -930,9 +949,9 @@ function Setting() {
                 ))}
               </div>
             ) : (
-              <div className="border border-dashed border-[#2a3441] rounded-xl py-10 px-6 text-center">
-                <FileImage className="w-7 h-7 mx-auto mb-3 text-[#484f58]" />
-                <p className="text-xs text-[#8b949e] italic">
+              <div className="border border-dashed border-slate-300 rounded-xl py-10 px-6 text-center">
+                <FileImage className="w-7 h-7 mx-auto mb-3 text-slate-400" />
+                <p className="text-xs text-slate-500 italic">
                   {certificatesLoading
                     ? 'Loading certificates...'
                     : 'No certificates uploaded yet.'}
@@ -943,22 +962,22 @@ function Setting() {
             {/* upload form */}
             <form
               onSubmit={handleUploadCertificate}
-              className="pt-6 border-t border-[#2a3441] space-y-4"
+              className="pt-6 border-t border-slate-200 space-y-4"
             >
-              <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider">
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Upload New Certificate
               </h3>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 {/* image picker */}
                 <div className="space-y-2">
-                  <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                  <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                     Certificate Image
                   </label>
 
                   <label
                     htmlFor="certificate-image"
-                    className="flex flex-col items-center justify-center gap-2 h-40 rounded-xl border border-dashed border-[#2a3441] bg-[#0d1117] cursor-pointer hover:border-[#8b949e] transition-colors overflow-hidden"
+                    className="flex flex-col items-center justify-center gap-2 h-40 rounded-xl border border-dashed border-slate-300 bg-slate-50 cursor-pointer hover:border-indigo-400 transition-colors overflow-hidden"
                   >
                     {previewUrl ? (
                       <img
@@ -968,8 +987,8 @@ function Setting() {
                       />
                     ) : (
                       <>
-                        <Upload className="w-6 h-6 text-[#8b949e]" />
-                        <span className="text-[11px] text-[#8b949e] text-center px-4">
+                        <Upload className="w-6 h-6 text-slate-400" />
+                        <span className="text-[11px] text-slate-500 text-center px-4">
                           Click to select an image
                           <br />
                           JPEG, JPG, PNG, WEBP — max 5MB
@@ -988,13 +1007,13 @@ function Setting() {
 
                   {certificateForm.image && (
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] text-[#6e7681] truncate">
+                      <span className="text-[11px] text-slate-500 truncate">
                         {certificateForm.image.name}
                       </span>
                       <button
                         type="button"
                         onClick={resetCertificateForm}
-                        className="text-[11px] text-[#8b949e] hover:text-red-400 transition-colors cursor-pointer shrink-0"
+                        className="text-[11px] text-slate-500 hover:text-rose-500 transition-colors cursor-pointer shrink-0"
                       >
                         Remove
                       </button>
@@ -1005,7 +1024,7 @@ function Setting() {
                 {/* metadata */}
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                    <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                       Certificate Name
                     </label>
                     <input
@@ -1013,14 +1032,14 @@ function Setting() {
                       placeholder="e.g. AWS Certified Solutions Architect"
                       value={certificateForm.certificateName}
                       onChange={(e) => setCertificateForm({ ...certificateForm, certificateName: e.target.value })}
-                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                      className="input"
                       required
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-2">
-                      <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                      <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                         Issuing Company
                       </label>
                       <input
@@ -1028,46 +1047,46 @@ function Setting() {
                         placeholder="e.g. Amazon Web Services"
                         value={certificateForm.companyName}
                         onChange={(e) => setCertificateForm({ ...certificateForm, companyName: e.target.value })}
-                        className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                        className="input"
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
+                      <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                         Issue Date
                       </label>
                       <input
                         type="date"
                         value={certificateForm.issueDate}
                         onChange={(e) => setCertificateForm({ ...certificateForm, issueDate: e.target.value })}
-                        className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                        className="input"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
-                      Role <span className="normal-case tracking-normal text-[#484f58]">(optional)</span>
+                    <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+                      Role <span className="normal-case tracking-normal text-slate-400">(optional)</span>
                     </label>
                     <input
                       type="text"
                       placeholder="e.g. Cloud Practitioner"
                       value={certificateForm.role}
                       onChange={(e) => setCertificateForm({ ...certificateForm, role: e.target.value })}
-                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e]"
+                      className="input"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs text-[#8b949e] font-semibold uppercase tracking-wider">
-                      Description <span className="normal-case tracking-normal text-[#484f58]">(optional)</span>
+                    <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+                      Description <span className="normal-case tracking-normal text-slate-400">(optional)</span>
                     </label>
                     <textarea
                       placeholder="What does this certificate prove?"
                       value={certificateForm.description}
                       onChange={(e) => setCertificateForm({ ...certificateForm, description: e.target.value })}
-                      className="w-full bg-[#0d1117] border border-[#2a3441] rounded-xl px-3 py-2 text-xs text-[#c9d1d9] focus:outline-none focus:border-[#8b949e] min-h-[60px]"
+                      className="input min-h-[60px]"
                     />
                   </div>
                 </div>
@@ -1077,7 +1096,7 @@ function Setting() {
                 <button
                   type="submit"
                   disabled={certificatesLoading}
-                  className="px-5 py-2.5 bg-[#238636] border border-[#2ea043] text-white hover:bg-[#2ea043] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                  className="btn-success flex items-center justify-center gap-2"
                 >
                   {certificatesLoading ? (
                     <>
@@ -1093,7 +1112,7 @@ function Setting() {
                 <button
                   type="button"
                   onClick={resetCertificateForm}
-                  className="px-5 py-2.5 bg-[#0d1117] border border-[#2a3441] text-[#c9d1d9] hover:bg-[#21262d] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="btn-secondary"
                 >
                   Clear Form
                 </button>
@@ -1103,38 +1122,78 @@ function Setting() {
         )}
 
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-red-500 mb-3">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-rose-600 mb-3">
             Danger Zone
           </h2>
 
-          <div className="rounded-xl border border-red-200 ">
+          <div className="rounded-xl border border-rose-200 bg-white">
 
-            <div className="flex items-center justify-between gap-4 px-5 py-5">
+            <div className="flex items-center justify-between gap-4 px-5 py-5 flex-wrap">
 
               <div className="flex items-center gap-3">
                 <AlertTriangle
                   size={18}
-                  className="text-red-500 shrink-0"
+                  className="text-rose-500 shrink-0"
                 />
 
                 <div>
-                  <p className="text-sm font-medium ">
+                  <p className="text-sm font-medium text-slate-900">
                     Delete Account
                   </p>
 
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     Permanently delete your TOM account and associated data.
                   </p>
                 </div>
               </div>
 
-              <button
-                className="px-3 py-2 rounded-lg text-xs font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
-              >
-                Delete Account
-              </button>
+              {confirmDeleteAccount ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDeleteAccount(false)}
+                    disabled={deletingAccount}
+                    className="btn-secondary btn-sm"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDeleteAccount}
+                    disabled={deletingAccount}
+                    className="btn-danger btn-sm flex items-center gap-1.5"
+                  >
+                    {deletingAccount ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" /> Deleting...
+                      </>
+                    ) : (
+                      'Yes, Delete Account'
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeleteAccount(true)}
+                  disabled={deletingAccount}
+                  className="btn-danger btn-sm"
+                >
+                  Delete Account
+                </button>
+              )}
 
             </div>
+
+            {confirmDeleteAccount && (
+              <div className="px-5 pb-5 -mt-2">
+                <p className="text-xs text-rose-500">
+                  This permanently removes your profile, repositories, education,
+                  experience and certificates. This action cannot be undone.
+                </p>
+              </div>
+            )}
 
           </div>
         </section>

@@ -1,316 +1,373 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  GitBranch, Users, Globe, Code2, Check, Send, Cat,
-  LogIn
+  GitBranch,
+  Users,
+  Globe,
+  Code2,
+  Check,
+  ArrowRight,
+  Bot,
+  FileText,
+  BarChart3,
+  Sparkles,
+  Zap,
+  Briefcase,
+  Star,
+  Search,
+  Database,
+  Layers,
+  Cat
 } from 'lucide-react';
+import SplasNavbar from '../Components/SplasNavbar';
 
 function SplashScreen() {
   const navigate = useNavigate();
 
+  // Platform Features Section
+  const platformFeatures = [
+    {
+      icon: Bot,
+      title: 'Repository AI',
+      desc: 'Connect GitHub repositories and keep them synced with a single click.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Code Analysis',
+      desc: 'Quality, security and maintainability scoring across your whole codebase.',
+    },
+    {
+      icon: Zap,
+      title: 'AI Code Improvement',
+      desc: 'Refactor code snippet with explanations directly from structured AI suggestions.',
+    },
+    {
+      icon: FileText,
+      title: 'README Generation',
+      desc: 'Structured, formatted READMEs generated from your repository structure.',
+    },
+    {
+      icon: Code2,
+      title: 'Project Documentation',
+      desc: 'Architecture, workflows, functions and non-functional requirements on demand.',
+    },
+    {
+      icon: Users,
+      title: 'Developer Portfolio',
+      desc: 'A shareable public portfolio built from your selected repositories.',
+    },
+    {
+      icon: Briefcase,
+      title: 'Client Marketplace',
+      desc: 'Post projects, receive bids and hire verified developers with ratings.',
+    },
+    {
+      icon: Sparkles,
+      title: 'Full requirements overview',
+      desc: 'Functional & non-functional requirements documented in the About page.',
+      hasLink: true,
+    },
+  ];
+
+  // How It Works Steps
+  const steps = [
+    {
+      step: '01',
+      title: 'Connect GitHub',
+      desc: 'Link your account and pick the repositories you want TOM to understand.',
+    },
+    {
+      step: '02',
+      title: 'Analyze Repository',
+      desc: 'Quality, security and maintainability scores calculated across every file.',
+    },
+    {
+      step: '03',
+      title: 'Ask AI',
+      desc: 'Get grounded answers about your own codebase with instant citations.',
+    },
+    {
+      step: '04',
+      title: 'Improve & Document',
+      desc: 'Get clean code suggestions, READMEs, and full documentation.',
+    },
+    {
+      step: '05',
+      title: 'Build Portfolio',
+      desc: 'Select your best repositories and publish an interactive developer profile.',
+    },
+    {
+      step: '06',
+      title: 'Connect with Clients',
+      desc: 'Bid on projects, deliver work and get paid through secure milestones.',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-main text-body-custom font-sans selection:bg-pulse-cyan/20 selection:text-pulse-cyan">
-      <nav className="flex items-center justify-between px-6 py-4 bg-main border-b border-slate">
-        <div className="flex items-center gap-2.5 cursor-pointer" onClick={()=>navigate('/')}>
-          <div className="p-1.5 rounded-xl border border-slate text-heading">
-            <Cat className="w-5 h-5" />
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-indigo-500 selection:text-white flex flex-col">
+      {/* Navigation Bar */}
+      <SplasNavbar />
+      
+      <div className="flex-1 w-full space-y-20 sm:space-y-28">
+        
+        {/* HERO SECTION */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 space-y-10">
+          <div className="max-w-3xl space-y-6">
+
+            <h1 className="text-slate-900 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.15]">
+              TOM — Train <span className="text-indigo-600">Optimal</span> Model
+            </h1>
+
+            <p className="text-slate-600 text-base sm:text-xl font-normal leading-relaxed">
+              AI-powered repository intelligence and a developer marketplace. <br className="hidden sm:inline" />
+              Understand your codebase, improve your projects, build your portfolio, and connect with clients.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-2">            
+              <button
+                onClick={() => navigate('/Authorization')}
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all active:scale-[0.98] cursor-pointer"
+              >
+                <span>Get Started</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
           </div>
-          <span className="font-extrabold text-lg tracking-tight text-heading">
-            TOM
-          </span>
         </div>
-        <div className="flex items-center gap-4">
-          <a
-            href="#pricing"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-bg-main to-bg-surface border border-white text-pulse-cyan text-xs font-semibold hover:border-pulse-cyan transition-all"
-          >
-            <span>Upgrade to Pro</span>
-          </a>
-          <button
-            onClick={() => navigate('/Authorization')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface hover:bg-slate-800 border border-slate text-body-custom text-xs font-medium transition-colors cursor-pointer"
-          >
-            <LogIn className="w-3.5 h-3.5 text-subheading" />
-            <span>Sign In</span>
-          </button>
+
+        {/* PLATFORM FEATURES SECTION */}
+        <div id="features" className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="space-y-2">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Platform Features</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Everything a developer needs, in one platform
+            </h2>
+            <p className="text-slate-500 text-xs sm:text-sm max-w-2xl">
+              From repository intelligence to getting paid — TOM covers the full developer workflow.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {platformFeatures.map((feat, idx) => {
+              const IconComp = feat.icon;
+              return (
+                <div
+                  key={idx}
+                  className="bg-white border border-slate-200/90 p-5 sm:p-6 rounded-2xl flex flex-col justify-between hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-50/50 transition-all group"
+                >
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      <IconComp size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900">{feat.title}</h3>
+                      <p className="text-xs text-slate-500 mt-1.5 sm:mt-2 leading-relaxed">{feat.desc}</p>
+                    </div>
+                  </div>
+                  {feat.hasLink && (
+                    <div className="pt-4 mt-2 border-t border-slate-100">
+                      <a href="/Features" className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1">
+                        Read more &rarr;
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </nav>
 
-      {/* Background filters */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-pulse-cyan/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -right-40 w-96 h-96 bg-pulse-violet/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-      </div>
+        {/* HOW IT WORKS SECTION */}
+        <div id="working" className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="space-y-2">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">How It Works</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Six steps from codebase to client delivery
+            </h2>
+          </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 space-y-28">
-        {/* First Hero Section */}
-        <div className="min-h-[70vh] grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="flex flex-col justify-center space-y-6">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface border border-white text-pulse-cyan text-xs font-semibold rounded-full w-fit">
-                <span>TOM</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            {steps.map((item, i) => (
+              <div
+                key={i}
+                className="bg-white border border-slate-200/90 p-5 sm:p-6 rounded-2xl relative space-y-3 sm:space-y-4 hover:border-indigo-300 transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+                    {item.step}
+                  </span>
+                  <span className="text-2xl sm:text-3xl font-extrabold text-slate-200 select-none">{item.step}</span>
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900">{item.title}</h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
-              <h1 className="text-subheading text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                Train Optimal Model
-              </h1>
-              <p className="text-subheading text-base sm:text-lg font-medium leading-relaxed">
-                An ML powered GitHub Intelligence, Documentation and Developer Recruiter Marketplace Platform.
+            ))}
+          </div>
+        </div>
+
+        {/* FULL-WIDTH DARK SECTION - CORE AI CONCEPT (RAG VISUAL EXPLANATION) */}
+        <div id="architecture" className="w-full bg-[#0B0F19] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 shadow-2xl relative overflow-hidden">
+          {/* Subtle Background Glow */}
+          <div className="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
+            {/* Left Column Text */}
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6">
+              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Core AI Concept</span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                Retrieval-Augmented Generation, explained visually
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                TOM never guesses. Your repository is filtered, chunked, and embedded, so that every question triggers a vector search that retrieves the most relevant code before the LLM drafts an answer with citations.
               </p>
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-md bg-surface text-pulse-cyan border border-slate">
-                    <GitBranch className="w-4 h-4 shrink-0" />
-                  </div>
-                  <span className="text-subheading text-xs font-medium">
-                    Make the repo to train the model
-                  </span>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-md bg-surface text-pulse-cyan border border-slate">
-                    <Users className="w-4 h-4 shrink-0" />
+              <ul className="space-y-2.5 text-xs text-slate-300 pt-1">
+                <li className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
                   </div>
-                  <span className="text-subheading text-xs font-medium">
-                    Make strong relations with clients and developers
-                  </span>
-                </div>
+                  <span>Repository-aware answers with file-level citations</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Scores for quality, security, and maintainability</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                    <Check size={12} />
+                  </div>
+                  <span>Improvement suggestions mapped to exact lines</span>
+                </li>
+              </ul>
 
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-md bg-surface text-pulse-cyan border border-slate">
-                    <Globe className="w-4 h-4 shrink-0" />
-                  </div>
-                  <span className="text-subheading text-xs font-medium">
-                    Sell your model in the world
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-md bg-surface text-pulse-cyan border border-slate">
-                    <Code2 className="w-4 h-4 shrink-0" />
-                  </div>
-                  <span className="text-subheading text-xs font-medium">
-                    Enhance coding skills with RAG & Scorecards
-                  </span>
-                </div>
+              <div className="pt-2">
+                <button
+                  onClick={() => navigate('/Authorization')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer"
+                >
+                  <span>Try the AI Assistant</span>
+                  <ArrowRight size={14} />
+                </button>
               </div>
             </div>
 
-            <div className="pt-4 flex items-center gap-4">
-              <button
-                onClick={() => navigate('/Authorization')}
-                className="px-6 py-3 bg-surface hover:bg-slate-800 text-body-custom border border-slate text-xs font-bold rounded-xl transition-all cursor-pointer"
-              >
-                Explore Platform
-              </button>
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center hidden md:flex pointer-events-none">
-            <div className="relative p-1 animate-pulse shadow-2xl">
-              <div className="flex flex-col items-center justify-center space-y-6">
-                <div className="p-10 bg-surface rounded-full border border-pulse-cyan/30">
-                  <Cat className="w-62 h-62 text-heading" />
+            {/* Right Column RAG Visual Process Grid */}
+            <div className="lg:col-span-7 bg-[#131B2E] border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-inner">
+              <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles size={16} className="text-indigo-400" />
+                  <span className="text-xs font-bold text-slate-200">How RAG works in TOM</span>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Pricing Tier Section */}
-        <div id="pricing" className="space-y-8">
-          <div className="text-center space-y-2 pointer-events-none">
-            <h2 className="text-3xl font-extrabold text-heading">Choose Your Tier</h2>
-            <p className="text-subheading text-xs">Flexible options for individual developers, teams, and recruiters</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Basic Tier */}
-            <div className="bg-surface border border-slate rounded-2xl p-8 flex flex-col justify-between space-y-6 hover:border-slate/80 transition-colors">
-              <div className="space-y-4 pointer-events-none">
-                <span className="text-[10px] font-bold tracking-wider px-2.5 py-1 bg-main text-subheading rounded-md uppercase border border-slate">
-                  BASIC TIER
+                <span className="text-[10px] bg-indigo-950 border border-indigo-800 text-indigo-300 px-2 py-0.5 rounded">
+                  Interactive flow
                 </span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-heading">$0</span>
-                  <span className="text-xs text-subheading">/ forever free</span>
-                </div>
-                <p className="text-xs text-subheading">Explore basic features and build your initial developer presence.</p>
-
-                <ul className="space-y-3 pt-4 text-xs text-body-custom">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                    <span>See and sync public repositories</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                    <span>Analyze repo quality and security scores</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                    <span>Full access to personal developer portfolio</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-subheading/50 line-through">
-                    <span>Train custom AI models (LoRA/QLoRA)</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-subheading/50 line-through">
-                    <span>AI Model Marketplace seller access</span>
-                  </li>
-                </ul>
               </div>
 
-              <button
-                onClick={() => navigate('/Authorization')}
-                className="w-full py-2.5 px-4 bg-main hover:bg-slate-800 text-body-custom text-xs font-semibold rounded-lg border border-slate transition-colors cursor-pointer"
-              >
-                Get Started Free
-              </button>
-            </div>
-
-            {/* Pro Tier */}
-            <div className="bg-surface border-2 border-pulse-cyan rounded-2xl p-8 flex flex-col justify-between space-y-6 relative shadow-lg shadow-cyan-950/50">
-              <div>
-                <div className="absolute -top-3 right-6 bg-pulse-cyan text-main text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">
-                  RECOMMENDED
+              {/* RAG Nodes Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <GitBranch size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">GitHub Repository</p>
+                  <p className="text-[9px] text-slate-400">Owner & public/private</p>
                 </div>
 
-                <div className="space-y-4">
-                  <span className="text-[10px] font-bold tracking-wider px-2.5 py-1 bg-main text-pulse-cyan border border-pulse-cyan/40 rounded-md uppercase">
-                    PRO TIER
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold text-heading">$19</span>
-                    <span className="text-xs text-subheading">/ month</span>
-                  </div>
-                  <p className="text-xs text-subheading">Unlock full AI model training, marketplace selling, and VS Code integration.</p>
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Search size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">File Filtering</p>
+                  <p className="text-[9px] text-slate-400">Skip binaries, node_modules</p>
+                </div>
 
-                  <ul className="space-y-3 pt-4 text-xs text-body-custom">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                      <span>Includes everything in Basic</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                      <span>Train custom AI models (LoRA/QLoRA & RAG)</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                      <span>Sell models on the AI Model Marketplace</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                      <span>Private repository sync & automated .docx docs</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-pulse-cyan shrink-0" />
-                      <span>VS Code extension inline code completion</span>
-                    </li>
-                  </ul>
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Code2 size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">Code Chunking</p>
+                  <p className="text-[9px] text-slate-400">AST & function level</p>
+                </div>
+
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Database size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">Embeddings</p>
+                  <p className="text-[9px] text-slate-400">Vector space storage</p>
+                </div>
+
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Layers size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">Vector Search</p>
+                  <p className="text-[9px] text-slate-400">Cosine similarity</p>
+                </div>
+
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <FileText size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">Relevant Context</p>
+                  <p className="text-[9px] text-slate-400">Extracted code snippets</p>
+                </div>
+
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Bot size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">LLM</p>
+                  <p className="text-[9px] text-slate-400">Grounded prompt generation</p>
+                </div>
+
+                <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
+                  <Zap size={16} className="mx-auto text-indigo-400 mb-1" />
+                  <p className="text-[11px] font-bold text-white">AI Response</p>
+                  <p className="text-[9px] text-slate-400">Answers + citations</p>
                 </div>
               </div>
-              <button
-                onClick={() => navigate('/Authorization')}
-                className="w-full py-2.5 px-4 bg-pulse-cyan hover:bg-cyan-400 text-main text-xs font-bold rounded-lg transition-colors cursor-pointer"
-              >
-                Upgrade to Pro
-              </button>
-            </div>
-          </div>
-        </div>
 
-        {/* Contributors Section */}
-        <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl font-extrabold text-heading">Project Contributors</h2>
-            <p className="text-subheading text-xs">The development team behind Train Optimal Model</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {/* Contributor 1 */}
-            <div className="bg-surface border border-slate p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-pulse-cyan/50 transition-colors">
-              <div className="w-16 h-16 rounded-full bg-main border border-pulse-cyan/30 flex items-center justify-center text-pulse-cyan text-xl font-bold pointer-events-none">
-                AW
-              </div>
-              <div className="pointer-events-none">
-                <p className="text-sm font-bold text-heading">Abdul Wasay</p>
-                <p className="text-[10px] text-subheading font-mono">FA23-BCS-004</p>
-                <p className="text-xs text-pulse-cyan mt-1">Core Developer</p>
-              </div>
-            </div>
-
-            {/* Contributor 2 */}
-            <div className="bg-surface border border-slate p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-pulse-violet/50 transition-colors">
-              <div className="w-16 h-16 rounded-full bg-main border border-pulse-violet/30 flex items-center justify-center text-pulse-violet text-xl font-bold pointer-events-none">
-                AT
-              </div>
-              <div className="pointer-events-none">
-                <p className="text-sm font-bold text-heading">Alishba Tanoli</p>
-                <p className="text-[10px] text-subheading font-mono">FA23-BCS-010</p>
-                <p className="text-xs text-pulse-violet mt-1">Core Developer</p>
-              </div>
-            </div>
-
-            {/* Contributor 3 */}
-            <div className="bg-surface border border-slate p-6 rounded-xl flex flex-col items-center text-center space-y-3 hover:border-purple-500/50 transition-colors">
-              <div className="w-16 h-16 rounded-full bg-main border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl font-bold pointer-events-none">
-                AJ
-              </div>
-              <div className="pointer-events-none">
-                <p className="text-sm font-bold text-heading">Aiman Jadoon</p>
-                <p className="text-[10px] text-subheading font-mono">FA23-BCS-008</p>
-                <p className="text-xs text-purple-400 mt-1">Core Developer</p>
+              <div className="text-center pt-1">
+                <span className="text-[10px] text-slate-400 font-mono">
+                  Vector Search &rarr; Fault-tolerant RAG
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Contact Form Section */}
-        <div id="contact" className="max-w-2xl mx-auto space-y-6">
-          <div className="text-center space-y-2 pointer-events-none">
-            <h2 className="text-3xl font-extrabold text-heading">Have Questions?</h2>
-            <p className="text-subheading text-xs">Send us a query and our team will get back to you shortly.</p>
+        <footer className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-xs text-slate-500">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded bg-indigo-600 text-white font-bold text-xs">
+                T
+              </span>
+              <span className="font-bold text-slate-900 text-sm">TOM</span>
+            </div>
+            <p className="text-slate-500 leading-relaxed text-[11px]">
+              TOM — Train Optimal Model. AI-powered repository intelligence and a developer marketplace.
+            </p>
           </div>
 
-          <form onSubmit={(e) => e.preventDefault()} className="bg-surface border border-slate p-8 rounded-2xl space-y-4 shadow-xl">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-subheading">Your Name</label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  className="w-full bg-main border border-slate rounded-lg px-3 py-2 text-xs text-body-custom focus:outline-none focus:border-pulse-cyan"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-subheading">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="john@example.com"
-                  className="w-full bg-main border border-slate rounded-lg px-3 py-2 text-xs text-body-custom focus:outline-none focus:border-pulse-cyan"
-                />
-              </div>
-            </div>
+          <div className="space-y-2">
+            <p className="font-bold text-slate-900">Product</p>
+            <ul className="space-y-1.5 text-slate-500">
+              <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
+              <li><a href="#architecture" className="hover:text-indigo-600 transition-colors">Architecture</a></li>
+              <li><a href="#working" className="hover:text-indigo-600 transition-colors">Requirements</a></li>
+            </ul>
+          </div>
 
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-subheading">Message</label>
-              <textarea
-                rows={4}
-                placeholder="Write your query here..."
-                className="w-full bg-main border border-slate rounded-lg px-3 py-2 text-xs text-body-custom focus:outline-none focus:border-pulse-cyan resize-none"
-              />
-            </div>
+          <div className="space-y-2">
+            <p className="font-bold text-slate-900">Portals</p>
+            <ul className="space-y-1.5 text-slate-500">
+              <li><button onClick={() => navigate('/Authorization')} className="hover:text-indigo-600 transition-colors cursor-pointer">Developer</button></li>
+              <li><button onClick={() => navigate('/Authorization')} className="hover:text-indigo-600 transition-colors cursor-pointer">Client</button></li>
+              <li><button onClick={() => navigate('/Authorization')} className="hover:text-indigo-600 transition-colors cursor-pointer">Admin</button></li>
+            </ul>
+          </div>
 
-            <button
-              type="submit"
-              className="w-full py-2.5 bg-blue-900/20 hover:bg-blue-900/30 text-main text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>Submit Query</span>
-            </button>
-          </form>
-        </div>
-
-        <footer className="pt-8 flex text-subheading justify-end">
-          <p className="font-mono text-[10px]">COMSATS University Islamabad, Abbottabad Campus</p>
+          <div className="space-y-2">
+            <p className="font-bold text-slate-900">Legal</p>
+            <ul className="space-y-1.5 text-slate-500">
+              <li><span className="cursor-pointer hover:text-indigo-600 transition-colors">Privacy Policy</span></li>
+              <li><span className="cursor-pointer hover:text-indigo-600 transition-colors">Terms of Service</span></li>
+              <li className="pt-2 text-[10px] font-mono text-slate-400">© 2026 TOM</li>
+            </ul>
+          </div>
         </footer>
+
       </div>
     </div>
   );
