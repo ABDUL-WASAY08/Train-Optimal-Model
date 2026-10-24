@@ -18,22 +18,37 @@ const fetchPrivateEmail = async (accessToken) => {
 };
 const fetchGithubRepoData = async (accessToken) => {
   try {
-    const repoRes = await axios.get(
-      "https://api.github.com/user/repos?per_page=100&sort=updated",
-      {
-        headers: {
-          Authorization: `token ${accessToken}`,
-          "User-Agent": "NodeApp",
-        },
-      }
-    );
-    const reposList = Array.isArray(repoRes.data) ? repoRes.data : [];
+    const reposList = [];
+    let page = 1;
+    let pageRepos;
+
+    do {
+      const repoRes = await axios.get(
+        `https://api.github.com/user/repos?per_page=100&sort=updated&page=${page}`,
+        {
+          headers: {
+            Authorization: `token ${accessToken}`,
+            "User-Agent": "NodeApp",
+          },
+        }
+      );
+      pageRepos = Array.isArray(repoRes.data) ? repoRes.data : [];
+      reposList.push(...pageRepos);
+      page += 1;
+    } while (pageRepos.length === 100);
+
     const repositories = reposList.map((repo) => ({
+      id: repo.id,
       name: repo.name,
       description: repo.description || "No description provided.",
       html_url: repo.html_url,
       stargazers_count: repo.stargazers_count || 0,
+      forks_count: repo.forks_count || 0,
+      watchers_count: repo.watchers_count || 0,
+      open_issues_count: repo.open_issues_count || 0,
       language: repo.language || "Plain Text",
+      private: repo.private,
+      updated_at: repo.updated_at,
       has_readme: repo.has_readme !== undefined ? repo.has_readme : true,
     }));
     const langMap = {};
@@ -76,7 +91,6 @@ const processGithubProfile = async (accessToken, profile, role = "developer") =>
     avatarUrl: profile._json.avatar_url || "",
     topLanguages: topLanguages,
     repositories: repositories,
-    Filteredrepositories:null,
     accessToken: accessToken,
     githubUrl: profile.profileUrl || `https://github.com/${profile.username}`,
     twitterUrl: profile._json.twitter_username

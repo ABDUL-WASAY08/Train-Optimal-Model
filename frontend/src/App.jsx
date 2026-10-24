@@ -86,16 +86,17 @@ function AppRoutes() {
       <Routes>
         <Route path='/' element={<SplashScreen />} />
         <Route path='/Authorization' element={<AuthScreen />} />
-        <Route path='/Features' element={<Features/>}/>
+        <Route path='/Features' element={<Features />} />
         <Route path='/About' element={<About />} />
         <Route path='/Architecture' element={<Architecture />} />
+        <Route path="/user/portfolio/:username" element={<PublicPortfolio />} />
         <Route element={<ProtectedMiddleware />}>
           <Route path="/account" element={<Accounts />} />
           <Route path="/dashboard" element={<MainScreen />} />
           <Route path="/client-dashboard" element={<ClientDashboardPlaceholder />} />
           <Route path="/admin-dashboard" element={<AdminDashboardPlaceholder />} />
         </Route>
-        <Route path="/user/portfolio/:username" element={<PublicPortfolio />} />
+
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
