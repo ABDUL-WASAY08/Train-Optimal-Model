@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Share2, Edit3, LogOut, Code2, Menu, X, Cat } from 'lucide-react';
+import { Share2, Edit3, LogOut, Menu, X, Cat } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
 function Navbar({ onSelectTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { logout } = useAuthStore();
   const navigate = useNavigate();
-
   const handleLogout = async () => {
     try {
       const res = await logout();
@@ -26,12 +24,10 @@ function Navbar({ onSelectTab }) {
     toast.info("you can just copy the url and share it ");
     if (onSelectTab) onSelectTab("SharePortfolio");
   };
-
   const handleDummyEdit = () => {
     toast.info("here you can edit your portfolio related info");
     if (onSelectTab) onSelectTab("Settings");
   };
-
   return (
     <header className="sticky top-0 z-30 w-full shrink-0 backdrop-blur border-b border-slate-200 bg-white/90">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -43,8 +39,6 @@ function Navbar({ onSelectTab }) {
             TOM
           </span>
         </div>
-
-        {/* Desktop Buttons */}
         <div className="hidden md:flex items-center gap-3">
           <button
             onClick={handleDummyEdit}
@@ -54,7 +48,6 @@ function Navbar({ onSelectTab }) {
             <Edit3 size={15} className="text-slate-400" />
             <span>Edit Portfolio</span>
           </button>
-
           <button
             onClick={handleDummyShare}
             type="button"
@@ -63,7 +56,6 @@ function Navbar({ onSelectTab }) {
             <Share2 size={15} className="text-slate-400" />
             <span>Share Portfolio</span>
           </button>
-
           <button
             onClick={handleLogout}
             type="button"
@@ -100,7 +92,6 @@ function Navbar({ onSelectTab }) {
             <Share2 className="w-4 h-4 text-slate-400" />
             <span>Share Portfolio</span>
           </button>
-
           <div className="pt-1 border-t border-slate-200">
             <button
               onClick={() => { setMobileMenuOpen(false); handleLogout(); }}

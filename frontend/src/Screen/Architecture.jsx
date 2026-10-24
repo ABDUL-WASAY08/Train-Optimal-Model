@@ -9,19 +9,11 @@ import {
     ShieldCheck, 
     Zap, 
     Bell, 
-    GitBranch, 
-    Bot, 
-    Search, 
-    CheckCircle2, 
-    ArrowRight,
-    Code2,
     HardDrive
 } from 'lucide-react';
 import SplashNavbar from '../Components/SplasNavbar';
-
 function Architecture() {
     const navigate = useNavigate();
-
     const requestPath = [
         {
             step: '1',
@@ -72,7 +64,6 @@ function Architecture() {
             tier: 'external'
         }
     ];
-
     const crossCutting = [
         {
             icon: ShieldCheck,
@@ -100,7 +91,6 @@ function Architecture() {
             desc: 'Event-driven in-app notification feed simulated in this prototype[cite: 4].'
         }
     ];
-
     const ragPipeline = [
         { num: '1', title: 'GitHub Repository', desc: 'Clone / webhook sync[cite: 4]' },
         { num: '2', title: 'File Filtering', desc: 'Drop binaries & lockfiles[cite: 4]' },
@@ -111,14 +101,10 @@ function Architecture() {
         { num: '7', title: 'LLM', desc: 'Grounded generation[cite: 4]' },
         { num: '8', title: 'AI Response', desc: 'Answer + citations[cite: 4]' }
     ];
-
     return (
         <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-indigo-500 selection:text-white">
             <SplashNavbar />
-
             <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
-                
-                {/* PAGE HEADER */}
                 <div className="space-y-4 mx-4 sm:mx-12 border-b border-slate-200 pb-10">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-full">
                         <Layers size={14} />
@@ -131,15 +117,12 @@ function Architecture() {
                         A layered architecture with a queue-backed background processing tier. The prototype mocks every external system behind identical interfaces[cite: 4].
                     </p>
                 </div>
-
-                {/* REQUEST PATH SECTION */}
                 <div className="mx-4 sm:mx-12 space-y-8">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Request Pipeline</span>
                         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">System Request Path</h2>
                         <p className="text-slate-500 text-sm">Step-by-step traversal from the client interface down to external LLM and vector tiers[cite: 4].</p>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {requestPath.map((item, idx) => (
                             <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 space-y-3 shadow-sm relative overflow-hidden flex flex-col justify-between">
@@ -157,8 +140,6 @@ function Architecture() {
                         ))}
                     </div>
                 </div>
-
-                {/* RAG PIPELINE SECTION */}
                 <div className="mx-4 sm:mx-12 space-y-8 bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -167,7 +148,6 @@ function Architecture() {
                         <h2 className="text-3xl font-extrabold tracking-tight">RAG Pipeline Architecture</h2>
                         <p className="text-slate-400 text-sm">How repository data transforms into grounded, cited AI answers[cite: 4].</p>
                     </div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10 pt-4">
                         {ragPipeline.map((rag, rIdx) => (
                             <div key={rIdx} className="bg-slate-800 border border-slate-700/80 p-5 rounded-2xl space-y-2">
@@ -181,8 +161,6 @@ function Architecture() {
                         ))}
                     </div>
                 </div>
-
-                {/* CROSS-CUTTING CONCERNS SECTION */}
                 <div className="mx-4 sm:mx-12 space-y-8">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Security & Operations</span>
@@ -205,8 +183,6 @@ function Architecture() {
                         })}
                     </div>
                 </div>
-
-                {/* PROTOTYPE NOTE NOTICE BOX */}
                 <div className="mx-4 sm:mx-12 bg-indigo-50 border border-indigo-200 rounded-3xl p-8 space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
@@ -221,8 +197,6 @@ function Architecture() {
                         MongoDB, Redis, GitHub API, LLM and payment gateway are mocked in <code className="bg-white px-2 py-0.5 rounded border border-indigo-200 font-mono text-indigo-900">src/services</code> with identical signatures, so switching to production requires no UI changes[cite: 4].
                     </p>
                 </div>
-
-                {/* BOTTOM CALL TO ACTION */}
                 <div className="mx-4 sm:mx-12 bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
                     <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to test the system live?</h2>
                     <p className="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto">

@@ -2,8 +2,6 @@ const axios = require("axios");
 const User = require("../model/user");
 const Certificate = require("../model/userData");
 const cloudinary = require("../api/cloudinary");
-
-// Private Helper: Email Fetching Logic
 const fetchPrivateEmail = async (accessToken) => {
   try {
     const emailRes = await axios.get("https://api.github.com/user/emails", {
@@ -18,7 +16,6 @@ const fetchPrivateEmail = async (accessToken) => {
     return null;
   }
 };
-
 const fetchGithubRepoData = async (accessToken) => {
   try {
     const repoRes = await axios.get(
@@ -30,10 +27,7 @@ const fetchGithubRepoData = async (accessToken) => {
         },
       }
     );
-
     const reposList = Array.isArray(repoRes.data) ? repoRes.data : [];
-
-    // Extract Repositories Array for Frontend
     const repositories = reposList.map((repo) => ({
       name: repo.name,
       description: repo.description || "No description provided.",
@@ -42,8 +36,6 @@ const fetchGithubRepoData = async (accessToken) => {
       language: repo.language || "Plain Text",
       has_readme: repo.has_readme !== undefined ? repo.has_readme : true,
     }));
-
-    // Calculate Top Languages Share
     const langMap = {};
     let totalCount = 0;
 
@@ -53,7 +45,6 @@ const fetchGithubRepoData = async (accessToken) => {
         totalCount += 1;
       }
     });
-
     const topLanguages = Object.keys(langMap)
       .map((lang) => ({
         language: lang,
@@ -70,14 +61,12 @@ const fetchGithubRepoData = async (accessToken) => {
     return { repositories: [], topLanguages: [] };
   }
 };
-
 const processGithubProfile = async (accessToken, profile, role = "developer") => {
   let email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
   if (!email) {
     email = await fetchPrivateEmail(accessToken);
   }
   const { repositories, topLanguages } = await fetchGithubRepoData(accessToken);
-
   const userData = {
     githubId: profile.id,
     username: profile.username,
@@ -107,8 +96,6 @@ const processGithubProfile = async (accessToken, profile, role = "developer") =>
 
   return user;
 };
-
-// 2. Redirect Handler
 const githubCallback = async (req, res) => {
   try {
     const role = req.session?.signupRole || req.user?.role || "developer";
@@ -130,13 +117,10 @@ const githubCallback = async (req, res) => {
     res.status(500).json({ message: "Auth Redirect Failed", error: error.message });
   }
 };
-
-// 3. Get Full Profile Handler
 const getProfile = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
   }
-
   try {
     const fullUser = await User.findById(req.user._id);
     res.status(200).json({
@@ -147,8 +131,6 @@ const getProfile = async (req, res) => {
     res.status(500).json({ success: false, message: "Error fetching user data" });
   }
 };
-
-
 const logout = (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -172,7 +154,6 @@ const logout = (req, res) => {
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       });
-
       return res.status(200).json({
         success: true,
         message: "Successfully logged out",
@@ -180,7 +161,6 @@ const logout = (req, res) => {
     });
   });
 };
-// 5. Delete Account Handler (permanent, self only)
 const deleteAccount = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
@@ -189,8 +169,6 @@ const deleteAccount = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    // 1. remove the cloudinary assets first, isolating each destroy so one
-    // failure cannot abort the rest and leave the account half deleted
     const certificates = await Certificate.find({ userId }).select("publicId");
 
     await Promise.all(
@@ -202,12 +180,8 @@ const deleteAccount = async (req, res) => {
         }
       })
     );
-
-    // 2. drop the certificate documents (model/userData.js), then the user (model/user.js)
     await Certificate.deleteMany({ userId });
     await User.findByIdAndDelete(userId);
-
-    // 3. destroy the session so the old cookie cannot be reused
     req.logout((logoutErr) => {
       if (logoutErr) {
         return res.status(500).json({
@@ -216,7 +190,6 @@ const deleteAccount = async (req, res) => {
           error: logoutErr.message,
         });
       }
-
       req.session.destroy((sessionErr) => {
         if (sessionErr) {
           return res.status(500).json({
@@ -225,14 +198,12 @@ const deleteAccount = async (req, res) => {
             error: sessionErr.message,
           });
         }
-
         res.clearCookie("connect.sid", {
           path: "/",
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
-
         return res.status(200).json({
           success: true,
           message: "Account deleted successfully",
@@ -247,7 +218,6 @@ const deleteAccount = async (req, res) => {
     });
   }
 };
-
 module.exports = {
   processGithubProfile,
   githubCallback,

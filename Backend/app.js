@@ -12,7 +12,6 @@ const accountRoute=require("./src/route/AccountRoute")
 require("./src/middleware/passportMiddleware");
 const portfolioRoute= require("./src/route/portfolioRoute");
 const imageRoute= require("./src/route/ImageRoute");
-
 const app = express();
 app.use(
   cors({
@@ -30,21 +29,14 @@ app.use(
     saveUninitialized: false,
   }),
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 connectDatabase();
-//authorizattion route
 app.use("/api/auth", authRoutes);
-// accounts route
 app.use("/api/account",accountRoute );
-// public portfolio route
 app.use("/api/user",portfolioRoute);
-// certificates/images route
 app.use("/api/user",imageRoute);
-
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

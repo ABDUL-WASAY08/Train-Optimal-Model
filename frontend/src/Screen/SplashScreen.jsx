@@ -66,8 +66,6 @@ function SplashScreen() {
       hasLink: true,
     },
   ];
-
-  // How It Works Steps
   const steps = [
     {
       step: '01',
@@ -103,12 +101,9 @@ function SplashScreen() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-indigo-500 selection:text-white flex flex-col">
-      {/* Navigation Bar */}
       <SplasNavbar />
       
       <div className="flex-1 w-full space-y-20 sm:space-y-28">
-        
-        {/* HERO SECTION */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 space-y-10">
           <div className="max-w-3xl space-y-6">
 

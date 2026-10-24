@@ -7,11 +7,8 @@ import {
   ShoppingBag,
   Briefcase,
   Settings,
-  Menu,
-  X,
   ChevronLeft,
   ChevronRight,
-  UserCheck,
   LucideShare2,
 } from "lucide-react";
 

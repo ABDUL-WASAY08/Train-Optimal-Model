@@ -40,8 +40,6 @@ function Accounts() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10">
-
-        {/* Header */}
         <section className="card p-6 sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-5">
@@ -56,7 +54,6 @@ function Accounts() {
                   <User className="m-auto h-8 w-8 text-slate-400" />
                 )}
               </div>
-
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Developer</p>
                 <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
@@ -68,7 +65,6 @@ function Accounts() {
               </div>
             </div>
           </div>
-
           {user?.bio && (
             <p className="mt-6 max-w-2xl text-sm leading-6 text-slate-600">{user.bio}</p>
           )}
@@ -79,13 +75,11 @@ function Accounts() {
                 <Mail className="w-3.5 h-3.5" /> {user.email}
               </span>
             )}
-
             {user?.githubUrl && (
               <a href={user.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700">
                 <GitBranch className="w-3.5 h-3.5" /> GitHub <ArrowUpRight className="w-3 h-3" />
               </a>
             )}
-
             {user?.twitterUrl && (
               <a href={user.twitterUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-700">
                 Twitter <ArrowUpRight className="w-3 h-3" />
@@ -99,7 +93,6 @@ function Accounts() {
             )}
           </div>
         </section>
-
         {user?.dob && (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<Calendar className="w-4 h-4" />} title="Personal Details" />
@@ -111,7 +104,6 @@ function Accounts() {
             </div>
           </section>
         )}
-
         {user?.skills?.length > 0 && (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<Award className="w-4 h-4" />} title="Skills & Technologies" />
@@ -127,7 +119,6 @@ function Accounts() {
             </div>
           </section>
         )}
-
         {user?.topLanguages?.length > 0 && (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<Code className="w-4 h-4" />} title="GitHub Languages" />
@@ -149,7 +140,6 @@ function Accounts() {
             </div>
           </section>
         )}
-
         {user?.Filteredrepositories?.length > 0 && (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<FolderGit2 className="w-4 h-4" />} title="Projects & Repositories" />
@@ -183,7 +173,6 @@ function Accounts() {
             </div>
           </section>
         )}
-
         {certificates.length > 0 ? (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<BadgeCheck className="w-4 h-4" />} title="Certificates" />
@@ -253,7 +242,6 @@ function Accounts() {
             </p>
           </section>
         )}
-
         {user?.workExperience?.length > 0 ? (
           <section className="card mt-6 p-6 sm:p-8">
             <SectionTitle icon={<Briefcase className="w-4 h-4" />} title="Work Experience" />
@@ -285,7 +273,6 @@ function Accounts() {
             </p>
           </section>
         )}
-
         <footer className="mt-10 border-t border-slate-200 pt-6">
           <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
             <p className="text-[10px] tracking-[0.18em] text-slate-400">TOM</p>
@@ -299,7 +286,6 @@ function Accounts() {
     </div>
   );
 }
-
 function SectionTitle({ icon, title }) {
   return (
     <div className="flex items-center gap-2.5">

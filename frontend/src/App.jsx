@@ -15,60 +15,49 @@ import PublicPortfolio from './Screen/publicPortfolio'
 import Features from './Screen/features'
 import About from './Screen/About'
 import Architecture from './Screen/Architecture'
-
 const ClientDashboardPlaceholder = () => (
   <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
     <h1 className="text-2xl font-bold">Client Dashboard Coming Soon</h1>
   </div>
 );
-
 const AdminDashboardPlaceholder = () => (
   <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
     <h1 className="text-2xl font-bold">Admin Dashboard Coming Soon</h1>
   </div>
 );
-
 const PUBLIC_ROUTE_PREFIXES = [
   '/',
   '/authorization',
   '/user/portfolio',
 ];
-
 function isPublicRoute(pathname) {
   const path = pathname.toLowerCase();
   return PUBLIC_ROUTE_PREFIXES.some(
     (prefix) => path === prefix || path.startsWith(`${prefix}/`)
   );
 }
-
 function AppRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
   const { fetchProfile, loading, user } = useAuthStore();
-
   const onPublicRoute = isPublicRoute(location.pathname);
-
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
-
   useEffect(() => {
     if (onPublicRoute) return;
     if (loading || !user) return;
-
     const role = user.role;
     const roleRoutes = {
       client: '/client-dashboard',
       admin: '/admin-dashboard',
       developer: '/dashboard',
     };
-
     const target = roleRoutes[role];
     if (target && location.pathname !== target) {
       navigate(target, { replace: true });
     }
   }, [loading, user, navigate, onPublicRoute, location.pathname]);
-
   if (loading && !onPublicRoute) {
     return (
       <div>
@@ -84,7 +73,6 @@ function AppRoutes() {
       </div>
     );
   }
-
   return (
     <div>
       <Toaster theme="dark" position="top-center" richColors
@@ -114,7 +102,6 @@ function AppRoutes() {
     </div>
   );
 }
-
 function App() {
   return (
     <BrowserRouter>

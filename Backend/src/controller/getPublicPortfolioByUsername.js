@@ -1,27 +1,21 @@
 const User = require("../model/user");
 const Certificate = require("../model/userData");
-
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
 const GetPublicPortfolio = async (req, res) => {
     try {
         const { username } = req.params;
-
         const user = await User.findOne({
             username: { $regex: new RegExp(`^${escapeRegex(username)}$`, "i") }
         });
-
         if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Portfolio not found",
             });
         }
-
         const certificates = await Certificate.find({ userId: user._id })
             .select("-publicId -__v")
             .sort({ createdAt: -1 });
-
         res.status(200).json({
             success: true,
             message: "Portfolio fetched successfully",
@@ -32,7 +26,6 @@ const GetPublicPortfolio = async (req, res) => {
                 certificates,
             },
         });
-
     } catch (error) {
         console.error("Error fetching public portfolio:", error);
         res.status(500).json({
@@ -42,7 +35,6 @@ const GetPublicPortfolio = async (req, res) => {
         });
     }
 };
-
 const GetportfolioUrl = async (req, res) => {
   try {
     if (!req.user) {

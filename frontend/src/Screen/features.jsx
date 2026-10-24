@@ -11,12 +11,6 @@ import {
     ShieldAlert,
     Check,
     ArrowRight,
-    Cpu,
-    GitBranch,
-    Lock,
-    Zap,
-    Layers,
-    Terminal,
     Sparkles
 } from 'lucide-react';
 import SplashNavbar from '../Components/SplasNavbar';
@@ -140,8 +134,6 @@ function Features() {
             <SplashNavbar />
 
             <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
-                
-                {/* PAGE HEADER */}
                 <div className="space-y-4 mx-4 sm:mx-12 border-b border-slate-200 pb-10">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-full">
                         <Sparkles size={14} />
@@ -154,8 +146,6 @@ function Features() {
                         An in-depth look into the 8 core building blocks of Train Optimal Model (TOM). Select any module below to inspect its detailed specifications, workflow mechanisms, and architectural implementation[cite: 4].
                     </p>
                 </div>
-
-                {/* INTERACTIVE SELECTOR SECTION */}
                 <div className="mx-4 sm:mx-12 space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                         
@@ -252,8 +242,6 @@ function Features() {
 
                     </div>
                 </div>
-
-                {/* EXTENSIVE PAGE SECTION 2: WORKFLOW DEEP DIVE */}
                 <div className="mx-4 sm:mx-12 bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 space-y-8 shadow-sm">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Workflow Depth</span>
@@ -293,8 +281,6 @@ function Features() {
                         </div>
                     </div>
                 </div>
-
-                {/* BOTTOM CALL TO ACTION */}
                 <div className="mx-4 sm:mx-12 bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
                     <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to experience these features live?</h2>
                     <p className="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto">

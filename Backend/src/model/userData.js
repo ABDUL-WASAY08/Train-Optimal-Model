@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const certificateSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -35,5 +34,4 @@ const certificateSchema = new mongoose.Schema({
     required: true,
   },
 }, { timestamps: true });
-
 module.exports = mongoose.model("Certificate", certificateSchema);

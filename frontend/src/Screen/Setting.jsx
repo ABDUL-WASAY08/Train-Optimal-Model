@@ -244,7 +244,6 @@ function Setting() {
     }
   };
 
-  // ---------------- certificates ----------------
   const loadCertificates = async () => {
     const res = await getCertificates();
     if (!res.success) {
@@ -679,8 +678,6 @@ function Setting() {
               </p>
             )}
           </div>
-
-          {/* Education Section */}
           <div className="card mt-5 p-6 sm:p-8 space-y-6">
             <div className="flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-indigo-600" />
@@ -831,8 +828,6 @@ function Setting() {
           </div>
 
         </div>}
-
-        {/* ================= Certificates ================= */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
             <h2 className='text-base font-semibold text-slate-900 tracking-wide'>
@@ -869,8 +864,6 @@ function Setting() {
                 {certificatesLoading ? 'Refreshing...' : 'Refresh'}
               </button>
             </div>
-
-            {/* uploaded list */}
             {certificates.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {certificates.map((cert) => (
@@ -958,8 +951,6 @@ function Setting() {
                 </p>
               </div>
             )}
-
-            {/* upload form */}
             <form
               onSubmit={handleUploadCertificate}
               className="pt-6 border-t border-slate-200 space-y-4"
@@ -1020,8 +1011,6 @@ function Setting() {
                     </div>
                   )}
                 </div>
-
-                {/* metadata */}
                 <div className="space-y-3">
                   <div className="space-y-2">
                     <label className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
@@ -1091,7 +1080,6 @@ function Setting() {
                   </div>
                 </div>
               </div>
-
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <button
                   type="submit"
@@ -1120,7 +1108,6 @@ function Setting() {
             </form>
           </div>
         )}
-
         <section>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-rose-600 mb-3">
             Danger Zone
@@ -1203,5 +1190,4 @@ function Setting() {
     </div>
   );
 }
-
 export default Setting;

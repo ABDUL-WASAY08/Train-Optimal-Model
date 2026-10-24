@@ -3,19 +3,11 @@ import { CatIcon, Plus, Trash2, Star, CheckCircle, Code, Sparkles, X } from 'luc
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
 import { toast } from 'sonner';
-
-/* ------------------------------------------------------------------ */
-/* Design tokens (only colors already used in the original component)  */
-/* ------------------------------------------------------------------ */
-
-// Same width + height on every step. Only the inner content scrolls.
 const CARD_SIZE = 'w-full min-w-0 h-[660px] sm:h-[640px] box-border';
-
 const labelCls = 'block text-xs font-semibold text-slate-700 mb-1.5';
 const hintCls = 'text-xs text-slate-500 leading-relaxed';
 const sectionTitle = 'text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight';
 const sectionTag = 'text-[11px] font-bold text-slate-400 tracking-wide';
-
 const inputBase =
     'w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all';
 const inputSmall =
@@ -26,11 +18,9 @@ const chipRow =
     'flex items-center justify-between bg-indigo-50/50 border border-indigo-100 rounded-lg px-3 py-2 text-xs';
 
 const STEPS = ['Profile', 'Repositories', 'Details'];
-
 function SetupProfileModal() {
     const { fetchProfile, user } = useAuthStore();
     const { updateAccountDetails, loading: utilityLoading } = useUtilityStore();
-
     const [step, setStep] = useState(1);
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
@@ -42,7 +32,6 @@ function SetupProfileModal() {
     const [experienceList, setExperienceList] = useState([]);
     const [repoSearchQuery, setRepoSearchQuery] = useState('');
     const [isRepoDropdownOpen, setIsRepoDropdownOpen] = useState(false);
-
     const filteredRepos =
         user?.repositories?.filter((repo) =>
             repo.name.toLowerCase().includes(repoSearchQuery.toLowerCase())
@@ -54,40 +43,33 @@ function SetupProfileModal() {
         setRepoSearchQuery('');
         setIsRepoDropdownOpen(false);
     };
-
     const handleRemoveSelectedRepo = (repoName) => {
         setSelectedRepos(selectedRepos.filter((r) => r.name !== repoName));
     };
-
     const handleAddEducation = () => {
         if (eduForm.degree && eduForm.institution) {
             setEducationList([...educationList, { ...eduForm, _id: Date.now().toString() }]);
             setEduForm({ degree: '', institution: '', year: '' });
         }
     };
-
     const handleAddExperience = () => {
         if (expForm.company && expForm.role) {
             setExperienceList([...experienceList, { ...expForm, _id: Date.now().toString() }]);
             setExpForm({ company: '', role: '', period: '', description: '' });
         }
     };
-
     const handleFinishSetup = async () => {
         const skillsArray = skills.split(',').map((s) => s.trim()).filter(Boolean);
         const hasEducationInput = Object.values(eduForm).some((value) => value.trim());
         const hasExperienceInput = Object.values(expForm).some((value) => value.trim());
-
         if (hasEducationInput && (!eduForm.degree.trim() || !eduForm.institution.trim())) {
             toast.error('Add both a degree and institution to save this education record.');
             return;
         }
-
         if (hasExperienceInput && (!expForm.company.trim() || !expForm.role.trim())) {
             toast.error('Add both a role and company to save this experience record.');
             return;
         }
-
         const education = [
             ...educationList,
             ...(hasEducationInput
@@ -101,14 +83,12 @@ function SetupProfileModal() {
                 : []),
         ];
         const payload = { SetRepo: true };
-
         if (username.trim()) payload.username = username.trim();
         if (bio.trim()) payload.bio = bio.trim();
         if (skillsArray.length > 0) payload.skills = skillsArray;
         if (selectedRepos.length > 0) payload.Filteredrepositories = selectedRepos;
         if (education.length > 0) payload.education = education;
         if (workExperience.length > 0) payload.workExperience = workExperience;
-
         const result = await updateAccountDetails(payload);
         if (result.success) {
             await fetchProfile(true);
@@ -116,22 +96,17 @@ function SetupProfileModal() {
             toast.error(result.error || 'Failed to save your profile details.');
         }
     };
-
     const parsedSkills = skills.split(',').map((s) => s.trim()).filter(Boolean);
-
-    // Each pane is exactly 100% of the track width, so the card never resizes.
     const paneClass =
         'w-full min-w-0 basis-full shrink-0 grow-0 h-full overflow-y-auto overflow-x-hidden py-5 pr-1 [scrollbar-gutter:stable]';
     const paneStyle = (n) => ({
         visibility: step === n ? 'visible' : 'hidden',
         transition: 'visibility 0s linear ' + (step === n ? '0s' : '350ms'),
     });
-
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-50 font-sans antialiased">
             <div className="min-h-full flex flex-col justify-center py-6 sm:py-10">
                 <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-                    {/* ---------- Page header ---------- */}
                     <div className="text-center space-y-2.5 max-w-xl mx-auto">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold tracking-wide">
                             <Sparkles size={13} /> TOM profile setup
@@ -143,14 +118,10 @@ function SetupProfileModal() {
                             Fill in your details and watch your portfolio card update as you type.
                         </p>
                     </div>
-
-                    {/* ---------- Form + preview ---------- */}
                     <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 lg:gap-8 items-start w-full max-w-2xl lg:max-w-none mx-auto">
-                        {/* ===== LEFT: FORM CARD ===== */}
                         <div
                             className={`${CARD_SIZE} bg-white p-5 sm:p-7 rounded-3xl border border-slate-200/90 shadow-sm flex flex-col`}
                         >
-                            {/* Stepper */}
                             <div className="flex items-center gap-2 pb-4 border-b border-slate-100 shrink-0">
                                 {STEPS.map((label, i) => {
                                     const n = i + 1;
@@ -195,8 +166,6 @@ function SetupProfileModal() {
                                     );
                                 })}
                             </div>
-
-                            {/* Body */}
                             <div className="flex-1 min-h-0 w-full overflow-hidden relative">
                                 <div
                                     className="flex h-full w-full will-change-transform"
@@ -205,7 +174,6 @@ function SetupProfileModal() {
                                         transition: 'transform 350ms cubic-bezier(0.22, 1, 0.36, 1)',
                                     }}
                                 >
-                                    {/* STEP 1 */}
                                     <div className={paneClass} aria-hidden={step !== 1} style={paneStyle(1)}>
                                         <div className="w-full space-y-5">
                                             <div className="space-y-1">
@@ -260,8 +228,6 @@ function SetupProfileModal() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* STEP 2 */}
                                     <div className={paneClass} aria-hidden={step !== 2} style={paneStyle(2)}>
                                         <div className="w-full space-y-5">
                                             <div className="space-y-1">
@@ -308,7 +274,6 @@ function SetupProfileModal() {
                                                     </div>
                                                 )}
                                             </div>
-
                                             {selectedRepos.length > 0 && (
                                                 <div className="w-full space-y-2">
                                                     <span className="text-xs font-semibold text-slate-700">
@@ -336,7 +301,6 @@ function SetupProfileModal() {
                                                     </div>
                                                 </div>
                                             )}
-
                                             <div className="w-full space-y-2">
                                                 <span className="text-xs font-semibold text-slate-700">
                                                     All synced repositories
@@ -373,8 +337,6 @@ function SetupProfileModal() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* STEP 3 */}
                                     <div className={paneClass} aria-hidden={step !== 3} style={paneStyle(3)}>
                                         <div className="w-full space-y-5">
                                             <div className="space-y-1">
@@ -394,8 +356,6 @@ function SetupProfileModal() {
                                                     className={inputBase}
                                                 />
                                             </div>
-
-                                            {/* Education */}
                                             <div className="w-full border-t border-slate-100 pt-4">
                                                 <h3 className="text-sm font-bold text-slate-900 mb-2.5">Education</h3>
                                                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2.5">
@@ -406,7 +366,6 @@ function SetupProfileModal() {
                                                 <button type="button" onClick={handleAddEducation} className={addBtn}>
                                                     <Plus className="w-3.5 h-3.5" /> Add education
                                                 </button>
-
                                                 {educationList.length > 0 && (
                                                     <div className="mt-3 space-y-1.5 max-h-28 overflow-y-auto pr-1">
                                                         {educationList.map((edu) => (
@@ -428,8 +387,6 @@ function SetupProfileModal() {
                                                     </div>
                                                 )}
                                             </div>
-
-                                            {/* Work Experience */}
                                             <div className="w-full border-t border-slate-100 pt-4">
                                                 <h3 className="text-sm font-bold text-slate-900 mb-2.5">Work experience</h3>
                                                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2.5">
@@ -466,8 +423,6 @@ function SetupProfileModal() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Footer */}
                             <div className="flex justify-between items-center pt-4 border-t border-slate-100 shrink-0 bg-white w-full">
                                 {step > 1 ? (
                                     <button
@@ -509,7 +464,6 @@ function SetupProfileModal() {
                         <div
                             className={`${CARD_SIZE}   flex flex-col overflow-hidden`}
                         >
-                            {/* Preview bar */}
                             <div className="flex items-center justify-between px-5 sm:px-7 py-3.5 border-b border-slate-100 shrink-0">
                                 <span className="text-sm font-extrabold text-indigo-600">
                                     Live portfolio preview
@@ -521,7 +475,6 @@ function SetupProfileModal() {
                             </div>
 
                             <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable]">
-                                {/* Banner + avatar */}
                                 <div className="h-20 sm:h-24" />
                                 <div className="px-5 sm:px-7 -mt-10 sm:-mt-12 flex items-end gap-4">
                                     {user?.avatarUrl ? (
@@ -546,7 +499,6 @@ function SetupProfileModal() {
                                 </div>
 
                                 <div className="px-5 sm:px-7 py-6 space-y-6">
-                                    {/* Bio */}
                                     <div className="space-y-2">
                                         <p className={sectionTag}>About</p>
                                         <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl min-h-[64px] border border-slate-100 break-words">
@@ -557,8 +509,6 @@ function SetupProfileModal() {
                                             )}
                                         </p>
                                     </div>
-
-                                    {/* Skills */}
                                     <div className="space-y-2">
                                         <p className={sectionTag}>Core skills</p>
                                         <div className="flex flex-wrap gap-2 min-h-[36px]">
@@ -578,8 +528,6 @@ function SetupProfileModal() {
                                             )}
                                         </div>
                                     </div>
-
-                                    {/* Repositories */}
                                     <div className="space-y-2">
                                         <p className={sectionTag}>
                                             Featured repositories ({selectedRepos.length})
@@ -610,8 +558,6 @@ function SetupProfileModal() {
                                             )}
                                         </div>
                                     </div>
-
-                                    {/* Education */}
                                     <div className="space-y-2">
                                         <p className={sectionTag}>Education</p>
                                         {educationList.length > 0 ? (
@@ -629,8 +575,6 @@ function SetupProfileModal() {
                                             <p className="text-sm text-slate-400 italic">Add education to show it here.</p>
                                         )}
                                     </div>
-
-                                    {/* Work experience */}
                                     <div className="space-y-2">
                                         <p className={sectionTag}>Work experience</p>
                                         {experienceList.length > 0 ? (

@@ -1,30 +1,23 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-    BookOpen, 
-    Target, 
-    Users, 
-    Layers, 
-    Workflow, 
-    CheckCircle2, 
-    AlertCircle, 
-    ArrowRight,
+import {
+    BookOpen,
+    Target,
+    Users,
+    Layers,
+    Workflow,
+    CheckCircle2,
+    AlertCircle,
     Building2,
     Calendar,
     GraduationCap
 } from 'lucide-react';
 import SplashNavbar from '../Components/SplasNavbar';
-
 function About() {
     const navigate = useNavigate();
-
     return (
         <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-indigo-500 selection:text-white">
             <SplashNavbar />
-
             <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
-                
-                {/* PAGE HEADER */}
                 <div className="space-y-4 mx-4 sm:mx-12 border-b border-slate-200 pb-10">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-full">
                         <GraduationCap size={14} />
@@ -51,8 +44,6 @@ function About() {
                         </div>
                     </div>
                 </div>
-
-                {/* SECTION 1: PROBLEM & MOTIVATION */}
                 <div className="mx-4 sm:mx-12 space-y-8">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">01. Problem & Motivation</span>
@@ -92,8 +83,6 @@ function About() {
                         </div>
                     </div>
                 </div>
-
-                {/* SECTION 2: PROPOSED SOLUTION & OBJECTIVES */}
                 <div className="mx-4 sm:mx-12 space-y-8 bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">02. Proposed Solution & Objectives</span>
@@ -149,8 +138,6 @@ function About() {
                         </div>
                     </div>
                 </div>
-
-                {/* SECTION 3: SCOPE & CONSTRAINTS */}
                 <div className="mx-4 sm:mx-12 space-y-8">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">03. Project Boundaries</span>
@@ -186,8 +173,6 @@ function About() {
                         </div>
                     </div>
                 </div>
-
-                {/* SECTION 4: DEVELOPMENT TEAM */}
                 <div className="mx-4 sm:mx-12 space-y-8">
                     <div className="space-y-2">
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">04. Project Team</span>
@@ -239,8 +224,6 @@ function About() {
                         </div>
                     </div>
                 </div>
-
-                {/* BOTTOM CALL TO ACTION */}
                 <div className="mx-4 sm:mx-12 bg-gradient-to-b from-indigo-600 to bg-[#131B2E] text-white rounded-3xl p-10 sm:p-12 text-center space-y-6 shadow-xl">
                     <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to explore the platform modules?</h2>
                     <p className="text-indigo-100 text-xs sm:text-sm max-w-xl mx-auto">

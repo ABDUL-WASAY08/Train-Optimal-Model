@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Loader2, Check } from 'lucide-react';
 import SharePortfolio from './SharePortfolio';
 import { useAuthStore } from '../zustand/useAuthStore';
@@ -78,8 +78,6 @@ function Dashboard() {
           {user?.email}
           {user?.username && <span className="ml-2">@{user.username}</span>}
         </p>
-
-        {/* figures — one hero, three supporting, no boxes */}
         <section className="mt-14 flex flex-wrap items-end gap-x-16 gap-y-10 border-y border-slate-200 py-10">
           <div>
             <p className="text-xs text-slate-500">Stars</p>
@@ -114,8 +112,6 @@ function Dashboard() {
           &middot; last commit today, 9:42 PM
           <span className="text-xs text-slate-400">placeholder</span>
         </p>
-
-        {/* language mix + profile strength, one panel */}
         <section className="mt-14 grid gap-10 rounded-xl border border-slate-200 bg-white p-7 shadow-card sm:grid-cols-[auto_1fr] sm:gap-12">
           <div>
             <h2 className="text-sm font-semibold text-slate-900">Language mix</h2>
@@ -181,8 +177,6 @@ function Dashboard() {
             </ul>
           </div>
         </section>
-
-        {/* models */}
         <section className="mt-14">
           <div className="flex items-baseline justify-between">
             <h2 className="text-sm font-semibold text-slate-900">Repositories with trained models</h2>
@@ -204,8 +198,6 @@ function Dashboard() {
             ))}
           </div>
         </section>
-
-        {/* share */}
         <section className="mt-16 border-t border-slate-200 pt-10">
           <h2 className="mb-5 text-sm font-semibold text-slate-900">Share portfolio</h2>
           <div className="max-w-md">

@@ -172,7 +172,6 @@ function PublicPortfolio() {
             </section>
 
             <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12 grid lg:grid-cols-3 gap-8">
-                {/* Left column */}
                 <div className="space-y-6">
                     {skillsCount > 0 && (
                         <div id="skills" className="card p-6">
@@ -220,8 +219,6 @@ function PublicPortfolio() {
                         </div>
                     )}
                 </div>
-
-                {/* Right column */}
                 <div className="lg:col-span-2 space-y-8">
                     {repos.length > 0 && (
                         <section id="work">

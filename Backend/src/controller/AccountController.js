@@ -1,5 +1,4 @@
 const User = require("../model/user");
-
 const updateAccountDetails = async (req, res) => {
   try {
     if (!req.user) {
@@ -15,13 +14,11 @@ const updateAccountDetails = async (req, res) => {
     if (dob !== undefined) updateData.dob = dob ? new Date(dob) : null;
     if (SetRepo !== undefined) updateData.SetRepo = SetRepo;
     if (Filteredrepositories !== undefined) updateData.Filteredrepositories = Filteredrepositories;
-
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: updateData },
       { returnDocument:"after" }
     );
-
     res.status(200).json({
       success: true,
       message: "Account details updated successfully",
@@ -35,7 +32,6 @@ const updateAccountDetails = async (req, res) => {
     });
   }
 };
-
 const updateDob = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -54,9 +50,6 @@ const updateDob = async (req, res) => {
     res.status(500).json({ success: false, error: "Failed to update DOB" });
   }
 };
-
-
-
 module.exports = {
   updateAccountDetails,
   updateDob

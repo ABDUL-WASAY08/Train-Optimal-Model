@@ -2,11 +2,9 @@ const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../model/user");
 const { processGithubProfile } = require("../controller/AuthController");
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
-
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id);
@@ -15,7 +13,6 @@ passport.deserializeUser(async (id, done) => {
     done(error, null);
   }
 });
-
 passport.use(
   new GitHubStrategy(
     {
@@ -36,5 +33,4 @@ passport.use(
     }
   )
 );
-
 module.exports = passport;

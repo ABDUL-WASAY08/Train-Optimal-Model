@@ -6,9 +6,7 @@ import { useAuthStore } from '../zustand/useAuthStore';
 function AuthScreen() {
   const [role, setRole] = useState('developer');
   const [brole, setBrole] = useState('users');
-
   const loginWithGithub = useAuthStore((state) => state.loginWithGithub);
-
   const [adminData, setAdminData] = useState({
     email: '',
     password: ''
@@ -24,7 +22,6 @@ function AuthScreen() {
     }));
     if (error) setError('');
   };
-
   const handleAuth = async (e) => {
     if (e) e.preventDefault();
 
@@ -33,11 +30,9 @@ function AuthScreen() {
         await loginWithGithub('developer');
         return;
       }
-
       console.log(`${role} login is still dummy for now`);
       return;
     }
-
     console.log('Admin login is still dummy for now');
   };
 
@@ -46,7 +41,6 @@ function AuthScreen() {
       <div className="hidden lg:flex flex-col justify-between bg-slate-900 text-white p-12 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
-
         <div
           className="relative flex items-center gap-3 w-fit cursor-pointer group transition-transform duration-300 hover:scale-[1.02]"
           onClick={() => navigate('/')}
@@ -61,32 +55,27 @@ function AuthScreen() {
             </span>
           </div>
         </div>
-
         <div className="relative space-y-4 max-w-lg transition-all duration-500 transform">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold rounded-full uppercase tracking-wider shadow-inner">
             <Sparkles size={13} className="animate-spin" style={{ animationDuration: '6s' }} />
             <span>{brole === 'users' ? `${role} portal` : 'admin oversight'}</span>
-          </div>
-          
+          </div>  
           <h1 className="text-4xl font-extrabold tracking-tight leading-[1.2]">
             {brole === 'users'
               ? 'Ship better code with repository-aware AI'
               : 'Secure platform control & telemetry'}
           </h1>
-          
           <p className="text-slate-400 text-sm sm:text-base leading-relaxed font-normal">
             {brole === 'users'
               ? 'Connect your repositories, execute static analysis, and publish verified portfolios that clients can fully trust.'
               : 'Monitor users, active projects, escrow payments, complaints, and system health metrics in real-time.'}
           </p>
         </div>
-
         <div className="relative flex items-center gap-2.5 text-xs text-slate-300 bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl w-fit backdrop-blur-md shadow-lg">
           <ShieldCheck size={18} className="text-indigo-400 shrink-0" />
           <span>Developer sign in is handled securely via GitHub OAuth API.</span>
         </div>
       </div>
-
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12">
         <div className="w-full max-w-md mx-auto space-y-6">
           <div className="flex items-center justify-between">
@@ -99,7 +88,6 @@ function AuthScreen() {
               </span>
               <span className="font-extrabold text-slate-900 text-lg tracking-tight">TOM</span>
             </div>
-
             <div className="flex items-center gap-1 bg-slate-200/80 border border-slate-300/70 rounded-2xl p-1 ml-auto shadow-inner">
               <button
                 type="button"
@@ -125,7 +113,6 @@ function AuthScreen() {
               </button>
             </div>
           </div>
-
           <div className="bg-white border border-slate-200/90 rounded-3xl p-8 shadow-2xl shadow-slate-200/50 space-y-6 transition-all duration-500">
             {brole === "users" ? (
               <div className="space-y-6 animate-fadeIn">
@@ -140,7 +127,6 @@ function AuthScreen() {
                     Select your profession to proceed with authentication
                   </p>
                 </div>
-
                 <div className="grid grid-cols-2 gap-2 bg-slate-100 border border-slate-200/80 rounded-2xl p-1.5">
                   <button
                     type="button"
@@ -154,7 +140,6 @@ function AuthScreen() {
                     <User2 className="w-4 h-4" />
                     <span>Client</span>
                   </button>
-
                   <button
                     type="button"
                     onClick={() => setRole('developer')}
@@ -168,7 +153,6 @@ function AuthScreen() {
                     <span>Developer</span>
                   </button>
                 </div>
-
                 <div key={role} className="flex flex-col items-center text-center pt-2 space-y-4 animate-fadeIn">
                   <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-md shadow-indigo-100 transform transition-transform duration-300 hover:scale-105">
                     {role === 'client' ? (
@@ -177,7 +161,6 @@ function AuthScreen() {
                       <Code2 className="w-8 h-8" />
                     )}
                   </div>
-
                   <div>
                     <h3 className="text-base font-bold text-slate-900 capitalize">
                       {role} Workspace
@@ -188,7 +171,6 @@ function AuthScreen() {
                         : 'For developers who connect GitHub repos, run RAG assistance, and publish verified portfolios.'}
                     </p>
                   </div>
-
                   <button
                     onClick={handleAuth}
                     className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
@@ -212,14 +194,12 @@ function AuthScreen() {
                     Enter your administrative credentials to manage system operations.
                   </p>
                 </div>
-
                 <form onSubmit={handleAuth} className="space-y-4">
                   {error && (
                     <p className="text-xs text-rose-600 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 font-medium animate-shake">
                       {error}
                     </p>
                   )}
-
                   <div className="space-y-1.5 text-left">
                     <label htmlFor="admin-email" className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
                       <Mail size={13} className="text-indigo-600" />
@@ -236,7 +216,6 @@ function AuthScreen() {
                       className="w-full px-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 transition-all duration-300"
                     />
                   </div>
-
                   <div className="space-y-1.5 text-left">
                     <label htmlFor="admin-password" className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
                       <Lock size={13} className="text-indigo-600" />
@@ -253,7 +232,6 @@ function AuthScreen() {
                       className="w-full px-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 transition-all duration-300"
                     />
                   </div>
-
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer mt-2"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Copy, Check, ExternalLink, Globe } from 'lucide-react';
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
-import { toast } from 'sonner'; // Optional: if you are using sonner for notifications
+import { toast } from 'sonner'; 
 
 function SharePortfolio() {
     const [copied, setCopied] = useState(false);

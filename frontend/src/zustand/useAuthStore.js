@@ -6,13 +6,11 @@ export const useAuthStore = create((set, get) => ({
   isAuthenticated: false,
   loading: true,
   error: null,
-
   loginWithGithub: (role) => {
     const githubUrl = new URL(import.meta.env.VITE_GITHUB_URL);
     githubUrl.searchParams.set("role", role);
     window.location.href = githubUrl.toString();
   },
-
   fetchProfile: async (force = false) => {
     set({ loading: true, error: null });
     try {
@@ -31,10 +29,8 @@ export const useAuthStore = create((set, get) => ({
       });
     }
   },
-
   setUser: (userData) =>
     set((state) => ({ user: { ...state.user, ...userData } })),
-
   updateDob: async (dob) => {
     try {
       const response = await api.put("/auth/update-dob", { dob });
@@ -49,7 +45,6 @@ export const useAuthStore = create((set, get) => ({
       };
     }
   },
-
   logout: async () => {
     set({ loading: true, error: null });
     try {
@@ -69,7 +64,6 @@ export const useAuthStore = create((set, get) => ({
       };
     }
   },
-
   deleteAccount: async () => {
     set({ loading: true, error: null });
     try {

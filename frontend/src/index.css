@@ -10,23 +10,17 @@
 }
 @layer base {
   :root {
-    --void-black: #0d1117; /* App background */
-    --graphite: #161b22; /* Surface / card background */
-    --slate-line: #2a3441; /* Borders, dividers, grid lines */
-    --fog-text: #c9d1d9; /* Body text */
-    --muted-steel: #8b949e; /* Secondary text, labels, captions */
-
-    /* Signature Accents */
-    --pulse-cyan: #3ecfff; /* Active training state, live progress, glowing highlights */
-    --pulse-violet: #8b5cf6; /* Hyperparameters, model architecture elements */
-
-    /* Status Colors */
-    --status-success: #3fb950; /* Converged / training complete */
-    --status-error: #f85149; /* Failed run, NaN loss, crash */
-    --status-warning: #d29922; /* Overfitting, early-stop warning */
-    --status-idle: #6e7681; /* Queued / not started */
-
-    /* Semantic Roles - Mapped to Dark Tech Canvas */
+    --void-black: #0d1117; 
+    --graphite: #161b22;
+    --slate-line: #2a3441;
+    --fog-text: #c9d1d9;
+    --muted-steel: #8b949e; 
+    --pulse-cyan: #3ecfff;
+    --pulse-violet: #8b5cf6; 
+    --status-success: #3fb950;
+    --status-error: #f85149; 
+    --status-warning: #d29922; 
+    --status-idle: #6e7681; 
     --bg-main: var(--void-black);
     --bg-surface: var(--graphite);
     --text-heading: #ffffff;
@@ -38,8 +32,7 @@
     --side-bar: var(--graphite);
     --border-color: var(--slate-line);
   }
-
-  body {
+ body {
     background-color: var(--bg-main);
     color: var(--text-body);
     margin: 0;
@@ -51,7 +44,6 @@
       Roboto,
       sans-serif;
   }
-
   h1,
   h2,
   h3,
@@ -60,16 +52,13 @@
   h6 {
     color: var(--text-heading);
   }
-
   p,
   span {
     color: var(--text-body);
   }
 }
-
-/* Custom Utilities for Animations & Palette */
 @layer utilities {
-  /* Color Utility Classes */
+
   .bg-main {
     background-color: var(--bg-main);
   }
@@ -85,8 +74,6 @@
   .text-body-custom {
     color: var(--text-body);
   }
-
-  /* Accent & Status Utilities */
   .text-pulse-cyan {
     color: var(--pulse-cyan);
   }
@@ -102,7 +89,6 @@
   .border-slate {
     border-color: var(--slate-line);
   }
-
   .status-success {
     color: var(--status-success);
   }
@@ -115,7 +101,6 @@
   .status-idle {
     color: var(--status-idle);
   }
-
   .btn-custom {
     background-color: var(--btn-bg);
     color: var(--btn-text);
@@ -129,18 +114,13 @@
     background-color: var(--btn-hover);
     box-shadow: 0 0 12px rgba(62, 207, 255, 0.4);
   }
-
-  /* Scroll Animations */
   .animate-slide-up {
     animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-
   .animate-slide-down {
     animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }
-
-/* Keyframes */
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -162,13 +142,10 @@
     transform: translateY(0);
   }
 }
-/* Scrollbar ki overall width */
 ::-webkit-scrollbar {
   width: 3px;
   height:20%;
 }
-
-/* Scrollbar ka background track */
 ::-webkit-scrollbar-track {
   background: #131324; 
   border-radius: 4px;
@@ -177,19 +154,13 @@
   background: #2f2e41; 
   border-radius: 4px;
 }
-
-
 ::-webkit-scrollbar-thumb:hover {
   background: #01023d;
 }
-
-
-
 @theme {
   --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
   --shadow-pop: 0 12px 40px rgba(16, 24, 40, 0.12);
 }
-
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed;
@@ -231,7 +202,6 @@
     @apply text-lg font-semibold text-slate-900;
   }
 }
-
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -261,9 +231,6 @@
 .skeleton {
   @apply relative overflow-hidden bg-slate-100 rounded;
 }
-
-/* Neutralize the legacy dark-theme global text colors so the light
-   prototype design inherits correctly (Tailwind utilities still win). */
 @layer base {
   h1,
   h2,
