@@ -23,8 +23,6 @@ import SplasNavbar from '../Components/SplasNavbar';
 
 function SplashScreen() {
   const navigate = useNavigate();
-
-  // Platform Features Section
   const platformFeatures = [
     {
       icon: Bot,
@@ -134,8 +132,6 @@ function SplashScreen() {
             </div>
           </div>
         </div>
-
-        {/* PLATFORM FEATURES SECTION */}
         <div id="features" className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
           <div className="space-y-2">
             <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Platform Features</span>
@@ -176,8 +172,6 @@ function SplashScreen() {
             })}
           </div>
         </div>
-
-        {/* HOW IT WORKS SECTION */}
         <div id="working" className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
           <div className="space-y-2">
             <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">How It Works</span>
@@ -208,11 +202,9 @@ function SplashScreen() {
 
      
         <div id="architecture" className="w-full bg-[#0B0F19] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 shadow-2xl relative overflow-hidden">
-          {/* Subtle Background Glow */}
           <div className="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
-            {/* Left Column Text */}
             <div className="lg:col-span-5 space-y-5 sm:space-y-6">
               <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Core AI Concept</span>
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
@@ -253,8 +245,6 @@ function SplashScreen() {
                 </button>
               </div>
             </div>
-
-            {/* Right Column RAG Visual Process Grid */}
             <div className="lg:col-span-7 bg-[#131B2E] border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-inner">
               <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
                 <div className="flex items-center gap-2">
@@ -265,8 +255,6 @@ function SplashScreen() {
                   Interactive flow
                 </span>
               </div>
-
-              {/* RAG Nodes Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 <div className="bg-[#1A233A] p-2.5 sm:p-3 rounded-xl border border-slate-700/60 space-y-1 text-center">
                   <GitBranch size={16} className="mx-auto text-indigo-400 mb-1" />
