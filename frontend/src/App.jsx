@@ -1,31 +1,23 @@
 import './App.css'
-import AuthScreen from './Screen/AuthScreen'
-import MainScreen from './Screen/MainScreen'
-import PageNotFound from './Screen/pageNotFound'
-import SplashScreen from './Screen/SplashScreen'
-import Accounts from './Screen/Accounts'
-import AccountSkelton from './Screen/AccountSkelton'
+import AuthScreen from './Screen/Basic/AuthScreen'
+import MainScreen from './Screen/Developers/MainScreen'
+import PageNotFound from './Screen/Basic/pageNotFound'
+import SplashScreen from './Screen/Basic/SplashScreen'
+import Accounts from './Screen/Developers/Accounts'
+import AccountSkelton from './Screen/Basic/AccountSkelton'
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import './index.css'
 import { Toaster } from "sonner"
 import ProtectedMiddleware from './Middleware/ProtectedMiddleware'
 import { useAuthStore } from './zustand/useAuthStore'
 import { useEffect } from 'react'
-import PublicPortfolio from './Screen/publicPortfolio'
-import Features from './Screen/features'
-import About from './Screen/About'
-import Architecture from './Screen/Architecture'
-import PreviewPortfolio from './Screen/previewPortfolio'
-const ClientDashboardPlaceholder = () => (
-  <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
-    <h1 className="text-2xl font-bold">Client Dashboard Coming Soon</h1>
-  </div>
-);
-const AdminDashboardPlaceholder = () => (
-  <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
-    <h1 className="text-2xl font-bold">Admin Dashboard Coming Soon</h1>
-  </div>
-);
+import PublicPortfolio from './Screen/Developers/publicPortfolio'
+import Features from './Screen/Basic/features'
+import About from './Screen/Basic/About'
+import Architecture from './Screen/Basic/Architecture'
+import PreviewPortfolio from './Screen/Developers/previewPortfolio'
+import ClientDashboard from './Screen/Clients/clientDashboard'
+import AdminDashboard from './Screen/Admin/adminDashboard'
 const PUBLIC_ROUTE_PREFIXES = [
   '/',
   '/authorization',
@@ -96,8 +88,8 @@ function AppRoutes() {
           <Route path="/user/previewPortfolio" element={<PreviewPortfolio />} />
           <Route path="/account" element={<Accounts />} />
           <Route path="/dashboard" element={<MainScreen />} />
-          <Route path="/client-dashboard" element={<ClientDashboardPlaceholder />} />
-          <Route path="/admin-dashboard" element={<AdminDashboardPlaceholder />} />
+          <Route path="/client-dashboard" element={<ClientDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Route>
 
 

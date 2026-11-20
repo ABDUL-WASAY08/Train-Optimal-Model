@@ -1,5 +1,5 @@
 const axios = require("axios");
-const User = require("../model/user");
+const { getUserModel, Developer } = require("../model/user");
 const Certificate = require("../model/userData");
 const cloudinary = require("../api/cloudinary");
 const fetchPrivateEmail = async (accessToken) => {
@@ -76,7 +76,8 @@ const fetchGithubRepoData = async (accessToken) => {
     return { repositories: [], topLanguages: [] };
   }
 };
-const processGithubProfile = async (accessToken, profile, role = "developer") => {
+const processGithubProfile = async (accessToken, profile) => {
+  const role = "developer";
   let email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
   if (!email) {
     email = await fetchPrivateEmail(accessToken);
@@ -100,22 +101,22 @@ const processGithubProfile = async (accessToken, profile, role = "developer") =>
     portfolioUrl:`user/portfolio/${profile.username}`,
     role,
   };
-  let user = await User.findOne({ githubId: profile.id });
+  let user = await Developer.findOne({ githubId: profile.id });
 
   if (user) {
-    user = await User.findByIdAndUpdate(user._id, userData, { new: true });
+    user = await Developer.findByIdAndUpdate(user._id, userData, { new: true });
   } else {
-    user = await User.create(userData);
+    user = await Developer.create(userData);
   }
 
   return user;
 };
 const githubCallback = async (req, res) => {
   try {
-    const role = req.session?.signupRole || req.user?.role || "developer";
+    const role = "developer";
 
     if (req.user && req.user._id) {
-      await User.findByIdAndUpdate(req.user._id, { role }, { new: true });
+      await Developer.findByIdAndUpdate(req.user._id, { role }, { new: true });
     }
 
     const frontendUri = process.env.FRONTEND_URI;
@@ -136,7 +137,8 @@ const getProfile = async (req, res) => {
     return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
   }
   try {
-    const fullUser = await User.findById(req.user._id);
+    const UserModel = getUserModel(req.user?.role);
+    const fullUser = await UserModel.findById(req.user._id);
     res.status(200).json({
       success: true,
       user: fullUser,
@@ -195,7 +197,8 @@ const deleteAccount = async (req, res) => {
       })
     );
     await Certificate.deleteMany({ userId });
-    await User.findByIdAndDelete(userId);
+    const UserModel = getUserModel(req.user?.role);
+    await UserModel.findByIdAndDelete(userId);
     req.logout((logoutErr) => {
       if (logoutErr) {
         return res.status(500).json({

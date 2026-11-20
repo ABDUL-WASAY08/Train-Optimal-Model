@@ -19,7 +19,7 @@ import {
   Layers,
   Cat
 } from 'lucide-react';
-import SplasNavbar from '../Components/SplasNavbar';
+import SplasNavbar from '../../Components/SplasNavbar';
 
 function SplashScreen() {
   const navigate = useNavigate();

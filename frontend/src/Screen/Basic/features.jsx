@@ -13,7 +13,7 @@ import {
     ArrowRight,
     Sparkles
 } from 'lucide-react';
-import SplashNavbar from '../Components/SplasNavbar';
+import SplashNavbar from '../../Components/SplasNavbar';
 
 function Features() {
     const navigate = useNavigate();

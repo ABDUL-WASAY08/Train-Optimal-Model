@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Check, ExternalLink, FileText, Loader2, Mail, Pencil, Plus, Save, Search, Trash2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
-import api from "../api/axios";
-import { useAuthStore } from "../zustand/useAuthStore";
-import "./PublicPortfolio.css";
+import api from "../../api/axios";
+import { useAuthStore } from "../../zustand/useAuthStore";
+import "./publicPortfolio.css";
 
 const portfolioStyles = `
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&display=swap");

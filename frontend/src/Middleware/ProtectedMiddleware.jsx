@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAuthStore } from '../zustand/useAuthStore'
 import { Navigate, Outlet } from 'react-router-dom'
 import { toast } from 'sonner'
-import AccountSkelton from '../Screen/AccountSkelton';
+import AccountSkelton from '../Screen/Basic/AccountSkelton';
 function ProtectedMiddleware() {
   const { user, loading } = useAuthStore();
   useEffect(() => {

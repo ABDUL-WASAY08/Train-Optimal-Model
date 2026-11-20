@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Copy, Check, ExternalLink, Globe } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore';
-import { useUtilityStore } from '../zustand/useUtilityStore';
+import { useAuthStore } from '../../zustand/useAuthStore';
+import { useUtilityStore } from '../../zustand/useUtilityStore';
 import { toast } from 'sonner'; 
 
 function SharePortfolio() {

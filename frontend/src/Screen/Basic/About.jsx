@@ -11,7 +11,7 @@ import {
     Calendar,
     GraduationCap
 } from 'lucide-react';
-import SplashNavbar from '../Components/SplasNavbar';
+import SplashNavbar from '../../Components/SplasNavbar';
 function About() {
     const navigate = useNavigate();
     return (

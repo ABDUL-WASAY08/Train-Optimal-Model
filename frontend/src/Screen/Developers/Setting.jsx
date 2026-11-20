@@ -22,8 +22,8 @@ import {
   FileImage,
   Building2,
 } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore';
-import { useUtilityStore } from '../zustand/useUtilityStore';
+import { useAuthStore } from '../../zustand/useAuthStore';
+import { useUtilityStore } from '../../zustand/useUtilityStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 

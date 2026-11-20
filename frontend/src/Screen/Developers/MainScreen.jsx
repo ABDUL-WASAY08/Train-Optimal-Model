@@ -1,10 +1,10 @@
-import Sidebar from '../Components/Sidebar';
+import Sidebar from '../../Components/Sidebar';
 import Accounts from './Accounts';
 import Setting from './Setting';
 import SharePortfolio from './SharePortfolio';
-import Navbar from '../Components/Navbar';
-import { useAuthStore } from '../zustand/useAuthStore';
-import Dashboard from './Dashboard';
+import Navbar from '../../Components/Navbar';
+import { useAuthStore } from '../../zustand/useAuthStore';
+import Dashboard from './dashboard';
 import SetupProfileModal from './SetupProfileModal';
 import Repositories from './Repositories';
 import { useState } from 'react';

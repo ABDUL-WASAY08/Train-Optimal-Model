@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Loader2, Check } from 'lucide-react';
 import SharePortfolio from './SharePortfolio';
-import { useAuthStore } from '../zustand/useAuthStore';
+import { useAuthStore } from '../../zustand/useAuthStore';
 
 const DUMMY_COMMITS_THIS_MONTH = 148;
 

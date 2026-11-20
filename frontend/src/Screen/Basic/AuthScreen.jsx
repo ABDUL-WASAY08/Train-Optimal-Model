@@ -1,39 +1,46 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Code2, User2, Cat, Sparkles, ShieldCheck, ArrowRight, Code, Mail, Lock, Terminal } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore';
+import { toast } from 'sonner';
+import { Code2, User2, Cat, Sparkles, ShieldCheck, ArrowRight, Code } from 'lucide-react';
+import { useAuthStore } from '../../zustand/useAuthStore';
 
 function AuthScreen() {
   const [role, setRole] = useState('developer');
   const [brole, setBrole] = useState('users');
   const loginWithGithub = useAuthStore((state) => state.loginWithGithub);
-  const [adminData, setAdminData] = useState({
-    email: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
+  const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAdminData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-    if (error) setError('');
-  };
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+    if (!error) return;
+
+    if (error === "role") {
+      toast.error("Invalid role selected. Please try again.");
+    } else if (error === "admin") {
+      toast.error("This Google account is not authorized as admin.");
+    } else {
+      toast.error("Sign in failed. Please try again.");
+    }
+
+    params.delete("error");
+    const query = params.toString();
+    navigate(window.location.pathname + (query ? `?${query}` : ""), { replace: true });
+  }, [navigate]);
+
   const handleAuth = async (e) => {
     if (e) e.preventDefault();
 
     if (brole === 'users') {
       if (role === 'developer') {
         await loginWithGithub('developer');
-        return;
+      } else {
+        loginWithGoogle('client');
       }
-      console.log(`${role} login is still dummy for now`);
       return;
     }
-    console.log('Admin login is still dummy for now');
+    loginWithGoogle('admin');
   };
 
   return (
@@ -73,7 +80,7 @@ function AuthScreen() {
         </div>
         <div className="relative flex items-center gap-2.5 text-xs text-slate-300 bg-slate-800/80 border border-slate-700/80 p-4 rounded-2xl w-fit backdrop-blur-md shadow-lg">
           <ShieldCheck size={18} className="text-indigo-400 shrink-0" />
-          <span>Developer sign in is handled securely via GitHub OAuth API.</span>
+          <span>Developers use GitHub. Clients and admins use Google.</span>
         </div>
       </div>
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12">
@@ -91,7 +98,7 @@ function AuthScreen() {
             <div className="flex items-center gap-1 bg-slate-200/80 border border-slate-300/70 rounded-2xl p-1 ml-auto shadow-inner">
               <button
                 type="button"
-                onClick={() => { setBrole('users'); setError(''); }}
+                onClick={() => setBrole('users')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                   brole === 'users' 
                     ? 'bg-white text-indigo-700 shadow-md scale-[1.02]' 
@@ -102,7 +109,7 @@ function AuthScreen() {
               </button>
               <button
                 type="button"
-                onClick={() => { setBrole('admin'); setError(''); }}
+                onClick={() => setBrole('admin')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                   brole === 'admin' 
                     ? 'bg-white text-indigo-700 shadow-md scale-[1.02]' 
@@ -191,55 +198,22 @@ function AuthScreen() {
                     Admin Sign In
                   </h2>
                   <p className="mt-1 text-xs text-slate-500 font-medium">
-                    Enter your administrative credentials to manage system operations.
+                    Continue with your authorized Google account to manage system operations.
                   </p>
                 </div>
-                <form onSubmit={handleAuth} className="space-y-4">
-                  {error && (
-                    <p className="text-xs text-rose-600 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 font-medium animate-shake">
-                      {error}
-                    </p>
-                  )}
-                  <div className="space-y-1.5 text-left">
-                    <label htmlFor="admin-email" className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
-                      <Mail size={13} className="text-indigo-600" />
-                      <span>Email Address</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="admin-email"
-                      name="email"
-                      value={adminData.email}
-                      onChange={handleInputChange}
-                      placeholder="admin@example.com"
-                      required
-                      className="w-full px-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 transition-all duration-300"
-                    />
-                  </div>
-                  <div className="space-y-1.5 text-left">
-                    <label htmlFor="admin-password" className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
-                      <Lock size={13} className="text-indigo-600" />
-                      <span>Password</span>
-                    </label>
-                    <input
-                      type="password"
-                      id="admin-password"
-                      name="password"
-                      value={adminData.password}
-                      onChange={handleInputChange}
-                      placeholder="••••••••"
-                      required
-                      className="w-full px-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-600/10 transition-all duration-300"
-                    />
-                  </div>
+                <div className="space-y-3">
                   <button
-                    type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer mt-2"
+                    onClick={handleAuth}
+                    className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
                   >
-                    <span>Authenticate as Admin</span>
+                    <User2 size={16} />
+                    <span>Sign in with Google</span>
                     <ArrowRight size={14} />
                   </button>
-                </form>
+                  <p className="text-[11px] text-slate-400 text-center">
+                    Use your authorized Google account.
+                  </p>
+                </div>
               </div>
             )}
           </div>

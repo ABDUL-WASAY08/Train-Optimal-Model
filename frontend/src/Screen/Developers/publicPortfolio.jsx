@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ExternalLink, Mail } from "lucide-react";
-import api from "../api/axios";
-import "./PublicPortfolio.css";
+import api from "../../api/axios";
+import "./publicPortfolio.css";
 
 const portfolioStyles = `
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&display=swap");

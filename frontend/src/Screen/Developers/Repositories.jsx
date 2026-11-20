@@ -13,7 +13,7 @@ import {
   Sparkles,
   Star,
 } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore';
+import { useAuthStore } from '../../zustand/useAuthStore';
 
 const formatDate = (date) => {
   if (!date) return 'Update date unavailable';

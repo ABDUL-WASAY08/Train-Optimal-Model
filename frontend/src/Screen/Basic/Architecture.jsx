@@ -11,7 +11,7 @@ import {
     Bell, 
     HardDrive
 } from 'lucide-react';
-import SplashNavbar from '../Components/SplasNavbar';
+import SplashNavbar from '../../Components/SplasNavbar';
 function Architecture() {
     const navigate = useNavigate();
     const requestPath = [

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CatIcon, Plus, Trash2, Star, CheckCircle, Code, Sparkles, X } from 'lucide-react';
-import { useAuthStore } from '../zustand/useAuthStore';
-import { useUtilityStore } from '../zustand/useUtilityStore';
+import { useAuthStore } from '../../zustand/useAuthStore';
+import { useUtilityStore } from '../../zustand/useUtilityStore';
 import { toast } from 'sonner';
 const CARD_SIZE = 'w-full min-w-0 h-[660px] sm:h-[640px] box-border';
 const labelCls = 'block text-xs font-semibold text-slate-700 mb-1.5';

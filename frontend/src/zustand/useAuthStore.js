@@ -11,6 +11,11 @@ export const useAuthStore = create((set, get) => ({
     githubUrl.searchParams.set("role", role);
     window.location.href = githubUrl.toString();
   },
+  loginWithGoogle: (role) => {
+    const googleUrl = new URL(import.meta.env.VITE_GOOGLE_URL);
+    googleUrl.searchParams.set("role", role);
+    window.location.href = googleUrl.toString();
+  },
   fetchProfile: async (force = false) => {
     set({ loading: true, error: null });
     try {
