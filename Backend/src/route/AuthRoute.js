@@ -6,10 +6,8 @@ const {
   logout,
   deleteAccount,
 } = require("../controller/AuthController");
-const { googleLogin } = require("../controller/GoogleAuthController");
 const ensureAuthenticated = require("../middleware/isAuthenticate");
 const router = express.Router();
-router.post("/google", googleLogin);
 router.get(
   "/github",
   (req, res, next) => {

@@ -1,5 +1,4 @@
 .env
 .env.local
 .env.*.local
-serviceAccountKey.json
 node_modules/

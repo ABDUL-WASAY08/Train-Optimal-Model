@@ -153,7 +153,7 @@ function About() {
                             </h3>
                             <ul className="space-y-2 text-xs text-emerald-800">
                                 <li className="flex items-center gap-2">• Three role workspaces: Developer, Client, Admin[cite: 4]</li>
-                                <li className="flex items-center gap-2">• GitHub OAuth & Google Authentication[cite: 4]</li>
+                                <li className="flex items-center gap-2">• GitHub OAuth and Google authentication[cite: 4]</li>
                                 <li className="flex items-center gap-2">• RAG pipeline with MongoDB Atlas Vector Search[cite: 4]</li>
                                 <li className="flex items-center gap-2">• Project bidding, tracking, and VS Code extension marketplace[cite: 4]</li>
                             </ul>
