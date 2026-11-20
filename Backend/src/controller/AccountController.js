@@ -4,11 +4,17 @@ const updateAccountDetails = async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
-    const { username, bio, skills, education, workExperience, dob, SetRepo, Filteredrepositories } = req.body;
+    const { username, name, email, bio, skills, githubUrl, linkedinUrl, twitterUrl, websiteUrl, education, workExperience, dob, SetRepo, Filteredrepositories } = req.body;
     const updateData = {};
     if (username !== undefined) updateData.username = username;
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
     if (bio !== undefined) updateData.bio = bio;
     if (skills !== undefined) updateData.skills = skills;
+    if (githubUrl !== undefined) updateData.githubUrl = githubUrl;
+    if (linkedinUrl !== undefined) updateData.linkedinUrl = linkedinUrl;
+    if (twitterUrl !== undefined) updateData.twitterUrl = twitterUrl;
+    if (websiteUrl !== undefined) updateData.websiteUrl = websiteUrl;
     if (education !== undefined) updateData.education = education;
     if (workExperience !== undefined) updateData.workExperience = workExperience;
     if (dob !== undefined) updateData.dob = dob ? new Date(dob) : null;
@@ -17,7 +23,7 @@ const updateAccountDetails = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: updateData },
-      { returnDocument:"after" }
+      { new: true }
     );
     res.status(200).json({
       success: true,
@@ -42,7 +48,7 @@ const updateDob = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { dob },
-      { returnDocument:"after" }
+      { new: true }
     );
 
     res.status(200).json({ success: true, user: updatedUser });

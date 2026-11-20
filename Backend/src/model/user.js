@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     githubId: String,
+    googleId: String,
     username: String,
     name: String,
     bio: String,
@@ -28,6 +29,11 @@ const userSchema = new mongoose.Schema(
         private: Boolean,
         updated_at: Date,
         has_readme: Boolean,
+        subtitle: String,
+        liveUrl: String,
+        imageUrl: String,
+        imagePublicId: String,
+        topics: Array,
       },
     ],
     Filteredrepositories: [
@@ -44,6 +50,11 @@ const userSchema = new mongoose.Schema(
         private: Boolean,
         updated_at: Date,
         has_readme: Boolean,
+        subtitle: String,
+        liveUrl: String,
+        imageUrl: String,
+        imagePublicId: String,
+        topics: Array,
       },
     ],
     skills: {
@@ -63,9 +74,13 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
     githubUrl: String,
+    linkedinUrl: String,
     twitterUrl: String,
     websiteUrl: String,
     portfolioUrl: String,
+    cvUrl: String,
+    cvPublicId: String,
+    cvName: String,
     SetRepo: {
       type: Boolean,
       default: false,

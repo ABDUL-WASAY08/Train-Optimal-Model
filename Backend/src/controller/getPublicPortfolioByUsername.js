@@ -23,6 +23,7 @@ const GetPublicPortfolio = async (req, res) => {
                 ...user.toObject(),
                 accessToken: undefined,
                 githubId: undefined,
+                cvPublicId: undefined,
                 certificates,
             },
         });

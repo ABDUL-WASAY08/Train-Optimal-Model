@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Mail,
   Globe,
@@ -36,6 +36,7 @@ import {
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUtilityStore } from '../zustand/useUtilityStore';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 /* ---------- Animation CSS (self-contained, no tailwind config needed) ---------- */
 /* NOTE: "backwards" fill-mode is intentional. It keeps the entrance animation from
@@ -188,7 +189,7 @@ const ProgressRow = ({ label, value, max, score, animated }) => (
 
 /* ---------- Main Accounts Component ---------- */
 
-function Accounts({ activeItem, onSelect }) {
+function Accounts({ onSelect }) {
   const { user, fetchProfile } = useAuthStore();
   const { certificates, getCertificates, updateAccountDetails } = useUtilityStore();
 
@@ -239,7 +240,7 @@ function Accounts({ activeItem, onSelect }) {
   const skillsList = Array.isArray(user?.skills) ? user.skills : [];
   const experienceList = Array.isArray(user?.workExperience) ? user.workExperience : [];
   const educationList = Array.isArray(user?.education) ? user.education : [];
-  const certsList = Array.isArray(certificates) ? certificates : [];
+  const certsList = useMemo(() => (Array.isArray(certificates) ? certificates : []), [certificates]);
 
   /* ----- Portfolio Strength calculation ----- */
   const projectsScore = Math.min(100, Math.round((projectsList.length / 7) * 100));
@@ -260,11 +261,7 @@ function Accounts({ activeItem, onSelect }) {
 
   const isCompleted = totalPowerScore === 100 && !!user?.bio;
 
-  const publicUrl = `https://fyp-prototype-ten.vercel.app/${
-    user?.portfolioUrl || `portfolio/${user?.username || 'developer'}`
-  }`;
-
-  /* ----- Filtered Certificates ----- */
+  const publicUrl =  user?.portfolioUrl || `portfolio/${user?.username || 'developer'}`;
   const filteredCertificates = useMemo(() => {
     if (!certSearchQuery.trim()) return certsList;
     const query = certSearchQuery.toLowerCase();
@@ -276,7 +273,6 @@ function Accounts({ activeItem, onSelect }) {
     });
   }, [certsList, certSearchQuery]);
 
-  /* ----- Handlers ----- */
   const handleOpenCertificates = () => {
     setActiveView('certificates');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -341,6 +337,7 @@ function Accounts({ activeItem, onSelect }) {
 
   const displayName = user?.name || user?.username || 'Developer Name';
   const initials = displayName.substring(0, 2).toUpperCase();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -365,7 +362,7 @@ function Accounts({ activeItem, onSelect }) {
               className="group/btn inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white text-slate-700 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
             >
               <Edit3 size={15} className="transition-transform duration-300 group-hover/btn:-rotate-12 group-hover/btn:scale-110" />{' '}
-              Edit profile
+              Settings
             </button>
             <button
               type="button"
@@ -375,7 +372,17 @@ function Accounts({ activeItem, onSelect }) {
               {/* shine sweep */}
               <span className="pointer-events-none absolute inset-y-0 -left-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover/btn:translate-x-[400%]" />
               <Eye size={15} className="relative transition-transform duration-300 group-hover/btn:scale-125" />
-              <span className="relative">Preview public page</span>
+              <span className="relative">Preview Only</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(`/user/previewPortfolio`)}
+              className="group/btn relative overflow-hidden inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-xl bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-300/50 active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
+            >
+              {/* shine sweep */}
+              <span className="pointer-events-none absolute inset-y-0 -left-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover/btn:translate-x-[400%]" />
+              <Eye size={15} className="relative transition-transform duration-300 group-hover/btn:scale-125" />
+              <span className="relative">Preview & Edit</span>
             </button>
           </div>
         </header>

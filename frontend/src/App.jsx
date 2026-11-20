@@ -15,6 +15,7 @@ import PublicPortfolio from './Screen/publicPortfolio'
 import Features from './Screen/features'
 import About from './Screen/About'
 import Architecture from './Screen/Architecture'
+import PreviewPortfolio from './Screen/previewPortfolio'
 const ClientDashboardPlaceholder = () => (
   <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
     <h1 className="text-2xl font-bold">Client Dashboard Coming Soon</h1>
@@ -29,6 +30,7 @@ const PUBLIC_ROUTE_PREFIXES = [
   '/',
   '/authorization',
   '/user/portfolio',
+  '/user/previewPortfolio',
 ];
 function isPublicRoute(pathname) {
   const path = pathname.toLowerCase();
@@ -91,6 +93,7 @@ function AppRoutes() {
         <Route path='/Architecture' element={<Architecture />} />
         <Route path="/user/portfolio/:username" element={<PublicPortfolio />} />
         <Route element={<ProtectedMiddleware />}>
+          <Route path="/user/previewPortfolio" element={<PreviewPortfolio />} />
           <Route path="/account" element={<Accounts />} />
           <Route path="/dashboard" element={<MainScreen />} />
           <Route path="/client-dashboard" element={<ClientDashboardPlaceholder />} />
