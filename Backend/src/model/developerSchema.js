@@ -1,40 +1,18 @@
 const mongoose = require("mongoose");
-
-const clientSchema = new mongoose.Schema(
-  {
-    googleId: { type: String, index: true },
-    username: String,
-    name: String,
-    email: String,
-    avatarUrl: String,
-    role: { type: String, enum: ["client"], default: "client", index: true },
-    dob: { type: Date, default: null },
-  },
-  { timestamps: true }
-);
-
-const adminSchema = new mongoose.Schema(
-  {
-    googleId: { type: String, index: true },
-    username: String,
-    name: String,
-    email: String,
-    avatarUrl: String,
-    role: { type: String, enum: ["admin"], default: "admin", index: true },
-    dob: { type: Date, default: null },
-  },
-  { timestamps: true }
-);
-
 const developerSchema = new mongoose.Schema(
   {
-    githubId: { type: String, index: true },
+    githubId: String,
+    googleId: String,
     username: String,
     name: String,
     bio: String,
     email: String,
     avatarUrl: String,
-    role: { type: String, enum: ["developer"], default: "developer", index: true },
+    role: {
+      type: String,
+      enum: ["developer", "client", "admin"],
+      default: "developer",
+    },
     accessToken: String,
     topLanguages: Array,
     repositories: [
@@ -79,10 +57,22 @@ const developerSchema = new mongoose.Schema(
         topics: Array,
       },
     ],
-    skills: { type: [String], default: [] },
-    education: { type: Array, default: [] },
-    workExperience: { type: Array, default: [] },
-    dob: { type: Date, default: null },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    education: {
+      type: Array,
+      default: [],
+    },
+    workExperience: {
+      type: Array,
+      default: [],
+    },
+    dob: {
+      type: Date,
+      default: null,
+    },
     githubUrl: String,
     linkedinUrl: String,
     twitterUrl: String,
@@ -91,18 +81,53 @@ const developerSchema = new mongoose.Schema(
     cvUrl: String,
     cvPublicId: String,
     cvName: String,
-    SetRepo: { type: Boolean, default: false },
+    SetRepo: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true },
+);
+const certificateSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Developer",
+      required: true,
+    },
+    certificateUrl: {
+      type: String,
+      required: true,
+    },
+    certificateName: {
+      type: String,
+      required: true,
+    },
+    companyName: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      default: "",
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+    issueDate: {
+      type: String,
+      default: "",
+    },
+    publicId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-const Client = mongoose.models.Client || mongoose.model("Client", clientSchema, "client");
-const Admin = mongoose.models.Admin || mongoose.model("Admin", adminSchema, "admin");
-const Developer =
-  mongoose.models.Developer || mongoose.model("Developer", developerSchema, "developer");
+const Developer = mongoose.model("Developer", developerSchema, "developers");
+const Certificate = mongoose.model("Certificate", certificateSchema, "certificates");
 
-const models = { client: Client, admin: Admin, developer: Developer };
-
-const getUserModel = (role) => models[role] || Developer;
-
-module.exports = { Client, Admin, Developer, getUserModel };
+module.exports = { Developer, Certificate };

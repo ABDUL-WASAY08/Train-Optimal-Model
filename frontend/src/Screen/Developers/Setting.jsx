@@ -24,11 +24,9 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../zustand/useAuthStore';
 import { useUtilityStore } from '../../zustand/useUtilityStore';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function Setting() {
-  const navigate = useNavigate();
   const { user, fetchProfile, setUser, deleteAccount } = useAuthStore();
   const { updateAccountDetails, loading } = useUtilityStore();
   const {
@@ -334,7 +332,7 @@ function Setting() {
 
     if (res?.success) {
       toast.success(res.message || 'Account deleted successfully');
-      navigate('/Authorization', { replace: true });
+      window.location.href = res.redirectUrl || '/Authorization';
     } else {
       setDeletingAccount(false);
       setConfirmDeleteAccount(false);

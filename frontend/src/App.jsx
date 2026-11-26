@@ -22,7 +22,7 @@ const PUBLIC_ROUTE_PREFIXES = [
   '/',
   '/authorization',
   '/user/portfolio',
-  '/user/previewPortfolio',
+  '/user/previewportfolio',
 ];
 function isPublicRoute(pathname) {
   const path = pathname.toLowerCase();
@@ -85,7 +85,7 @@ function AppRoutes() {
         <Route path='/Architecture' element={<Architecture />} />
         <Route path="/user/portfolio/:username" element={<PublicPortfolio />} />
         <Route element={<ProtectedMiddleware />}>
-          <Route path="/user/previewPortfolio" element={<PreviewPortfolio />} />
+          <Route path="/user/previewportfolio" element={<PreviewPortfolio />} />
           <Route path="/account" element={<Accounts />} />
           <Route path="/dashboard" element={<MainScreen />} />
           <Route path="/client-dashboard" element={<ClientDashboard />} />

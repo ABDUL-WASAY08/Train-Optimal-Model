@@ -82,6 +82,7 @@ export const useAuthStore = create((set, get) => ({
       return {
         success: true,
         message: response.data?.message || "Account deleted successfully",
+        redirectUrl: response.data?.redirectUrl,
       };
     } catch (err) {
       set({ loading: false });

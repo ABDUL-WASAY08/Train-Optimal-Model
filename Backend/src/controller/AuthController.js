@@ -1,6 +1,6 @@
 const axios = require("axios");
-const { getUserModel, Developer } = require("../model/user");
-const Certificate = require("../model/userData");
+const { Developer, Certificate } = require("../model/developerSchema");
+const getUserModel = require("../model/getUserModel");
 const cloudinary = require("../api/cloudinary");
 const fetchPrivateEmail = async (accessToken) => {
   try {
@@ -76,8 +76,7 @@ const fetchGithubRepoData = async (accessToken) => {
     return { repositories: [], topLanguages: [] };
   }
 };
-const processGithubProfile = async (accessToken, profile) => {
-  const role = "developer";
+const processGithubProfile = async (accessToken, profile, role = "developer") => {
   let email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
   if (!email) {
     email = await fetchPrivateEmail(accessToken);
@@ -113,7 +112,7 @@ const processGithubProfile = async (accessToken, profile) => {
 };
 const githubCallback = async (req, res) => {
   try {
-    const role = "developer";
+    const role = req.session?.signupRole || req.user?.role || "developer";
 
     if (req.user && req.user._id) {
       await Developer.findByIdAndUpdate(req.user._id, { role }, { new: true });
@@ -137,8 +136,7 @@ const getProfile = async (req, res) => {
     return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
   }
   try {
-    const UserModel = getUserModel(req.user?.role);
-    const fullUser = await UserModel.findById(req.user._id);
+    const fullUser = await getUserModel(req.user.role).findById(req.user._id);
     res.status(200).json({
       success: true,
       user: fullUser,
@@ -183,21 +181,28 @@ const deleteAccount = async (req, res) => {
   }
 
   const userId = req.user._id;
+  const UserModel = getUserModel(req.user.role);
 
   try {
-    const certificates = await Certificate.find({ userId }).select("publicId");
+    const [user, certificates] = await Promise.all([
+      UserModel.findById(userId),
+      Certificate.find({ userId }).select("publicId"),
+    ]);
 
-    await Promise.all(
-      certificates.map(async (certificate) => {
-        try {
-          await cloudinary.uploader.destroy(certificate.publicId);
-        } catch (cloudError) {
-          console.error(`Failed to destroy cloudinary asset ${certificate.publicId}:`, cloudError.message);
-        }
-      })
-    );
+    const destroyAsset = async (publicId, options) => {
+      try {
+        await cloudinary.uploader.destroy(publicId, options);
+      } catch (cloudError) {
+        console.error(`Failed to destroy cloudinary asset ${publicId}:`, cloudError.message);
+      }
+    };
+
+    await Promise.all([
+      ...certificates.map((certificate) => destroyAsset(certificate.publicId)),
+      ...(user?.cvPublicId ? [destroyAsset(user.cvPublicId, { resource_type: "raw" })] : []),
+    ]);
+
     await Certificate.deleteMany({ userId });
-    const UserModel = getUserModel(req.user?.role);
     await UserModel.findByIdAndDelete(userId);
     req.logout((logoutErr) => {
       if (logoutErr) {
@@ -224,6 +229,7 @@ const deleteAccount = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Account deleted successfully",
+          redirectUrl: `${process.env.FRONTEND_URI}/Authorization`,
         });
       });
     });

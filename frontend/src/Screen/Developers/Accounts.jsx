@@ -36,7 +36,6 @@ import {
 import { useAuthStore } from '../../zustand/useAuthStore';
 import { useUtilityStore } from '../../zustand/useUtilityStore';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 
 /* ---------- Animation CSS (self-contained, no tailwind config needed) ---------- */
 /* NOTE: "backwards" fill-mode is intentional. It keeps the entrance animation from
@@ -261,7 +260,15 @@ function Accounts({ onSelect }) {
 
   const isCompleted = totalPowerScore === 100 && !!user?.bio;
 
-  const publicUrl =  user?.portfolioUrl || `portfolio/${user?.username || 'developer'}`;
+  const rawPortfolioPath = user?.username
+    ? `/user/portfolio/${encodeURIComponent(user.username)}`
+    : user?.portfolioUrl || '';
+
+  const publicUrl = rawPortfolioPath
+    ? /^https?:\/\//i.test(rawPortfolioPath)
+      ? rawPortfolioPath
+      : new URL(`/${String(rawPortfolioPath).replace(/^\/+/, '')}`, window.location.origin).href
+    : '';
   const filteredCertificates = useMemo(() => {
     if (!certSearchQuery.trim()) return certsList;
     const query = certSearchQuery.toLowerCase();
@@ -337,7 +344,6 @@ function Accounts({ onSelect }) {
 
   const displayName = user?.name || user?.username || 'Developer Name';
   const initials = displayName.substring(0, 2).toUpperCase();
-  const navigate = useNavigate();
 
   return (
     <div
@@ -366,7 +372,13 @@ function Accounts({ onSelect }) {
             </button>
             <button
               type="button"
-              onClick={() => window.open(publicUrl, '_blank')}
+              onClick={() => {
+                if (!publicUrl) {
+                  toast.error('Portfolio link unavailable');
+                  return;
+                }
+                window.open(publicUrl, '_blank', 'noopener,noreferrer');
+              }}
               className="group/btn relative overflow-hidden inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-xl bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-300/50 active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
             >
               {/* shine sweep */}
@@ -376,7 +388,7 @@ function Accounts({ onSelect }) {
             </button>
             <button
               type="button"
-              onClick={() => navigate(`/user/previewPortfolio`)}
+              onClick={() => window.open('/user/previewportfolio', '_blank', 'noopener,noreferrer')}
               className="group/btn relative overflow-hidden inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-xl bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-300/50 active:translate-y-0 active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
             >
               {/* shine sweep */}

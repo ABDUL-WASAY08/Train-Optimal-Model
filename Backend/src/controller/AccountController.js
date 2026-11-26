@@ -1,4 +1,4 @@
-const User = require("../model/user");
+const getUserModel = require("../model/getUserModel");
 const updateAccountDetails = async (req, res) => {
   try {
     if (!req.user) {
@@ -20,7 +20,7 @@ const updateAccountDetails = async (req, res) => {
     if (dob !== undefined) updateData.dob = dob ? new Date(dob) : null;
     if (SetRepo !== undefined) updateData.SetRepo = SetRepo;
     if (Filteredrepositories !== undefined) updateData.Filteredrepositories = Filteredrepositories;
-    const updatedUser = await User.findByIdAndUpdate(
+    const updatedUser = await getUserModel(req.user.role).findByIdAndUpdate(
       req.user._id,
       { $set: updateData },
       { new: true }
@@ -45,7 +45,7 @@ const updateDob = async (req, res) => {
 
   try {
     const { dob } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
+    const updatedUser = await getUserModel(req.user.role).findByIdAndUpdate(
       req.user._id,
       { dob },
       { new: true }

@@ -1,7 +1,9 @@
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const User = require("../model/user");
+const { Developer } = require("../model/developerSchema");
+const Client = require("../model/clientSchema");
+const Admin = require("../model/adminSchema");
 const { processGithubProfile } = require("../controller/AuthController");
 const { processGoogleProfile } = require("../controller/GoogleAuthController");
 passport.serializeUser((user, done) => {
@@ -9,8 +11,11 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id);
-    done(null, user);    // user is sved in req.user
+    const user =
+      (await Developer.findById(id)) ||
+      (await Client.findById(id)) ||
+      (await Admin.findById(id));
+    done(null, user);
   } catch (error) {
     done(error, null);
   }

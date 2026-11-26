@@ -1,6 +1,6 @@
 const cloudinary = require("../api/cloudinary");
-const Certificate = require("../model/userData");
-const User = require("../model/user");
+const { Certificate } = require("../model/developerSchema");
+const getUserModel = require("../model/getUserModel");
 const uploadCertificate = async (req, res) => {
   try {
     if (!req.user) {
@@ -126,7 +126,7 @@ const uploadCv = async (req, res) => {
       folder: "fyp_cvs",
       resource_type: "raw",
     });
-    const user = await User.findByIdAndUpdate(
+    const user = await getUserModel(req.user.role).findByIdAndUpdate(
       req.user._id,
       { $set: { cvUrl: result.secure_url, cvPublicId: result.public_id, cvName: req.file.originalname } },
       { new: true }
@@ -149,14 +149,14 @@ const deleteCv = async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized, please login first" });
     }
-    const user = await User.findById(req.user._id);
+    const user = await getUserModel(req.user.role).findById(req.user._id);
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
     if (user.cvPublicId) {
       await cloudinary.uploader.destroy(user.cvPublicId, { resource_type: "raw" });
     }
-    const updatedUser = await User.findByIdAndUpdate(
+    const updatedUser = await getUserModel(req.user.role).findByIdAndUpdate(
       req.user._id,
       { $set: { cvUrl: null, cvPublicId: null, cvName: null } },
       { new: true }

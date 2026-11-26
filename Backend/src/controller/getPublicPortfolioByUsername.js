@@ -1,10 +1,10 @@
-const User = require("../model/user");
-const Certificate = require("../model/userData");
+const { Developer, Certificate } = require("../model/developerSchema");
+const getUserModel = require("../model/getUserModel");
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const GetPublicPortfolio = async (req, res) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({
+        const user = await Developer.findOne({
             username: { $regex: new RegExp(`^${escapeRegex(username)}$`, "i") }
         });
         if (!user) {
@@ -45,7 +45,7 @@ const GetportfolioUrl = async (req, res) => {
       });
     }
     const userId = req.user._id;
-    const user = await User.findById(userId);
+    const user = await getUserModel(req.user.role).findById(userId);
     if (!user) {
       return res.status(401).json({
         success: false,

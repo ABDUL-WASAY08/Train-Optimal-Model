@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Check, ExternalLink, FileText, Loader2, Mail, Pencil, Plus, Save, Search, Trash2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import api from "../../api/axios";
@@ -98,7 +98,6 @@ textarea.pw-edit-input { resize: vertical; min-height: 62px; line-height: 1.6; }
   .pw-orb, .pw-cursor { animation: none !important; }
 }
 `;
-
 const firstValue = (source, keys) => {
   if (!source || typeof source !== "object") return "";
   for (const key of keys) {
@@ -107,6 +106,7 @@ const firstValue = (source, keys) => {
   }
   return "";
 };
+
 
 const cleanText = (value) => {
   if (value === undefined || value === null) return "";
@@ -537,6 +537,7 @@ const LinkedinIcon = ({ size = 16 }) => (
 
 function PreviewPortfolio() {
   const { username } = useParams();
+  const navigate = useNavigate();
   const { user: authUser, setUser, loading: authLoading } = useAuthStore();
   const authUserRef = useRef(authUser);
 
@@ -1203,7 +1204,15 @@ function PreviewPortfolio() {
           borderBottom: `1px solid ${menuOpen || scrolled ? "rgba(124,106,247,0.1)" : "transparent"}`,
         }}
       >
+        <button
+          type="button"
+          className="mx-10 mt-10 text-xl font-bold text-white transition-colors hover:text-purple-300"
+          onClick={() => navigate('/')}
+        >
+          TOM
+        </button>
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          
           <button
             type="button"
             onClick={() => scrollTo("about")}
